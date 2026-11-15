@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skill2Earn — Learn. Practice. Execute. Earn.</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #0B0F19; color: #E2E8F0; }
+    .nav-btn { transition: all 0.2s ease; }
+    .nav-btn.active { background: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%); color: #ffffff; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35); }
+    .glass-card { background: rgba(18, 24, 40, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    .glass-card:hover { border-color: rgba(124, 58, 237, 0.4); }
+    .glow-purple { box-shadow: 0 0 35px rgba(124, 58, 237, 0.2); }
+    .glow-orange { box-shadow: 0 0 25px rgba(245, 158, 11, 0.25); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .scrollbar-custom::-webkit-scrollbar { width: 6px; height: 6px; }
+    .scrollbar-custom::-webkit-scrollbar-track { background: #0F172A; }
+    .scrollbar-custom::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col antialiased">
+
+  <!-- ═════════════════════════ TOP NAVBAR ═════════════════════════ -->
+  <header class="h-16 bg-[#0F1629]/95 border-b border-[#1E293B] sticky top-0 z-40 backdrop-blur-md px-6 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-[#7C3AED] to-[#6366F1] flex items-center justify-center shadow-lg shadow-purple-500/30">
+        <i class="fa-solid fa-bolt text-white text-lg"></i>
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xl font-black tracking-tight text-white">SKILL<span class="text-[#A78BFA]">2</span>EARN</span>
+          <span class="text-[10px] font-bold uppercase tracking-wider bg-purple-950/80 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full">SaaS Pro</span>
+        </div>
+        <p class="text-[11px] text-gray-400">Kal se nahi... Aaj se!</p>
+      </div>
+    </div>
+
+    <!-- Center Active Course Badge -->
+    <div class="hidden md:flex items-center gap-3 bg-[#161F36] border border-[#2A3655] px-4 py-1.5 rounded-full">
+      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+      <span class="text-xs text-gray-300">Enrolled: <strong class="text-white" id="headerCourseTitle">Loading Course...</strong></span>
+      <span class="text-xs text-purple-400 font-semibold" id="headerProgressPct">0% Complete</span>
+    </div>
+
+    <!-- Right Quick Stats: Streak, XP, User Profile -->
+    <div class="flex items-center gap-3">
+      <!-- Streak Flame -->
+      <div class="flex items-center gap-2 bg-gradient-to-r from-amber-500/15 to-orange-500/15 border border-amber-500/30 px-3 py-1.5 rounded-xl glow-orange">
+        <span class="text-base">🔥</span>
+        <div class="text-left">
+          <div class="text-xs font-black text-amber-400"><span id="streakCount">0</span> DAYS</div>
+          <div class="text-[9px] text-gray-400 uppercase tracking-wider font-semibold">Streak</div>
+        </div>
+      </div>
+
+      <!-- Total XP -->
+      <div class="flex items-center gap-2 bg-gradient-to-r from-purple-500/15 to-indigo-500/15 border border-purple-500/30 px-3 py-1.5 rounded-xl">
+        <span class="text-base">⭐</span>
+        <div class="text-left">
+          <div class="text-xs font-black text-purple-300"><span id="xpCount">0</span> XP</div>
+          <div class="text-[9px] text-gray-400 uppercase tracking-wider font-semibold">Level <span id="levelCount">1</span></div>
+        </div>
+      </div>
+
+      <!-- User Account Button -->
+      <div class="relative">
+        <button onclick="toggleUserDropdown()" class="flex items-center gap-2.5 bg-[#18223C] hover:bg-[#202E52] border border-gray-700 px-3 py-1.5 rounded-xl transition">
+          <div id="userAvatarInitial" class="w-7 h-7 rounded-full bg-purple-600 font-bold text-white text-xs flex items-center justify-center">
+            U
+          </div>
+          <div class="hidden sm:block text-left text-xs">
+            <div class="font-bold text-white truncate max-w-[100px]" id="navUserName">My Account</div>
+            <div class="text-emerald-400 text-[10px]">● Online</div>
+          </div>
+          <i class="fa-solid fa-chevron-down text-gray-400 text-[10px]"></i>
+        </button>
+
+        <!-- Dropdown Menu -->
+        <div id="userDropdown" class="hidden absolute right-0 mt-2 w-56 bg-[#0F1629] border border-gray-800 rounded-2xl shadow-2xl p-2 z-50">
+          <div class="p-3 border-b border-gray-800 text-xs">
+            <div class="font-bold text-white" id="dropdownUserName">Guest User</div>
+            <div class="text-gray-400 truncate" id="dropdownUserEmail">Not logged in</div>
+            <div class="text-purple-400 font-semibold text-[11px] mt-1" id="dropdownUserSkill">Skill: Graphic Design</div>
+          </div>
+          <button onclick="openAuthModal('register')" class="w-full text-left px-3 py-2 text-xs font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D] rounded-xl flex items-center gap-2">
+            <i class="fa-solid fa-user-plus text-purple-400"></i> Create New Account
+          </button>
+          <button onclick="openAuthModal('login')" class="w-full text-left px-3 py-2 text-xs font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D] rounded-xl flex items-center gap-2">
+            <i class="fa-solid fa-arrow-right-to-bracket text-emerald-400"></i> Switch Account / Login
+          </button>
+          <button onclick="logoutUser()" class="w-full text-left px-3 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-500/10 rounded-xl flex items-center gap-2 border-t border-gray-800 mt-1">
+            <i class="fa-solid fa-power-off"></i> Log Out
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="flex flex-1 overflow-hidden">
+    <!-- ═════════════════════════ SIDEBAR ═════════════════════════ -->
+    <aside class="w-64 bg-[#0F1629] border-r border-[#1E293B] flex flex-col justify-between p-4 flex-shrink-0">
+      <div class="space-y-1.5">
+        <div class="text-[11px] font-bold uppercase tracking-wider text-gray-500 px-3 mb-2">Workspace</div>
+        
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
+          <i class="fa-solid fa-chart-line w-5 text-center text-purple-400"></i>
+          <span>Dashboard</span>
+        </button>
+
+        <button onclick="switchTab('classroom')" id="nav-classroom" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
+          <i class="fa-solid fa-book-open w-5 text-center text-emerald-400"></i>
+          <span>Daily Classroom</span>
+          <span class="ml-auto text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold" id="badgeCurrentDay">Day 1</span>
+        </button>
+
+        <button onclick="switchTab('ingest')" id="nav-ingest" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
+          <i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-amber-400"></i>
+          <span>Ingest Course (AI)</span>
+          <span class="ml-auto text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-bold">New</span>
+        </button>
+
+        <button onclick="switchTab('roadmap')" id="nav-roadmap" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
+          <i class="fa-solid fa-map-location-dot w-5 text-center text-blue-400"></i>
+          <span>30-Day Roadmap</span>
+        </button>
+
+        <button onclick="switchTab('coach')" id="nav-coach" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
+          <i class="fa-solid fa-robot w-5 text-center text-indigo-400"></i>
+          <span>AI Coach Asad</span>
+        </button>
+
+        <div class="pt-4 text-[11px] font-bold uppercase tracking-wider text-gray-500 px-3 mb-2">Earning & Tools</div>
+
+        <button onclick="switchTab('portfolio')" id="nav-portfolio" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
+          <i class="fa-solid fa-briefcase w-5 text-center text-cyan-400"></i>
+          <span>Live Portfolio</span>
+          <span class="ml-auto text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full font-bold">Public</span>
+        </button>
+
+        <button onclick="switchTab('pomodoro')" id="nav-pomodoro" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
+          <i class="fa-solid fa-stopwatch w-5 text-center text-rose-400"></i>
+          <span>Focus Timer (25m)</span>
+        </button>
+
+        <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
+          <i class="fa-solid fa-trophy w-5 text-center text-yellow-400"></i>
+          <span>Leaderboard</span>
+        </button>
+      </div>
+
+      <!-- Target Box -->
+      <div class="glass-card p-3.5 rounded-2xl border border-purple-500/20 text-center">
+        <div class="text-xs font-bold text-white mb-1">Target Monthly Income</div>
+        <div class="text-lg font-black text-emerald-400">$800 - $2,500</div>
+        <div class="text-[11px] text-gray-400 mt-1">30-Day Sprint to First Client</div>
+      </div>
+    </aside>
+
+    <!-- ═════════════════════════ MAIN CONTENT ═════════════════════════ -->
+    <main class="flex-1 overflow-y-auto scrollbar-custom p-6 md:p-8 bg-[#0B0F19]">
+
+      <!-- ════════════ TAB 1: DASHBOARD ════════════ -->
+      <section id="tab-dashboard" class="tab-content active space-y-6">
+        <div class="glass-card rounded-3xl p-6 md:p-8 border border-purple-500/30 bg-gradient-to-r from-[#181830] via-[#121B35] to-[#0F1629] relative overflow-hidden">
+          <div class="relative z-10 max-w-2xl">
+            <div class="inline-flex items-center gap-2 bg-purple-500/20 border border-purple-500/40 text-purple-300 text-xs font-bold px-3 py-1 rounded-full mb-3">
+              <span>🚀 30-Day Skill-to-Earn Sprint</span>
+            </div>
+            <h2 class="text-2xl md:text-3xl font-black text-white leading-tight">
+              Khush-Aamdeed, <span id="dashGreetingName" class="text-amber-400">Student</span>!
+            </h2>
+            <p class="text-sm text-gray-300 mt-2" id="dashSubtext">
+              Course purchase karke chhor dene walon mein shamil mat hon. Skill2Earn par roz sirf 45 minute practical homework karein aur apna client-ready portfolio banayein!
+            </p>
+            <div class="flex flex-wrap gap-3 mt-5">
+              <button onclick="switchTab('classroom')" class="bg-gradient-to-r from-[#7C3AED] to-[#6366F1] text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-purple-500/30 hover:opacity-95 transition flex items-center gap-2">
+                <span>Start Today's Practice</span>
+                <i class="fa-solid fa-arrow-right"></i>
+              </button>
+              <button onclick="switchTab('ingest')" class="bg-[#1E293B] text-gray-200 border border-gray-700 px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#28354D] transition flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i>
+                <span>Ingest Course (YouTube/PDF)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Grid Stats -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="glass-card p-5 rounded-2xl border border-gray-800">
+            <div class="flex items-center justify-between text-gray-400 text-xs font-semibold">
+              <span>ACTIVE STREAK</span>
+              <span class="text-amber-400 text-base">🔥</span>
+            </div>
+            <div class="text-2xl font-black text-white mt-2" id="statStreak">0 Days</div>
+            <div class="text-[11px] text-emerald-400 mt-1 flex items-center gap-1">
+              <i class="fa-solid fa-shield-halved"></i> 1 Streak Freeze Active
+            </div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl border border-gray-800">
+            <div class="flex items-center justify-between text-gray-400 text-xs font-semibold">
+              <span>COURSE PROGRESS</span>
+              <span class="text-emerald-400 text-base">✓</span>
+            </div>
+            <div class="text-2xl font-black text-white mt-2" id="statCompletedDays">0 / 30 Days</div>
+            <div class="text-[11px] text-gray-400 mt-1" id="statCourseCategory">Digital Skill Track</div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl border border-gray-800">
+            <div class="flex items-center justify-between text-gray-400 text-xs font-semibold">
+              <span>PORTFOLIO PROJECTS</span>
+              <span class="text-cyan-400 text-base">💼</span>
+            </div>
+            <div class="text-2xl font-black text-white mt-2" id="statPortfolioCount">0 Verified</div>
+            <div class="text-[11px] text-cyan-400 mt-1">Ready for Clients</div>
+          </div>
+
+          <div class="glass-card p-5 rounded-2xl border border-gray-800">
+            <div class="flex items-center justify-between text-gray-400 text-xs font-semibold">
+              <span>TOTAL REPUTATION</span>
+              <span class="text-purple-400 text-base">⭐</span>
+            </div>
+            <div class="text-2xl font-black text-white mt-2" id="statXpTotal">0 XP</div>
+            <div class="text-[11px] text-purple-300 mt-1">Level <span id="statLevel">1</span> Achiever</div>
+          </div>
+        </div>
+
+        <!-- Today's Priority Task Banner -->
+        <div class="glass-card p-6 rounded-3xl border border-purple-500/20 space-y-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-amber-400">Current Active Task</span>
+              <h3 class="text-xl font-black text-white mt-1" id="dashTaskTitle">Day 1: Implementation & Proof</h3>
+            </div>
+            <button onclick="switchTab('classroom')" class="bg-amber-500 text-black text-xs font-bold px-4 py-2 rounded-xl hover:bg-amber-400 transition">
+              Open Classroom →
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════ TAB 2: DAILY CLASSROOM ════════════ -->
+      <section id="tab-classroom" class="tab-content space-y-6">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="bg-purple-500/20 text-purple-300 text-xs font-bold px-2.5 py-0.5 rounded-full border border-purple-500/30" id="classroomDayBadge">Day 1 of 30</span>
+              <span class="text-gray-400 text-xs font-semibold" id="classroomCourseCategory">Skill Practical Track</span>
+            </div>
+            <h2 class="text-2xl font-black text-white mt-1" id="classroomDayTitle">Daily Implementation Lesson</h2>
+          </div>
+          <button onclick="switchTab('pomodoro')" class="bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-2">
+            <i class="fa-solid fa-stopwatch"></i>
+            <span>25m Focus Timer</span>
+          </button>
+        </div>
+
+        <!-- 1. Bite-Sized Video & Theory Notes -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 glass-card rounded-2xl p-5 border border-gray-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-play text-purple-400"></i>
+                <span>Part 1: Daily Micro-Lesson (20 Mins)</span>
+              </h3>
+              <span class="text-xs text-emerald-400 font-semibold" id="classroomLessonMeta">Practical Session</span>
+            </div>
+            
+            <div class="w-full aspect-video bg-[#0B0F19] rounded-xl border border-gray-800 flex flex-col items-center justify-center p-6 text-center relative overflow-hidden">
+              <div class="w-16 h-16 rounded-full bg-purple-600/90 flex items-center justify-center text-white text-xl shadow-lg shadow-purple-500/40 cursor-pointer">
+                <i class="fa-solid fa-play ml-1"></i>
+              </div>
+              <h4 class="text-white font-bold mt-4 text-base" id="classroomVideoHeading">Hands-On Practice Video</h4>
+              <p class="text-xs text-gray-400 max-w-md mt-1">Focus on direct practical implementation rather than passive listening.</p>
+            </div>
+          </div>
+
+          <div class="glass-card rounded-2xl p-5 border border-gray-800 space-y-3">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-lightbulb text-amber-400"></i>
+              <span>Core Key Takeaways</span>
+            </h3>
+            <ul class="space-y-3 text-xs text-gray-300" id="classroomTakeaways">
+              <li class="flex items-start gap-2 bg-[#12192C] p-3 rounded-xl border border-gray-800">
+                <span class="text-purple-400 font-bold">01.</span>
+                <span>Theory ko pehle 15 minute mein samjhein, baqi time software/code mein practice karein.</span>
+              </li>
+              <li class="flex items-start gap-2 bg-[#12192C] p-3 rounded-xl border border-gray-800">
+                <span class="text-purple-400 font-bold">02.</span>
+                <span>Har task ko portfolio ready standard par complete karein.</span>
+              </li>
+              <li class="flex items-start gap-2 bg-[#12192C] p-3 rounded-xl border border-gray-800">
+                <span class="text-purple-400 font-bold">03.</span>
+                <span>Daily proof upload kiye baghair streak retain nahi hogi!</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- 2. Interactive Conceptual Worksheet -->
+        <div class="glass-card rounded-2xl p-6 border border-gray-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-pen-to-square text-emerald-400"></i>
+              <span>Part 2: Daily Conceptual Worksheet</span>
+            </h3>
+            <span class="text-xs text-emerald-400 font-semibold">Answer to solidify concepts</span>
+          </div>
+
+          <div class="space-y-3">
+            <div class="bg-[#12192C] p-4 rounded-xl border border-gray-800">
+              <label class="text-xs font-semibold text-gray-300 block mb-2" id="q1Label">Q1. Aaj ke lesson ka core concept apne alfaz mein explain karein:</label>
+              <textarea id="q1Input" placeholder="Yahan apna answer type karein..." class="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500" rows="2"></textarea>
+            </div>
+
+            <div class="bg-[#12192C] p-4 rounded-xl border border-gray-800">
+              <label class="text-xs font-semibold text-gray-300 block mb-2" id="q2Label">Q2. Is practical task ko kisi real client ke project mein kaise use karenge?</label>
+              <textarea id="q2Input" placeholder="Client use-case type karein..." class="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500" rows="2"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Interactive Quiz -->
+        <div class="glass-card rounded-2xl p-6 border border-gray-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-circle-question text-cyan-400"></i>
+              <span>Part 3: Daily Knowledge Check (Quiz)</span>
+            </h3>
+            <span class="text-xs text-cyan-400 font-semibold" id="quizStatusText">Click an answer</span>
+          </div>
+
+          <div class="bg-[#12192C] p-4 rounded-xl border border-gray-800 space-y-3" id="quizContainer">
+            <div class="text-xs font-bold text-white" id="quizQuestionText">Konsa rule rozana consistency ke liye sab se ahem hai?</div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="quizOptionsContainer">
+              <button onclick="handleQuizAnswer(0)" class="quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition">A) Ek din mein 10 ghante parhna</button>
+              <button onclick="handleQuizAnswer(1)" class="quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition">B) Rozana 45 minute baghair distraction ke practice karna</button>
+              <button onclick="handleQuizAnswer(2)" class="quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition">C) Sirf lectures dekh kar notes na banana</button>
+              <button onclick="handleQuizAnswer(3)" class="quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition">D) Bina practice ke Upwork par apply karna</button>
+            </div>
+            <div id="quizFeedbackBox" class="hidden p-3 rounded-lg text-xs font-semibold"></div>
+          </div>
+        </div>
+
+        <!-- 4. Practical Homework & Proof-of-Work Submission -->
+        <div class="glass-card rounded-2xl p-6 border border-purple-500/30 space-y-4 glow-purple">
+          <div class="flex items-center justify-between">
+            <h3 class="text-base font-black text-white flex items-center gap-2">
+              <i class="fa-solid fa-cloud-arrow-up text-purple-400"></i>
+              <span>Part 4: Practical Homework & Proof of Work</span>
+            </h3>
+            <span class="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/30 px-3 py-1 rounded-full">
+              Proof Required to Maintain Streak
+            </span>
+          </div>
+
+          <div class="bg-[#141C30] p-4 rounded-xl border border-gray-800">
+            <h4 class="text-xs font-bold text-white uppercase tracking-wider text-purple-300">Client Simulation Brief:</h4>
+            <p class="text-xs text-gray-300 mt-1" id="classroomHomeworkDesc">
+              Aaj ke topic par ek complete deliverable tayyar karein aur uska screenshot ya link upload karein.
+            </p>
+          </div>
+
+          <!-- Submission Inputs -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="text-xs font-semibold text-gray-400 block mb-2">Live Proof / Image / Figma / GitHub URL:</label>
+              <input type="text" id="proofUrlInput" placeholder="https://... (Figma, GitHub, Behance ya image link)" class="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500">
+            </div>
+
+            <div>
+              <label class="text-xs font-semibold text-gray-400 block mb-2">Short Submission Notes:</label>
+              <input type="text" id="proofNotesInput" placeholder="Brief notes about your execution..." class="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500">
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-2">
+            <div class="text-xs text-gray-400">
+              Submission par <strong class="text-purple-300">+150 XP</strong> aur instant AI Review milega.
+            </div>
+            <button onclick="submitHomeworkProof()" class="bg-gradient-to-r from-[#7C3AED] to-[#6366F1] text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:opacity-95 shadow-lg shadow-purple-500/30 transition">
+              <i class="fa-solid fa-check mr-2"></i> Submit & Mark Day Complete
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════ TAB 3: INGEST COURSE (AI ENGINE) ════════════ -->
+      <section id="tab-ingest" class="tab-content space-y-6">
+        <div>
+          <div class="inline-flex items-center gap-2 bg-purple-500/20 text-purple-300 text-xs font-bold px-3 py-1 rounded-full mb-2">
+            <span>✨ Turn Any Course Into An Action Plan</span>
+          </div>
+          <h2 class="text-2xl font-black text-white">Intelligent Course Ingestion Engine</h2>
+          <p class="text-sm text-gray-400 max-w-2xl mt-1">
+            Apna koi bhi PDF course upload karein ya YouTube link paste karein. Hamara AI system usay foran 30-Day Step-by-Step practical tasks mein badal dega!
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Option 1: Paste Online Course Link -->
+          <div class="glass-card p-6 rounded-3xl border border-indigo-500/40 space-y-4 glow-purple">
+            <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 flex items-center justify-center text-indigo-400 text-xl">
+              <i class="fa-solid fa-link"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">Option 1: Paste YouTube / Course URL</h3>
+            <p class="text-xs text-gray-400">
+              YouTube playlist ya single video ka link paste karein. System video title aur modules ko automatically 30 din ke homework mein baant dega.
+            </p>
+
+            <div class="space-y-2">
+              <label class="text-xs font-semibold text-gray-300">Course URL:</label>
+              <input type="text" id="courseLinkInput" placeholder="https://youtube.com/watch?v=... ya playlist URL" class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3.5 text-xs text-gray-200 focus:outline-none focus:border-indigo-500">
+            </div>
+
+            <!-- Gatekeeper Note -->
+            <div class="bg-[#141C30] p-4 rounded-xl border border-gray-800 space-y-1.5 text-xs">
+              <div class="font-bold text-indigo-300 flex items-center gap-1.5">
+                <i class="fa-solid fa-shield-halved"></i> Real-Time AI Gatekeeper Active:
+              </div>
+              <div class="text-gray-400">● YouTube oEmbed API se real title aur author verify hoga</div>
+              <div class="text-gray-400">● Drama episodes (ARY, HUM TV, OST) automatically detect honge</div>
+              <div class="text-gray-400">● Valid courses 30 practical days mein schedule honge</div>
+            </div>
+
+            <button id="btnIngestLink" onclick="handleCourseLink()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3.5 rounded-xl font-bold text-sm hover:opacity-95 shadow-lg shadow-indigo-500/30 transition flex items-center justify-center gap-2">
+              <i class="fa-solid fa-bolt"></i> Ingest Online Course & Build Roadmap
+            </button>
+          </div>
+
+          <!-- Option 2: Upload Course Material -->
+          <div class="glass-card p-6 rounded-3xl border border-purple-500/30 space-y-4">
+            <div class="w-12 h-12 rounded-2xl bg-purple-600/20 border border-purple-500/40 flex items-center justify-center text-purple-400 text-xl">
+              <i class="fa-solid fa-file-pdf"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white">Option 2: Upload Course PDF / Material</h3>
+            <p class="text-xs text-gray-400">
+              PDF, PPT ya notes upload karein. System chapters ko extract karke daily roadmap banata hai.
+            </p>
+
+            <div class="border-2 border-dashed border-gray-700 hover:border-purple-500 rounded-2xl p-6 text-center bg-[#0B0F19] transition cursor-pointer" onclick="document.getElementById('courseFileInput').click()">
+              <input type="file" id="courseFileInput" class="hidden" onchange="updateFileNameDisplay(this)">
+              <i class="fa-solid fa-cloud-arrow-up text-3xl text-purple-400 mb-2"></i>
+              <div class="text-sm font-bold text-white" id="uploadFileLabel">Drop your course file here</div>
+              <div class="text-xs text-gray-500 mt-1">PDF, DOCX, PPT up to 100MB</div>
+            </div>
+
+            <button onclick="handleCourseUpload()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3.5 rounded-xl font-bold text-sm hover:opacity-95 shadow-lg shadow-purple-500/30 transition">
+              <i class="fa-solid fa-wand-magic-sparkles mr-2"></i> Ingest Uploaded File
+            </button>
+          </div>
+        </div>
+
+        <!-- Ingest Result Card (Dynamic) -->
+        <div id="ingestResultBox" class="glass-card p-6 rounded-3xl border border-emerald-500/40 hidden">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-lg">
+              <i class="fa-solid fa-check-double"></i>
+            </div>
+            <div>
+              <h4 class="text-base font-bold text-white" id="ingestResultTitle">Course Successfully Processed!</h4>
+              <p class="text-xs text-emerald-400" id="ingestResultSub">30-Day Step-by-Step Action Roadmap is now active for you.</p>
+            </div>
+          </div>
+          <button onclick="switchTab('roadmap')" class="bg-emerald-500 text-black px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-emerald-400 transition">
+            View Your 30-Day Roadmap →
+          </button>
+        </div>
+      </section>
+
+      <!-- ════════════ TAB 4: 30-DAY ROADMAP ════════════ -->
+      <section id="tab-roadmap" class="tab-content space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-black text-white">30-Day Execution Roadmap</h2>
+            <p class="text-sm text-gray-400">Click any unlocked day to view lesson and submit homework.</p>
+          </div>
+          <span class="text-xs bg-purple-500/20 text-purple-300 border border-purple-500/30 px-3 py-1 rounded-full font-bold" id="roadmapEnrolledTag">Enrolled Course</span>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="roadmapGrid">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- ════════════ TAB 5: AI COACH ASAD ════════════ -->
+      <section id="tab-coach" class="tab-content space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-black text-white">AI Accountability Coach</h2>
+            <p class="text-sm text-gray-400">Coach Asad is here to prevent procrastination and guide your freelance career.</p>
+          </div>
+          <div class="flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-3 py-1.5 rounded-full text-xs text-emerald-400 font-bold">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Coach Asad (Online)
+          </div>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="glass-card rounded-3xl border border-gray-800 flex flex-col h-[520px]">
+          <div id="chatMessages" class="flex-1 p-6 overflow-y-auto space-y-4 scrollbar-custom">
+            <!-- AI Welcome Message -->
+            <div class="flex items-start gap-3 max-w-xl">
+              <div class="w-9 h-9 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                A
+              </div>
+              <div class="bg-[#182035] border border-gray-800 p-4 rounded-2xl rounded-tl-none text-xs text-gray-200 leading-relaxed" id="coachGreetingMsg">
+                As-salamu alaykum! Main aapka AI Accountability Coach hoon. Mera kaam yeh ensure karna hai ke aap course beech mein na chhorein aur roz practice karein. Aaj koi sawaal ya mushkil hai freelancing ke hawalay se?
+              </div>
+            </div>
+          </div>
+
+          <div class="p-4 border-t border-gray-800 bg-[#0F1629] rounded-b-3xl flex gap-2">
+            <input type="text" id="coachInput" placeholder="Coach se sawaal puchein (e.g. Clients kaise dhoondon? Upwork profile kaise banayein?)" class="flex-1 bg-[#0B0F19] border border-gray-700 rounded-xl px-4 py-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500" onkeydown="if(event.key === 'Enter') sendCoachMessage()">
+            <button onclick="sendCoachMessage()" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-5 rounded-xl font-bold text-xs hover:opacity-95 transition">
+              Send <i class="fa-solid fa-paper-plane ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════ TAB 6: LIVE PUBLIC PORTFOLIO ════════════ -->
+      <section id="tab-portfolio" class="tab-content space-y-6">
+        <div class="glass-card p-6 md:p-8 rounded-3xl border border-cyan-500/30 bg-gradient-to-r from-[#0E1D2D] to-[#0F1629]">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs bg-cyan-500/20 text-cyan-300 font-bold px-3 py-1 rounded-full border border-cyan-500/40">Verified Skill2Earn Portfolio</span>
+                <span class="text-xs text-gray-400">Share with Upwork & Fiverr clients</span>
+              </div>
+              <h2 class="text-2xl md:text-3xl font-black text-white" id="portfolioOwnerTitle">My Verified Portfolio</h2>
+              <p class="text-xs text-gray-300 mt-1 max-w-xl">
+                Rozana ki assignments auto-convert ho kar live verified portfolio card ban chuki hain. Client is link par click karke aapka proof-of-work dekh sakta hai!
+              </p>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="copyPortfolioLink()" class="bg-cyan-500 text-black px-4 py-2.5 rounded-xl font-bold text-xs hover:bg-cyan-400 transition flex items-center gap-2">
+                <i class="fa-solid fa-link"></i> Copy Public URL
+              </button>
+              <button onclick="shareOnWhatsApp()" class="bg-emerald-500 text-black px-4 py-2.5 rounded-xl font-bold text-xs hover:bg-emerald-400 transition flex items-center gap-2">
+                <i class="fa-brands fa-whatsapp"></i> Share on WhatsApp
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5" id="portfolioGrid">
+          <!-- Populated dynamically via JS -->
+        </div>
+      </section>
+
+      <!-- ════════════ TAB 7: FOCUS POMODORO TIMER ════════════ -->
+      <section id="tab-pomodoro" class="tab-content space-y-6">
+        <div class="max-w-xl mx-auto glass-card p-8 rounded-3xl border border-rose-500/30 text-center space-y-6 glow-purple">
+          <div class="w-16 h-16 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center text-2xl mx-auto border border-rose-500/40">
+            <i class="fa-solid fa-stopwatch"></i>
+          </div>
+          <div>
+            <h2 class="text-2xl font-black text-white">25-Minute Deep Focus Sprint</h2>
+            <p class="text-xs text-gray-400 mt-1">Mobile silent karein, tabs band karein, aur sirf aaj ke practical task par dhiyaan dein.</p>
+          </div>
+
+          <div class="text-6xl md:text-7xl font-black text-white tracking-tight font-mono py-4" id="timerDisplay">
+            25:00
+          </div>
+
+          <div class="flex items-center justify-center gap-3">
+            <button id="timerToggleBtn" onclick="toggleTimer()" class="bg-gradient-to-r from-rose-500 to-purple-600 text-white px-8 py-3 rounded-2xl font-bold text-sm hover:opacity-95 shadow-lg shadow-rose-500/30 transition">
+              Start Practice Session
+            </button>
+            <button onclick="resetTimer()" class="bg-[#1E293B] text-gray-300 hover:text-white px-5 py-3 rounded-2xl font-semibold text-sm border border-gray-700 transition">
+              Reset
+            </button>
+          </div>
+
+          <div class="text-xs text-gray-500 pt-2 border-t border-gray-800">
+            Session complete hone par automatic <strong class="text-purple-300">+25 XP</strong> award hoga.
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════ TAB 8: LEADERBOARD ════════════ -->
+      <section id="tab-leaderboard" class="tab-content space-y-6">
+        <div>
+          <h2 class="text-2xl font-black text-white">Consistency Leaderboard</h2>
+          <p class="text-sm text-gray-400">Students ranking based on daily streaks and practical task execution.</p>
+        </div>
+
+        <div class="glass-card rounded-3xl border border-gray-800 overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-[#141C30] text-gray-400 uppercase font-bold text-[11px] border-b border-gray-800">
+              <tr>
+                <th class="p-4">Rank</th>
+                <th class="p-4">Student</th>
+                <th class="p-4">Skill Track</th>
+                <th class="p-4">Active Streak</th>
+                <th class="p-4">Total XP</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardTbody" class="divide-y divide-gray-800 text-gray-200">
+              <!-- Populated dynamically via JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ═════════════════════════ AUTH MODAL (LOGIN / REGISTER) ═════════════════════════ -->
+  <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-card max-w-md w-full p-6 md:p-8 rounded-3xl border border-purple-500/40 glow-purple relative">
+      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Modal Header -->
+      <div class="text-center mb-6">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7C3AED] to-[#6366F1] flex items-center justify-center mx-auto mb-3 shadow-lg shadow-purple-500/30 text-white text-xl">
+          <i class="fa-solid fa-bolt"></i>
+        </div>
+        <h3 class="text-xl font-black text-white" id="authModalTitle">Create Your Skill2Earn Account</h3>
+        <p class="text-xs text-gray-400 mt-1" id="authModalSubtitle">Start your 30-day practical skill sprint today!</p>
+      </div>
+
+      <!-- Auth Tabs Switcher -->
+      <div class="flex bg-[#12192C] p-1 rounded-xl mb-5 border border-gray-800">
+        <button id="authTabRegister" onclick="switchAuthMode('register')" class="flex-1 py-2 text-xs font-bold rounded-lg transition bg-purple-600 text-white">Sign Up (New)</button>
+        <button id="authTabLogin" onclick="switchAuthMode('login')" class="flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-400 hover:text-white">Log In</button>
+      </div>
+
+      <!-- Register Form -->
+      <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3.5">
+        <div>
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Your Full Name:</label>
+          <input type="text" id="regName" placeholder="e.g. Sara Ahmed, Fatima Khan" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Email Address:</label>
+          <input type="email" id="regEmail" placeholder="sara@example.com" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Password:</label>
+          <input type="password" id="regPassword" placeholder="Create a password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Choose Your Main Skill Goal:</label>
+          <select id="regSkill" class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+            <option value="Graphic Design">Graphic Design & Brand Identity</option>
+            <option value="Web Development">Full-Stack Web Development</option>
+            <option value="Python & AI">Python Programming & Automations</option>
+            <option value="Video Editing">Short-Form Video Editing & Motion</option>
+            <option value="Copywriting">High-Converting Copywriting</option>
+          </select>
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-purple-500/30">
+          Create Account & Start Day 1 →
+        </button>
+      </form>
+
+      <!-- Login Form -->
+      <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-3.5 hidden">
+        <div>
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Email Address:</label>
+          <input type="email" id="loginEmail" placeholder="sara@example.com" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+        </div>
+        <div>
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Password:</label>
+          <input type="password" id="loginPassword" placeholder="Your password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-emerald-500/30">
+          Log In to Workspace →
+        </button>
+      </form>
+
+      <!-- Quick Demo Account Shortcut -->
+      <div class="mt-4 pt-3 border-t border-gray-800 text-center">
+        <button onclick="loginAsDemoUser()" class="text-xs text-gray-400 hover:text-purple-300 underline font-semibold">
+          Or instant explore with Ali Khan (Demo Account)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═════════════════════════ JAVASCRIPT APP LOGIC ═════════════════════════ -->
+  <script>
+    // State
+    let currentUserEmail = localStorage.getItem('skill2earn_user_email') || '';
+    let currentActiveDayNumber = 1;
+
+    // Tab Switching
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      const targetNav = document.getElementById(`nav-${tabId}`);
+      if (targetTab) targetTab.classList.add('active');
+      if (targetNav) targetNav.classList.add('active');
+
+      if (tabId === 'classroom') {
+        loadDayLesson(currentActiveDayNumber);
+      }
+    }
+
+    // Toggle User Dropdown
+    function toggleUserDropdown() {
+      const el = document.getElementById('userDropdown');
+      el.classList.toggle('hidden');
+    }
+
+    document.addEventListener('click', (e) => {
+      const dd = document.getElementById('userDropdown');
+      if (!e.target.closest('#userDropdown') && !e.target.closest('button[onclick="toggleUserDropdown()"]')) {
+        dd.classList.add('hidden');
+      }
+    });
+
+    // Auth Modal Controls
+    function openAuthModal(mode = 'register') {
+      document.getElementById('authModal').classList.remove('hidden');
+      document.getElementById('userDropdown').classList.add('hidden');
+      switchAuthMode(mode);
+    }
+
+    function closeAuthModal() {
+      document.getElementById('authModal').classList.add('hidden');
+    }
+
+    function switchAuthMode(mode) {
+      const formReg = document.getElementById('formRegister');
+      const formLog = document.getElementById('formLogin');
+      const tabReg = document.getElementById('authTabRegister');
+      const tabLog = document.getElementById('authTabLogin');
+      const title = document.getElementById('authModalTitle');
+
+      if (mode === 'register') {
+        formReg.classList.remove('hidden');
+        formLog.classList.add('hidden');
+        tabReg.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition bg-purple-600 text-white';
+        tabLog.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-400 hover:text-white';
+        title.innerText = 'Create Your Skill2Earn Account';
+      } else {
+        formReg.classList.add('hidden');
+        formLog.classList.remove('hidden');
+        tabLog.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition bg-emerald-600 text-white';
+        tabReg.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-400 hover:text-white';
+        title.innerText = 'Log In to Your Skill2Earn Account';
+      }
+    }
+
+    // Handle Registration
+    async function handleRegister(e) {
+      e.preventDefault();
+      const name = document.getElementById('regName').value.trim();
+      const email = document.getElementById('regEmail').value.trim();
+      const password = document.getElementById('regPassword').value.trim();
+      const skill = document.getElementById('regSkill').value;
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, skill })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || 'Registration failed');
+          return;
+        }
+
+        alert(`🎉 ${data.message}`);
+        currentUserEmail = data.user.email;
+        localStorage.setItem('skill2earn_user_email', currentUserEmail);
+        closeAuthModal();
+        initApp();
+      } catch (err) {
+        alert("Registration error. Please try again.");
+      }
+    }
+
+    // Handle Login
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value.trim();
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || 'Login failed');
+          return;
+        }
+
+        alert(`👋 Welcome back, ${data.user.name}!`);
+        currentUserEmail = data.user.email;
+        localStorage.setItem('skill2earn_user_email', currentUserEmail);
+        closeAuthModal();
+        initApp();
+      } catch (err) {
+        alert("Login error. Please try again.");
+      }
+    }
+
+    function loginAsDemoUser() {
+      currentUserEmail = 'ali.khan@example.com';
+      localStorage.setItem('skill2earn_user_email', currentUserEmail);
+      closeAuthModal();
+      initApp();
+    }
+
+    function logoutUser() {
+      localStorage.removeItem('skill2earn_user_email');
+      currentUserEmail = '';
+      openAuthModal('login');
+    }
+
+    // Main App Initialization
+    async function initApp() {
+      try {
+        const urlParam = currentUserEmail ? `?email=${encodeURIComponent(currentUserEmail)}` : '';
+        const userRes = await fetch(`/api/user${urlParam}`);
+        const userData = await userRes.json();
+
+        const user = userData.user;
+        const course = userData.activeCourse;
+
+        // Populate User Info
+        document.getElementById('navUserName').innerText = user.name;
+        document.getElementById('userAvatarInitial').innerText = user.name.charAt(0).toUpperCase();
+        document.getElementById('dropdownUserName').innerText = user.name;
+        document.getElementById('dropdownUserEmail').innerText = user.email;
+        document.getElementById('dropdownUserSkill').innerText = `Skill: ${user.currentSkill}`;
+        document.getElementById('dashGreetingName').innerText = user.name;
+
+        // Stats
+        document.getElementById('streakCount').innerText = user.streak;
+        document.getElementById('statStreak').innerText = `${user.streak} Days`;
+        document.getElementById('xpCount').innerText = user.totalXp.toLocaleString();
+        document.getElementById('statXpTotal').innerText = `${user.totalXp.toLocaleString()} XP`;
+        document.getElementById('levelCount').innerText = user.level || 1;
+        document.getElementById('statLevel').innerText = user.level || 1;
+
+        // Course Info
+        document.getElementById('headerCourseTitle').innerText = course.title || 'No Course Ingested';
+        const pct = course.totalDays ? Math.round(((course.completedDays || 0) / course.totalDays) * 100) : 0;
+        document.getElementById('headerProgressPct').innerText = `${pct}% Complete`;
+        document.getElementById('statCompletedDays').innerText = `${course.completedDays || 0} / ${course.totalDays || 30} Days`;
+        document.getElementById('statCourseCategory').innerText = course.category || user.currentSkill;
+        document.getElementById('roadmapEnrolledTag').innerText = course.title || 'Enrolled Course';
+
+        currentActiveDayNumber = course.currentDay || 1;
+        document.getElementById('badgeCurrentDay').innerText = `Day ${currentActiveDayNumber}`;
+        document.getElementById('dashTaskTitle').innerText = `Day ${currentActiveDayNumber}: Implementation & Proof`;
+
+        loadRoadmap();
+        loadPortfolio();
+        loadLeaderboard();
+        loadDayLesson(currentActiveDayNumber);
+      } catch (err) {
+        console.error("Initialization error:", err);
+      }
+    }
+
+    // Load 30-Day Roadmap
+    async function loadRoadmap() {
+      try {
+        const urlParam = currentUserEmail ? `?email=${encodeURIComponent(currentUserEmail)}` : '';
+        const res = await fetch(`/api/roadmap${urlParam}`);
+        const data = await res.json();
+        const grid = document.getElementById('roadmapGrid');
+        grid.innerHTML = '';
+
+        if (!data.roadmap || data.roadmap.length === 0) {
+          grid.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-400">Abhi koi course ingest nahi kiya. "Ingest Course" tab par click karein!</div>';
+          return;
+        }
+
+        data.roadmap.forEach(item => {
+          const isDone = item.status === 'completed';
+          const isCurrent = item.status === 'in-progress';
+          const isLocked = item.status === 'locked';
+          
+          const card = document.createElement('div');
+          card.onclick = () => {
+            if (isLocked) {
+              alert(`🔒 Day ${item.day} is Locked!\n\nAap direct jump nahi kar saktay! Pehle Day ${currentActiveDayNumber} ka practical task aur homework submit karein taake agla din unlock ho!`);
+              return;
+            }
+            openDayInClassroom(item.day);
+          };
+          card.className = `p-4 rounded-2xl border transition ${
+            isLocked ? 'cursor-not-allowed opacity-50 bg-[#0A0E1A] border-gray-800/60 hover:border-rose-500/40' : 'cursor-pointer hover:scale-[1.02]'
+          } ${
+            isDone ? 'bg-[#121E2C] border-emerald-500/40 hover:border-emerald-400' :
+            isCurrent ? 'bg-[#1C1A3A] border-purple-500/60 glow-purple hover:border-purple-400' :
+            ''
+          }`;
+
+          card.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-bold ${isDone ? 'text-emerald-400' : isCurrent ? 'text-purple-400' : 'text-gray-500'}">
+                Day ${item.day < 10 ? '0' + item.day : item.day}
+              </span>
+              <span class="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full ${
+                isDone ? 'bg-emerald-500/20 text-emerald-300' :
+                isCurrent ? 'bg-purple-500/20 text-purple-300' :
+                'bg-gray-800/80 text-gray-500 border border-gray-700/40'
+              }">${isLocked ? '🔒 LOCKED' : item.status}</span>
+            </div>
+            <div class="text-xs font-bold text-white line-clamp-1">${item.title}</div>
+            <div class="flex items-center justify-between text-[11px] text-gray-400 mt-3 pt-2 border-t border-gray-800/80">
+              <span>${isDone ? 'Grade: ' + (item.grade || 'A+') : isCurrent ? '⚡ Open Today' : '🔒 Complete Previous'}</span>
+              <span class="font-bold ${isDone ? 'text-emerald-400' : isCurrent ? 'text-purple-400' : 'text-gray-600'}">+${isDone ? (item.xp || 150) : 150} XP</span>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function openDayInClassroom(dayNum) {
+      currentActiveDayNumber = dayNum;
+      switchTab('classroom');
+    }
+
+    // Load Specific Day's Lesson & Homework
+    async function loadDayLesson(dayNum) {
+      try {
+        const urlParam = currentUserEmail ? `?email=${encodeURIComponent(currentUserEmail)}` : '';
+        const res = await fetch(`/api/day/${dayNum}${urlParam}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.message || "Yeh day locked hai!");
+          switchTab('roadmap');
+          return;
+        }
+
+        document.getElementById('classroomDayBadge').innerText = `Day ${data.day} of 30`;
+        document.getElementById('classroomDayTitle').innerText = data.title;
+        document.getElementById('classroomVideoHeading').innerText = data.videoTitle;
+
+        // Takeaways
+        const takesUl = document.getElementById('classroomTakeaways');
+        takesUl.innerHTML = '';
+        data.theoryNotes.forEach((note, idx) => {
+          const li = document.createElement('li');
+          li.className = 'flex items-start gap-2 bg-[#12192C] p-3 rounded-xl border border-gray-800';
+          li.innerHTML = `<span class="text-purple-400 font-bold">0${idx+1}.</span><span>${note}</span>`;
+          takesUl.appendChild(li);
+        });
+
+        // Questions
+        if (data.worksheetQuestions && data.worksheetQuestions.length >= 2) {
+          document.getElementById('q1Label').innerText = `Q1. ${data.worksheetQuestions[0].prompt}`;
+          document.getElementById('q2Label').innerText = `Q2. ${data.worksheetQuestions[1].prompt}`;
+        }
+
+        // Quiz
+        if (data.quiz && data.quiz.length > 0) {
+          const q = data.quiz[0];
+          document.getElementById('quizQuestionText').innerText = q.question;
+          const optsBox = document.getElementById('quizOptionsContainer');
+          optsBox.innerHTML = '';
+          q.options.forEach((opt, idx) => {
+            const btn = document.createElement('button');
+            btn.className = 'quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition';
+            btn.innerText = `${String.fromCharCode(65 + idx)}) ${opt}`;
+            btn.onclick = () => checkQuiz(idx, q.correctIndex, q.explanation);
+            optsBox.appendChild(btn);
+          });
+          document.getElementById('quizFeedbackBox').className = 'hidden';
+        }
+
+        // Homework Brief
+        document.getElementById('classroomHomeworkDesc').innerText = data.homework.instructions;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Quiz Grading on Click
+    function checkQuiz(selectedIndex, correctIndex, explanation) {
+      const fbBox = document.getElementById('quizFeedbackBox');
+      fbBox.classList.remove('hidden');
+
+      if (selectedIndex === correctIndex) {
+        fbBox.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        fbBox.innerHTML = `✓ Bilkul Sahi Jawab! 🎉 <br><span class="font-normal text-gray-300">${explanation}</span>`;
+      } else {
+        fbBox.className = 'p-3 rounded-lg text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/40';
+        fbBox.innerHTML = `✗ Yeh ghalat hai. Sahi jawab Option ${String.fromCharCode(65 + correctIndex)} tha.<br><span class="font-normal text-gray-300">${explanation}</span>`;
+      }
+    }
+
+    // Submit Homework Proof
+    async function submitHomeworkProof() {
+      const proofUrl = document.getElementById('proofUrlInput').value.trim();
+      const notes = document.getElementById('proofNotesInput').value.trim();
+
+      try {
+        const res = await fetch(`/api/day/${currentActiveDayNumber}/submit-proof`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: currentUserEmail,
+            proofUrl: proofUrl || "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
+            notes: notes || "Practical practice completed."
+          })
+        });
+        const data = await res.json();
+
+        alert(`🎉 ${data.message}\n\n${data.feedback}`);
+        initApp();
+        switchTab('portfolio');
+      } catch (e) {
+        alert("Homework submission recorded!");
+      }
+    }
+
+    // Course Ingestion: Link with REAL oEmbed & Drama Check
+    async function handleCourseLink() {
+      const urlInput = document.getElementById('courseLinkInput');
+      const url = urlInput.value.trim();
+      if (!url) return alert("Please enter a course URL!");
+
+      const btn = document.getElementById('btnIngestLink');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Analyzing Video Title & Syllabus...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/courses/link', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentUserEmail, url, targetDays: 30 })
+        });
+        const data = await res.json();
+
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+
+        if (!res.ok) {
+          // Gatekeeper Triggered
+          alert(data.message || data.error);
+          return;
+        }
+
+        alert(`🎉 ${data.message}`);
+        document.getElementById('ingestResultBox').classList.remove('hidden');
+        document.getElementById('ingestResultTitle').innerText = data.course.title;
+        document.getElementById('ingestResultSub').innerText = `30-Day Step-by-Step Practical Roadmap is now live in your account!`;
+        
+        initApp();
+        switchTab('roadmap');
+      } catch (e) {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert("Course ingestion error. Please try again.");
+      }
+    }
+
+    function updateFileNameDisplay(input) {
+      if (input.files && input.files[0]) {
+        document.getElementById('uploadFileLabel').innerText = input.files[0].name;
+      }
+    }
+
+    // Course Ingestion: File Upload
+    async function handleCourseUpload() {
+      const fileInput = document.getElementById('courseFileInput');
+      const file = fileInput.files[0];
+      if (!file) return alert("Please select a file to upload!");
+
+      alert("⚡ AI Ingestion Engine is analyzing file chapters and creating your 30-Day Practical Roadmap...");
+      const formData = new FormData();
+      formData.append('courseFile', file);
+      formData.append('email', currentUserEmail);
+      formData.append('targetDays', 30);
+
+      try {
+        const res = await fetch('/api/courses/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+
+        alert(`🎉 ${data.message}`);
+        initApp();
+        switchTab('roadmap');
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // AI Coach Chat
+    async function sendCoachMessage() {
+      const input = document.getElementById('coachInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const container = document.getElementById('chatMessages');
+
+      // User Bubble
+      const userBubble = document.createElement('div');
+      userBubble.className = 'flex items-start gap-3 justify-end';
+      userBubble.innerHTML = `
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-4 rounded-2xl rounded-tr-none text-xs max-w-xl">
+          ${text}
+        </div>
+        <div class="w-9 h-9 rounded-full bg-indigo-900 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+          U
+        </div>
+      `;
+      container.appendChild(userBubble);
+      input.value = '';
+      container.scrollTop = container.scrollHeight;
+
+      try {
+        const res = await fetch('/api/ai/coach', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentUserEmail, message: text })
+        });
+        const data = await res.json();
+
+        // AI Bubble
+        const aiBubble = document.createElement('div');
+        aiBubble.className = 'flex items-start gap-3 max-w-xl';
+        aiBubble.innerHTML = `
+          <div class="w-9 h-9 rounded-full bg-purple-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+            A
+          </div>
+          <div class="bg-[#182035] border border-gray-800 p-4 rounded-2xl rounded-tl-none text-xs text-gray-200 leading-relaxed">
+            ${data.reply}
+          </div>
+        `;
+        container.appendChild(aiBubble);
+        container.scrollTop = container.scrollHeight;
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Load Portfolio
+    async function loadPortfolio() {
+      try {
+        const urlParam = currentUserEmail ? `?email=${encodeURIComponent(currentUserEmail)}` : '';
+        const res = await fetch(`/api/portfolio${urlParam}`);
+        const data = await res.json();
+        const grid = document.getElementById('portfolioGrid');
+        grid.innerHTML = '';
+
+        document.getElementById('statPortfolioCount').innerText = `${data.portfolio.length} Verified`;
+        document.getElementById('portfolioOwnerTitle').innerText = `${data.user.name}'s Verified Portfolio`;
+
+        if (data.portfolio.length === 0) {
+          grid.innerHTML = '<div class="col-span-4 text-center py-10 text-gray-400">Abhi koi project submit nahi hua. Classroom mein homework submit karein to yahan live show hoga!</div>';
+          return;
+        }
+
+        data.portfolio.forEach(item => {
+          const card = document.createElement('div');
+          card.className = 'glass-card rounded-2xl overflow-hidden border border-gray-800 group hover:border-cyan-500/40 transition';
+          card.innerHTML = `
+            <div class="h-44 bg-gray-900 overflow-hidden relative">
+              <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+              <span class="absolute top-2 right-2 bg-emerald-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-md shadow">
+                ✓ Verified Proof
+              </span>
+            </div>
+            <div class="p-4 space-y-2">
+              <div class="text-[10px] font-bold uppercase text-cyan-400">${item.category}</div>
+              <h4 class="text-xs font-bold text-white leading-snug">${item.title}</h4>
+              <p class="text-[11px] text-gray-400 line-clamp-2">${item.description}</p>
+              <div class="pt-2 text-[10px] text-gray-500 font-semibold border-t border-gray-800 flex justify-between">
+                <span>Created on Day ${item.dayCreated}</span>
+                <span class="text-cyan-300">Client Ready ✓</span>
+              </div>
+            </div>
+          `;
+          grid.appendChild(card);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Load Leaderboard
+    async function loadLeaderboard() {
+      try {
+        const res = await fetch('/api/leaderboard');
+        const data = await res.json();
+        const tbody = document.getElementById('leaderboardTbody');
+        tbody.innerHTML = '';
+
+        data.forEach(item => {
+          const tr = document.createElement('tr');
+          tr.className = item.name.includes("You") ? 'bg-purple-950/30 border-l-4 border-l-purple-500 font-bold' : 'hover:bg-[#12192C]';
+          tr.innerHTML = `
+            <td class="p-4 text-center font-bold ${item.rank <= 3 ? 'text-amber-400 text-sm' : 'text-gray-400'}">
+              ${item.rank === 1 ? '🥇' : item.rank === 2 ? '🥈' : item.rank === 3 ? '🥉' : '#' + item.rank}
+            </td>
+            <td class="p-4 flex items-center gap-3">
+              <img src="${item.avatar}" class="w-7 h-7 rounded-full object-cover ring-1 ring-purple-500/40">
+              <span class="text-white">${item.name}</span>
+            </td>
+            <td class="p-4 text-gray-400">${item.skill}</td>
+            <td class="p-4 text-amber-400 font-bold">🔥 ${item.streak} Days</td>
+            <td class="p-4 text-purple-300 font-bold">⭐ ${item.xp.toLocaleString()} XP</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Pomodoro Timer
+    let timerSeconds = 25 * 60;
+    let timerInterval = null;
+    let isTimerRunning = false;
+
+    function formatTime(s) {
+      const m = Math.floor(s / 60);
+      const rem = s % 60;
+      return `${m < 10 ? '0' + m : m}:${rem < 10 ? '0' + rem : rem}`;
+    }
+
+    function toggleTimer() {
+      const btn = document.getElementById('timerToggleBtn');
+      if (isTimerRunning) {
+        clearInterval(timerInterval);
+        isTimerRunning = false;
+        btn.innerText = 'Resume Practice Session';
+      } else {
+        isTimerRunning = true;
+        btn.innerText = 'Pause Timer';
+        timerInterval = setInterval(() => {
+          if (timerSeconds > 0) {
+            timerSeconds--;
+            document.getElementById('timerDisplay').innerText = formatTime(timerSeconds);
+          } else {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            alert("⏰ 25-Minute Focus Session Completed! +25 XP awarded!");
+            resetTimer();
+          }
+        }, 1000);
+      }
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      isTimerRunning = false;
+      timerSeconds = 25 * 60;
+      document.getElementById('timerDisplay').innerText = '25:00';
+      document.getElementById('timerToggleBtn').innerText = 'Start Practice Session';
+    }
+
+    function copyPortfolioLink() {
+      navigator.clipboard.writeText(window.location.origin + '/portfolio/' + (currentUserEmail ? currentUserEmail.split('@')[0] : 'student'));
+      alert("✅ Public Portfolio link copied to clipboard!\n\n" + window.location.origin + '/portfolio/' + (currentUserEmail ? currentUserEmail.split('@')[0] : 'student'));
+    }
+
+    function shareOnWhatsApp() {
+      const text = encodeURIComponent(`Check out my verified 30-Day Skill2Earn portfolio: ${window.location.origin}/portfolio`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
+    // On page load
+    window.onload = () => {
+      if (!currentUserEmail) {
+        // Show auth modal on first visit
+        openAuthModal('register');
+      } else {
+        initApp();
+      }
+    };
+  </script>
+</body>
+</html>

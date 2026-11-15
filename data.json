@@ -1,0 +1,815 @@
+{
+  "users": {
+    "ali.khan@example.com": {
+      "name": "Ali Khan",
+      "email": "ali.khan@example.com",
+      "role": "Aspiring Freelance Designer",
+      "currentSkill": "Academics & Science (Matric / FSc)",
+      "dailyGoalMins": 45,
+      "targetDays": 30,
+      "streak": 14,
+      "bestStreak": 14,
+      "totalXp": 2450,
+      "level": 4,
+      "freezeAvailable": 1,
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
+      "activeCourse": {
+        "id": "course-1794764156108",
+        "title": "Class 9 Physics Complete Board Exam Preparation Course",
+        "source": "YouTube: Online Academy",
+        "totalDays": 30,
+        "completedDays": 0,
+        "currentDay": 1,
+        "category": "Academics & Science (Matric / FSc)",
+        "estimatedIncomePotential": "Target: Grade A+ (90%+ Marks)",
+        "url": "https://www.youtube.com/watch?v=sample9thPhysics"
+      },
+      "roadmap": [
+        {
+          "day": 1,
+          "title": "Physical Quantities, Base & Derived SI Units",
+          "status": "in-progress",
+          "xp": 150,
+          "grade": null
+        },
+        {
+          "day": 2,
+          "title": "Measuring Instruments: Vernier Callipers & Screw Gauge",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 3,
+          "title": "Kinematics: Rest, Motion & Translatory/Rotatory Motion",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 4,
+          "title": "Scalars vs Vectors, Distance vs Displacement Concepts",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 5,
+          "title": "Speed, Velocity, Uniform Acceleration & Formulas",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 6,
+          "title": "Graphical Analysis of Motion: Distance-Time Graphs",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 7,
+          "title": "Milestone 1: Three Equations of Motion Derivations & Numericals",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 8,
+          "title": "Motion Under Gravity & Free-Fall Problem Solving",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 9,
+          "title": "Dynamics: Force, Inertia & Linear Momentum",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 10,
+          "title": "Newton's Laws of Motion (1st & 2nd Law F=ma)",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 11,
+          "title": "Mass vs Weight & Newton's Third Law Applications",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 12,
+          "title": "Tension & Acceleration in String Problems",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 13,
+          "title": "Law of Conservation of Momentum with Examples",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 14,
+          "title": "Friction: Rolling vs Sliding & Methods to Reduce",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 15,
+          "title": "Uniform Circular Motion, Centripetal Force & Banking",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 16,
+          "title": "Milestone 2: Turning Effect of Forces & Torque Principle",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 17,
+          "title": "Center of Gravity & Conditions of Equilibrium",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 18,
+          "title": "Gravitation: Newton's Universal Gravitational Constant",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 19,
+          "title": "Mass of Earth Calculation & Variation of 'g'",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 20,
+          "title": "Motion of Artificial Satellites & Orbital Speed",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 21,
+          "title": "Work & Energy: Kinetic vs Potential Energy Formulas",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 22,
+          "title": "Major Energy Sources & Interconversion of Energy",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 23,
+          "title": "Efficiency, Power Calculations & Kilowatt-Hour",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 24,
+          "title": "Matter Properties: Kinetic Molecular Model & Density",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 25,
+          "title": "Pressure in Liquids, Pascal's Law & Hydraulic Lift",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 26,
+          "title": "Archimedes Principle, Upthrust & Principle of Floatation",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 27,
+          "title": "Hooke's Law, Stress, Strain & Young's Modulus",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 28,
+          "title": "Thermal Properties: Specific Heat & Heat Capacity",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 29,
+          "title": "Latent Heat of Fusion, Vaporization & Evaporation",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 30,
+          "title": "Board Exam Full Past Paper Mock Exam & Solutions",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        }
+      ],
+      "portfolio": [
+        {
+          "id": "p1",
+          "title": "Aura Coffee Co. - Minimalist Identity",
+          "category": "Branding & Identity",
+          "image": "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
+          "description": "Geometric monogram logo, custom typography, and kraft paper packaging mockups.",
+          "dayCreated": 14,
+          "verified": true
+        },
+        {
+          "id": "p2",
+          "title": "Zenith Sound - Noise-Cancelling Headphones Ad",
+          "category": "Social Media Ads",
+          "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80",
+          "description": "High-CTR Instagram & Facebook conversion creatives with glowing ambient neon lighting.",
+          "dayCreated": 6,
+          "verified": true
+        },
+        {
+          "id": "p3",
+          "title": "Lumina Organics - Skincare Box Packaging",
+          "category": "Packaging Design",
+          "image": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=600&q=80",
+          "description": "Eco-friendly botanical cosmetics packaging with gold foil typography accents.",
+          "dayCreated": 13,
+          "verified": true
+        },
+        {
+          "id": "p4",
+          "title": "FinFlow Mobile Banking - App Icons & Assets",
+          "category": "UI Graphics",
+          "image": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
+          "description": "Complete 24-piece 3D styled icon set for modern neo-banking dashboard.",
+          "dayCreated": 12,
+          "verified": true
+        }
+      ]
+    },
+    "sara.khan@gmail.com": {
+      "name": "Sara Khan",
+      "email": "sara.khan@gmail.com",
+      "password": "password123",
+      "role": "Freelance Student",
+      "currentSkill": "Photography, Music Instruments & Practical Life Skills",
+      "dailyGoalMins": 45,
+      "targetDays": 30,
+      "streak": 1,
+      "bestStreak": 1,
+      "totalXp": 150,
+      "level": 1,
+      "freezeAvailable": 1,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+      "activeCourse": {
+        "id": "course-1794767070504",
+        "title": "Learn Piano Keyboard Lessons for Beginners",
+        "source": "YouTube: Online Academy",
+        "totalDays": 30,
+        "completedDays": 0,
+        "currentDay": 1,
+        "category": "Photography, Music Instruments & Practical Life Skills",
+        "estimatedIncomePotential": "Professional Creative Mastery",
+        "url": "https://www.youtube.com/watch?v=mock"
+      },
+      "roadmap": [
+        {
+          "day": 1,
+          "title": "Core Design Principles & Visual Hierarchy",
+          "status": "in-progress",
+          "xp": 150,
+          "grade": null
+        },
+        {
+          "day": 2,
+          "title": "Color Harmonies & Palette Construction",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 3,
+          "title": "Typography Pairing, Kerning & Hierarchy",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 4,
+          "title": "Layout Grids & Composition Rules",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 5,
+          "title": "Vector Shape Construction in Illustrator/Figma",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 6,
+          "title": "High-CTR Social Media Ad Creative Formats",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 7,
+          "title": "E-Commerce Product Display Cards & Badges",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 8,
+          "title": "Photo Retouching & Clean Background Removal",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 9,
+          "title": "Minimalist Custom Icon Set Construction",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 10,
+          "title": "YouTube High-Conversion Thumbnail Strategy",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 11,
+          "title": "Multi-Page Editorial Layout & PDF Booklet",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 12,
+          "title": "Mobile App Icon & Visual Asset Creation",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 13,
+          "title": "Product Packaging & Box Mockup Design",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 14,
+          "title": "Brand Identity & Geometric Monogram Logo",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 15,
+          "title": "Brand Guidelines & Visual Styleguide Book",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 16,
+          "title": "Corporate Stationery: Business Cards & Header",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 17,
+          "title": "Social Media Carousel Post Sequences",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 18,
+          "title": "Pitch Deck & Presentation Slide Mastery",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 19,
+          "title": "Figma UI Components & Design Systems",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 20,
+          "title": "Client Simulation Brief 1: Modern Coffee Brand",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 21,
+          "title": "Client Simulation Brief 2: FinTech Mobile App",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 22,
+          "title": "Cosmetic Label & Bottle Mockup Production",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 23,
+          "title": "Behance Case Study Architecture (Part 1)",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 24,
+          "title": "Behance Case Study Presentation (Part 2)",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 25,
+          "title": "Building a Live Public Portfolio Showcase",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 26,
+          "title": "Service Pricing, Packages & Contract Scopes",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 27,
+          "title": "Fiverr Gig SEO & High-Converting Images",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 28,
+          "title": "Upwork Profile Polish & Winning Proposals",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 29,
+          "title": "Direct Client Outreach via LinkedIn & Twitter",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 30,
+          "title": "First 5 Client Pitches & Official Graduation",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        }
+      ],
+      "portfolio": []
+    },
+    "hassan.ateeq08@gmail.com": {
+      "name": "hjk",
+      "email": "hassan.ateeq08@gmail.com",
+      "password": "1234",
+      "role": "Freelance Student",
+      "currentSkill": "Graphic Design",
+      "dailyGoalMins": 45,
+      "targetDays": 30,
+      "streak": 1,
+      "bestStreak": 1,
+      "totalXp": 150,
+      "level": 1,
+      "freezeAvailable": 1,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+      "activeCourse": {
+        "id": "course-1794763688073",
+        "title": "Learn AI with Hisham Sarwar now on Learneasy.pk free course | Learn & Earn today",
+        "source": "YouTube: Hisham Sarwar",
+        "totalDays": 30,
+        "completedDays": 0,
+        "currentDay": 1,
+        "category": "Graphic Design",
+        "estimatedIncomePotential": "$800 - $2,500 / Month",
+        "url": "https://youtu.be/epdDYnVraTA?si=sORtRHZMOMcEu1C_"
+      },
+      "roadmap": [
+        {
+          "day": 1,
+          "title": "Core Design Principles & Visual Hierarchy",
+          "status": "in-progress",
+          "xp": 150,
+          "grade": null
+        },
+        {
+          "day": 2,
+          "title": "Color Harmonies & Palette Construction",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 3,
+          "title": "Typography Pairing, Kerning & Hierarchy",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 4,
+          "title": "Layout Grids & Composition Rules",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 5,
+          "title": "Vector Shape Construction in Illustrator/Figma",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 6,
+          "title": "High-CTR Social Media Ad Creative Formats",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 7,
+          "title": "E-Commerce Product Display Cards & Badges",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 8,
+          "title": "Photo Retouching & Clean Background Removal",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 9,
+          "title": "Minimalist Custom Icon Set Construction",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 10,
+          "title": "YouTube High-Conversion Thumbnail Strategy",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 11,
+          "title": "Multi-Page Editorial Layout & PDF Booklet",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 12,
+          "title": "Mobile App Icon & Visual Asset Creation",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 13,
+          "title": "Product Packaging & Box Mockup Design",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 14,
+          "title": "Brand Identity & Geometric Monogram Logo",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 15,
+          "title": "Brand Guidelines & Visual Styleguide Book",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 16,
+          "title": "Corporate Stationery: Business Cards & Header",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 17,
+          "title": "Social Media Carousel Post Sequences",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 18,
+          "title": "Pitch Deck & Presentation Slide Mastery",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 19,
+          "title": "Figma UI Components & Design Systems",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 20,
+          "title": "Client Simulation Brief 1: Modern Coffee Brand",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 21,
+          "title": "Client Simulation Brief 2: FinTech Mobile App",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 22,
+          "title": "Cosmetic Label & Bottle Mockup Production",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 23,
+          "title": "Behance Case Study Architecture (Part 1)",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 24,
+          "title": "Behance Case Study Presentation (Part 2)",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 25,
+          "title": "Building a Live Public Portfolio Showcase",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 26,
+          "title": "Service Pricing, Packages & Contract Scopes",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 27,
+          "title": "Fiverr Gig SEO & High-Converting Images",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 28,
+          "title": "Upwork Profile Polish & Winning Proposals",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 29,
+          "title": "Direct Client Outreach via LinkedIn & Twitter",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        },
+        {
+          "day": 30,
+          "title": "First 5 Client Pitches & Official Graduation",
+          "status": "locked",
+          "xp": 0,
+          "grade": null
+        }
+      ],
+      "portfolio": []
+    }
+  },
+  "leaderboard": [
+    {
+      "rank": 1,
+      "name": "Hamza Tariq",
+      "streak": 28,
+      "xp": 4820,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80",
+      "skill": "Full-Stack Dev"
+    },
+    {
+      "rank": 2,
+      "name": "Sara Ahmed",
+      "streak": 22,
+      "xp": 3750,
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80",
+      "skill": "Graphic Design"
+    },
+    {
+      "rank": 3,
+      "name": "Ali Khan",
+      "streak": 14,
+      "xp": 2450,
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80",
+      "skill": "UI/UX Design"
+    },
+    {
+      "rank": 4,
+      "name": "Bilal Ahmed",
+      "streak": 12,
+      "xp": 2100,
+      "avatar": "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=80&q=80",
+      "skill": "Video Editing"
+    },
+    {
+      "rank": 5,
+      "name": "Zainab Raza",
+      "streak": 9,
+      "xp": 1620,
+      "avatar": "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=80&q=80",
+      "skill": "Python AI"
+    },
+    {
+      "rank": 6,
+      "name": "Sara Khan (You)",
+      "streak": 1,
+      "xp": 150,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+      "skill": "Python & AI"
+    },
+    {
+      "rank": 7,
+      "name": "hjk (You)",
+      "streak": 1,
+      "xp": 150,
+      "avatar": "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
+      "skill": "Graphic Design"
+    }
+  ]
+}
