@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const os = require('os');
 const multer = require('multer');
 const { GLOBAL_ENTERTAINMENT_BLACKLIST, GLOBAL_SKILLS_TAXONOMY } = require('./taxonomy');
 
@@ -13,9 +14,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Uploads directory
-const uploadsDir = path.join(__dirname, 'uploads');
-if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
+// Safe Uploads Directory (works on local and serverless /tmp)
+const uploadsDir = path.join(os.tmpdir(), 'skill2earn_uploads');
+try { if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true }); } catch (e) {}
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadsDir),
@@ -26,7 +27,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-const DATA_FILE = path.join(__dirname, 'data.json');
+const DATA_FILE = path.join(os.tmpdir(), 'skill2earn_data.json');
 
 // Helper to generate 30-Day Roadmap based on course topic
 function generateCurriculum(skillTitle, category = "General") {
@@ -294,36 +295,30 @@ function getInitialDb() {
   };
 }
 
+let inMemoryDb = null;
+
 function loadDb() {
-  if (!fs.existsSync(DATA_FILE)) {
-    const init = getInitialDb();
-    fs.writeFileSync(DATA_FILE, JSON.stringify(init, null, 2));
-    return init;
-  }
+  if (inMemoryDb) return inMemoryDb;
   try {
-    const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
-    if (!data.users) {
-      // Migrate old single-user data to multi-user
-      const migrated = getInitialDb();
-      if (data.user && data.user.email) {
-        migrated.users[data.user.email] = {
-          ...data.user,
-          activeCourse: data.activeCourse || migrated.users["ali.khan@example.com"].activeCourse,
-          roadmap: data.roadmap || migrated.users["ali.khan@example.com"].roadmap,
-          portfolio: data.portfolio || []
-        };
+    if (fs.existsSync(DATA_FILE)) {
+      const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
+      if (data && data.users) {
+        inMemoryDb = data;
+        return inMemoryDb;
       }
-      saveDb(migrated);
-      return migrated;
     }
-    return data;
-  } catch (e) {
-    return getInitialDb();
-  }
+  } catch (e) {}
+
+  inMemoryDb = getInitialDb();
+  try { fs.writeFileSync(DATA_FILE, JSON.stringify(inMemoryDb, null, 2)); } catch (e) {}
+  return inMemoryDb;
 }
 
 function saveDb(data) {
-  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  inMemoryDb = data;
+  try {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+  } catch (e) {}
 }
 
 function getUser(req, db) {
@@ -737,10 +732,19 @@ app.get('/api/leaderboard', (req, res) => {
   res.json(db.leaderboard);
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`\n======================================================`);
-  console.log(`🚀 Skill2Earn Multi-User SaaS Server is running!`);
-  console.log(`🌐 Local URL: http://localhost:${PORT}`);
-  console.log(`======================================================\n`);
+// Fallback middleware to serve index.html for any frontend route
+app.use((req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
+
+// Start Server locally
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`\n======================================================`);
+    console.log(`🚀 Skill2Earn Multi-User SaaS Server is running!`);
+    console.log(`🌐 Local URL: http://localhost:${PORT}`);
+    console.log(`======================================================\n`);
+  });
+}
+
+module.exports = app;
