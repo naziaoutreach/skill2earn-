@@ -247,9 +247,10 @@ function getLessonForDay(dayNum, courseTitle, skillCategory) {
 function getInitialDb() {
   return {
     users: {
-      "ali.khan@example.com": {
+      "ali": {
+        id: "ali",
         name: "Ali Khan",
-        email: "ali.khan@example.com",
+        email: "ali@skill2earn.user",
         password: "123",
         role: "Aspiring Freelance Designer",
         currentSkill: "Graphic Design & Brand Identity",
@@ -322,10 +323,19 @@ function saveDb(data) {
 }
 
 function getUser(req, db) {
-  const email = (req.query.email || req.headers['x-user-email'] || (req.body && req.body.email) || "").trim().toLowerCase();
-  if (email && db.users[email]) {
-    return db.users[email];
+  const identifier = (req.query.email || req.query.username || req.headers['x-user-email'] || (req.body && (req.body.email || req.body.username)) || "").trim().toLowerCase();
+  
+  if (identifier) {
+    if (db.users[identifier]) return db.users[identifier];
+    // Find by name case-insensitively
+    const match = Object.values(db.users).find(u => 
+      (u.name && u.name.toLowerCase() === identifier) || 
+      (u.email && u.email.toLowerCase() === identifier) ||
+      (u.id && u.id.toLowerCase() === identifier)
+    );
+    if (match) return match;
   }
+
   // Fallback to first user in list
   const firstKey = Object.keys(db.users)[0];
   return db.users[firstKey];
@@ -333,26 +343,33 @@ function getUser(req, db) {
 
 // ═════════════════════════ AUTHENTICATION ROUTES ═════════════════════════
 
-// 1. Register New User
+// 1. Register New User (Simple Username & Password)
 app.post('/api/auth/register', (req, res) => {
   const db = loadDb();
-  const { name, email, password, skill = "Graphic Design", dailyGoalMins = 45 } = req.body;
+  const { name, password, skill = "Graphic Design", dailyGoalMins = 45 } = req.body;
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ error: "Name, email and password are required!" });
+  if (!name || !password) {
+    return res.status(400).json({ error: "Naam aur Password dono lazmi hain!" });
   }
 
-  const cleanEmail = email.trim().toLowerCase();
-  if (db.users[cleanEmail]) {
-    return res.status(400).json({ error: "Is email se account pehle se bana hua hai! Please Log In karein." });
+  const cleanName = name.trim();
+  const userKey = cleanName.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+
+  if (!userKey) {
+    return res.status(400).json({ error: "Baraye meherbani koi theek naam likhein." });
+  }
+
+  if (db.users[userKey]) {
+    return res.status(400).json({ error: `Yeh naam (${cleanName}) pehle se registered hai! Log In karein ya koi aur naam rakhein.` });
   }
 
   const defaultCourseTitle = `${skill} 30-Day Practical Fast-Track`;
   const initialRoadmap = generateCurriculum(skill);
 
   const newUser = {
-    name: name.trim(),
-    email: cleanEmail,
+    id: userKey,
+    name: cleanName,
+    email: `${userKey}@skill2earn.user`,
     password: password.trim(),
     role: "Freelance Student",
     currentSkill: skill,
@@ -378,7 +395,7 @@ app.post('/api/auth/register', (req, res) => {
     portfolio: []
   };
 
-  db.users[cleanEmail] = newUser;
+  db.users[userKey] = newUser;
   
   // Also add to leaderboard
   db.leaderboard.push({
@@ -399,20 +416,29 @@ app.post('/api/auth/register', (req, res) => {
   });
 });
 
-// 2. Login
+// 2. Login (Simple Username/Name & Password)
 app.post('/api/auth/login', (req, res) => {
   const db = loadDb();
-  const { email, password } = req.body;
+  const { username, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email aur Password dono lazmi hain!" });
+  if (!username || !password) {
+    return res.status(400).json({ error: "Naam aur Password dono lazmi hain!" });
   }
 
-  const cleanEmail = email.trim().toLowerCase();
-  const user = db.users[cleanEmail];
+  const cleanUser = username.trim().toLowerCase();
+  let user = db.users[cleanUser];
+
+  if (!user) {
+    // Try matching by name or email
+    user = Object.values(db.users).find(u => 
+      (u.name && u.name.toLowerCase() === cleanUser) || 
+      (u.email && u.email.toLowerCase() === cleanUser) ||
+      (u.id && u.id.toLowerCase() === cleanUser)
+    );
+  }
 
   if (!user || user.password !== password.trim()) {
-    return res.status(401).json({ error: "Ghalat email ya password! Please check karke dobara try karein." });
+    return res.status(401).json({ error: "Ghalat naam ya password! Please check karke dobara try karein." });
   }
 
   res.json({
@@ -738,7 +764,7 @@ app.use((req, res) => {
 });
 
 // Start Server locally
-if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL && !process.env.NOW_REGION) {
   app.listen(PORT, () => {
     console.log(`\n======================================================`);
     console.log(`🚀 Skill2Earn Multi-User SaaS Server is running!`);

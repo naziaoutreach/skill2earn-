@@ -625,57 +625,53 @@
         <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#7C3AED] to-[#6366F1] flex items-center justify-center mx-auto mb-3 shadow-lg shadow-purple-500/30 text-white text-xl">
           <i class="fa-solid fa-bolt"></i>
         </div>
-        <h3 class="text-xl font-black text-white" id="authModalTitle">Create Your Skill2Earn Account</h3>
-        <p class="text-xs text-gray-400 mt-1" id="authModalSubtitle">Start your 30-day practical skill sprint today!</p>
+        <h3 class="text-xl font-black text-white" id="authModalTitle">Apna Account Banayein</h3>
+        <p class="text-xs text-gray-400 mt-1" id="authModalSubtitle">Sirf apna naam aur password likhein!</p>
       </div>
 
       <!-- Auth Tabs Switcher -->
       <div class="flex bg-[#12192C] p-1 rounded-xl mb-5 border border-gray-800">
-        <button id="authTabRegister" onclick="switchAuthMode('register')" class="flex-1 py-2 text-xs font-bold rounded-lg transition bg-purple-600 text-white">Sign Up (New)</button>
+        <button id="authTabRegister" onclick="switchAuthMode('register')" class="flex-1 py-2 text-xs font-bold rounded-lg transition bg-purple-600 text-white">Naya Account (Sign Up)</button>
         <button id="authTabLogin" onclick="switchAuthMode('login')" class="flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-400 hover:text-white">Log In</button>
       </div>
 
       <!-- Register Form -->
       <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3.5">
         <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Your Full Name:</label>
-          <input type="text" id="regName" placeholder="e.g. Sara Ahmed, Fatima Khan" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
-        </div>
-        <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Email Address:</label>
-          <input type="email" id="regEmail" placeholder="sara@example.com" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Aapka Naam (Username):</label>
+          <input type="text" id="regName" placeholder="Jaise: Sara, Ali, ya apna naam" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1">Password:</label>
-          <input type="password" id="regPassword" placeholder="Create a password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <input type="password" id="regPassword" placeholder="Apna aasan password rakhein" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Choose Your Main Skill Goal:</label>
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Aap kya seekhna chahte hain?</label>
           <select id="regSkill" class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
             <option value="Graphic Design">Graphic Design & Brand Identity</option>
             <option value="Web Development">Full-Stack Web Development</option>
-            <option value="Python & AI">Python Programming & Automations</option>
-            <option value="Video Editing">Short-Form Video Editing & Motion</option>
-            <option value="Copywriting">High-Converting Copywriting</option>
+            <option value="Python & AI">Python Programming & AI</option>
+            <option value="Video Editing">Video Editing & Motion</option>
+            <option value="Spoken English">Spoken English & Communication</option>
           </select>
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-purple-500/30">
-          Create Account & Start Day 1 →
+          Account Banayein aur Shuru Karein →
         </button>
       </form>
 
       <!-- Login Form -->
       <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-3.5 hidden">
         <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Email Address:</label>
-          <input type="email" id="loginEmail" placeholder="sara@example.com" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Aapka Naam ya Username:</label>
+          <input type="text" id="loginUsername" placeholder="Jaise: Sara ya Ali" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1">Password:</label>
-          <input type="password" id="loginPassword" placeholder="Your password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <input type="password" id="loginPassword" placeholder="Apna password likhein" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-emerald-500/30">
-          Log In to Workspace →
+          Log In Karein →
         </button>
       </form>
 
@@ -759,7 +755,6 @@
     async function handleRegister(e) {
       e.preventDefault();
       const name = document.getElementById('regName').value.trim();
-      const email = document.getElementById('regEmail').value.trim();
       const password = document.getElementById('regPassword').value.trim();
       const skill = document.getElementById('regSkill').value;
 
@@ -767,7 +762,7 @@
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, skill })
+          body: JSON.stringify({ name, password, skill })
         });
         const data = await res.json();
 
@@ -777,7 +772,7 @@
         }
 
         alert(`🎉 ${data.message}`);
-        currentUserEmail = data.user.email;
+        currentUserEmail = data.user.id || data.user.email || data.user.name;
         localStorage.setItem('skill2earn_user_email', currentUserEmail);
         closeAuthModal();
         initApp();
@@ -789,14 +784,14 @@
     // Handle Login
     async function handleLogin(e) {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
+      const username = document.getElementById('loginUsername').value.trim();
       const password = document.getElementById('loginPassword').value.trim();
 
       try {
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password })
+          body: JSON.stringify({ username, password })
         });
         const data = await res.json();
 
@@ -806,7 +801,7 @@
         }
 
         alert(`👋 Welcome back, ${data.user.name}!`);
-        currentUserEmail = data.user.email;
+        currentUserEmail = data.user.id || data.user.email || data.user.name;
         localStorage.setItem('skill2earn_user_email', currentUserEmail);
         closeAuthModal();
         initApp();
@@ -816,7 +811,7 @@
     }
 
     function loginAsDemoUser() {
-      currentUserEmail = 'ali.khan@example.com';
+      currentUserEmail = 'ali';
       localStorage.setItem('skill2earn_user_email', currentUserEmail);
       closeAuthModal();
       initApp();
