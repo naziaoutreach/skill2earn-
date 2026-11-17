@@ -687,7 +687,7 @@
   <!-- ═════════════════════════ JAVASCRIPT APP LOGIC ═════════════════════════ -->
   <script>
     // State
-    let currentUserEmail = localStorage.getItem('skill2earn_user_email') || '';
+    let currentUserEmail = localStorage.getItem('practix_user_email') || '';
     let currentActiveDayNumber = 1;
 
     // Tab Switching
@@ -773,7 +773,7 @@
 
         alert(`🎉 ${data.message}`);
         currentUserEmail = data.user.id || data.user.email || data.user.name;
-        localStorage.setItem('skill2earn_user_email', currentUserEmail);
+        localStorage.setItem('practix_user_email', currentUserEmail);
         closeAuthModal();
         initApp();
       } catch (err) {
@@ -802,7 +802,7 @@
 
         alert(`👋 Welcome back, ${data.user.name}!`);
         currentUserEmail = data.user.id || data.user.email || data.user.name;
-        localStorage.setItem('skill2earn_user_email', currentUserEmail);
+        localStorage.setItem('practix_user_email', currentUserEmail);
         closeAuthModal();
         initApp();
       } catch (err) {
@@ -812,13 +812,13 @@
 
     function loginAsDemoUser() {
       currentUserEmail = 'ali';
-      localStorage.setItem('skill2earn_user_email', currentUserEmail);
+      localStorage.setItem('practix_user_email', currentUserEmail);
       closeAuthModal();
       initApp();
     }
 
     function logoutUser() {
-      localStorage.removeItem('skill2earn_user_email');
+      localStorage.removeItem('practix_user_email');
       currentUserEmail = '';
       openAuthModal('login');
     }

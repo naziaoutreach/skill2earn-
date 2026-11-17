@@ -15,7 +15,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Safe Uploads Directory (works on local and serverless /tmp)
-const uploadsDir = path.join(os.tmpdir(), 'skill2earn_uploads');
+const uploadsDir = path.join(os.tmpdir(), 'practix_uploads');
 try { if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true }); } catch (e) {}
 
 const storage = multer.diskStorage({
@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-const DATA_FILE = path.join(os.tmpdir(), 'skill2earn_data.json');
+const DATA_FILE = path.join(os.tmpdir(), 'practix_data.json');
 
 // Helper to generate 30-Day Roadmap based on course topic
 function generateCurriculum(skillTitle, category = "General") {
@@ -250,7 +250,7 @@ function getInitialDb() {
       "ali": {
         id: "ali",
         name: "Ali Khan",
-        email: "ali@skill2earn.user",
+        email: "ali@practix.user",
         password: "123",
         role: "Aspiring Freelance Designer",
         currentSkill: "Graphic Design & Brand Identity",
@@ -369,7 +369,7 @@ app.post('/api/auth/register', (req, res) => {
   const newUser = {
     id: userKey,
     name: cleanName,
-    email: `${userKey}@skill2earn.user`,
+    email: `${userKey}@practix.user`,
     password: password.trim(),
     role: "Freelance Student",
     currentSkill: skill,
