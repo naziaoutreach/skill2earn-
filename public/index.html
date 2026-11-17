@@ -115,59 +115,59 @@
     <!-- ═════════════════════════ SIDEBAR ═════════════════════════ -->
     <aside class="w-64 bg-[#0F1629] border-r border-[#1E293B] flex flex-col justify-between p-4 flex-shrink-0">
       <div class="space-y-1.5">
-        <div class="text-[11px] font-bold uppercase tracking-wider text-gray-500 px-3 mb-2">Workspace</div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-gray-500 px-3 mb-2" id="sidebarWorkspaceLabel">Workspace</div>
         
         <button onclick="switchTab('dashboard')" id="nav-dashboard" class="nav-btn active w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
           <i class="fa-solid fa-chart-line w-5 text-center text-purple-400"></i>
-          <span>Dashboard</span>
+          <span id="navTextDashboard">Dashboard</span>
         </button>
 
         <button onclick="switchTab('classroom')" id="nav-classroom" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
           <i class="fa-solid fa-book-open w-5 text-center text-emerald-400"></i>
-          <span>Daily Classroom</span>
+          <span id="navTextClassroom">Daily Classroom</span>
           <span class="ml-auto text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded-full font-bold" id="badgeCurrentDay">Day 1</span>
         </button>
 
         <button onclick="switchTab('ingest')" id="nav-ingest" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
           <i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-amber-400"></i>
-          <span>Ingest Course (AI)</span>
+          <span id="navTextIngest">Ingest Course (AI)</span>
           <span class="ml-auto text-[10px] bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full font-bold">New</span>
         </button>
 
         <button onclick="switchTab('roadmap')" id="nav-roadmap" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
           <i class="fa-solid fa-map-location-dot w-5 text-center text-blue-400"></i>
-          <span>30-Day Roadmap</span>
+          <span id="navTextRoadmap">30-Day Roadmap</span>
         </button>
 
         <button onclick="switchTab('coach')" id="nav-coach" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
           <i class="fa-solid fa-robot w-5 text-center text-indigo-400"></i>
-          <span>AI Coach Asad</span>
+          <span id="navTextCoach">AI Coach Asad</span>
         </button>
 
-        <div class="pt-4 text-[11px] font-bold uppercase tracking-wider text-gray-500 px-3 mb-2">Earning & Tools</div>
+        <div class="pt-4 text-[11px] font-bold uppercase tracking-wider text-gray-500 px-3 mb-2" id="sidebarToolsLabel">Earning & Tools</div>
 
         <button onclick="switchTab('portfolio')" id="nav-portfolio" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
           <i class="fa-solid fa-briefcase w-5 text-center text-cyan-400"></i>
-          <span>Live Portfolio</span>
+          <span id="navTextPortfolio">Live Portfolio</span>
           <span class="ml-auto text-[10px] bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-full font-bold">Public</span>
         </button>
 
         <button onclick="switchTab('pomodoro')" id="nav-pomodoro" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
           <i class="fa-solid fa-stopwatch w-5 text-center text-rose-400"></i>
-          <span>Focus Timer (25m)</span>
+          <span id="navTextPomodoro">Focus Timer (25m)</span>
         </button>
 
         <button onclick="switchTab('leaderboard')" id="nav-leaderboard" class="nav-btn w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold text-gray-300 hover:text-white hover:bg-[#1A233D]">
           <i class="fa-solid fa-trophy w-5 text-center text-yellow-400"></i>
-          <span>Leaderboard</span>
+          <span id="navTextLeaderboard">Leaderboard</span>
         </button>
       </div>
 
       <!-- Target Box -->
       <div class="glass-card p-3.5 rounded-2xl border border-purple-500/20 text-center">
-        <div class="text-xs font-bold text-white mb-1">Target Monthly Income</div>
+        <div class="text-xs font-bold text-white mb-1" id="sidebarTargetTitle">Target Monthly Income</div>
         <div class="text-lg font-black text-emerald-400">$800 - $2,500</div>
-        <div class="text-[11px] text-gray-400 mt-1">30-Day Sprint to First Client</div>
+        <div class="text-[11px] text-gray-400 mt-1" id="sidebarSprintText">30-Day Sprint to First Client</div>
       </div>
     </aside>
 
@@ -911,6 +911,43 @@
 
     function applyLanguageTranslations() {
       const t = TRANSLATIONS[currentLang] || TRANSLATIONS.urdu;
+
+      // Update Sidebar Navigation
+      const wsLabel = document.getElementById('sidebarWorkspaceLabel');
+      if (wsLabel) wsLabel.innerText = t.workspaceLabel;
+
+      const nDash = document.getElementById('navTextDashboard');
+      if (nDash) nDash.innerText = t.navDashboard;
+
+      const nClass = document.getElementById('navTextClassroom');
+      if (nClass) nClass.innerText = t.navClassroom;
+
+      const nIng = document.getElementById('navTextIngest');
+      if (nIng) nIng.innerText = t.navIngest;
+
+      const nRoad = document.getElementById('navTextRoadmap');
+      if (nRoad) nRoad.innerText = t.navRoadmap;
+
+      const nCoach = document.getElementById('navTextCoach');
+      if (nCoach) nCoach.innerText = t.navCoach;
+
+      const toolsLabel = document.getElementById('sidebarToolsLabel');
+      if (toolsLabel) toolsLabel.innerText = currentLang === 'en' ? "Tools & Earnings" : "Earning & Tools";
+
+      const nPort = document.getElementById('navTextPortfolio');
+      if (nPort) nPort.innerText = t.navPortfolio;
+
+      const nPomo = document.getElementById('navTextPomodoro');
+      if (nPomo) nPomo.innerText = t.navPomodoro;
+
+      const nLead = document.getElementById('navTextLeaderboard');
+      if (nLead) nLead.innerText = t.navLeaderboard;
+
+      const sideTarget = document.getElementById('sidebarTargetTitle');
+      if (sideTarget) sideTarget.innerText = t.targetTitle;
+
+      const sideSprint = document.getElementById('sidebarSprintText');
+      if (sideSprint) sideSprint.innerText = t.targetSprint;
 
       // Update Header & Nav
       const subTag = document.querySelector('header p.text-\\[11px\\]');
