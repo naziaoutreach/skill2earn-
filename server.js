@@ -411,7 +411,7 @@ app.post('/api/auth/register', (req, res) => {
 
   res.json({
     success: true,
-    message: `Mubarak ho ${newUser.name}! Aapka TalentBridge account kamyabi se ban gaya hai.`,
+    message: `Mubarak ho ${newUser.name}! Aapka Practix account kamyabi se ban gaya hai.`,
     user: newUser
   });
 });
@@ -528,7 +528,7 @@ app.post('/api/courses/link', async (req, res) => {
     return res.status(400).json({
       error: "entertainment_detected",
       category: matchedEntertainment.category,
-      message: `${matchedEntertainment.icon} Content Gatekeeper Alert:\n\nYeh video "${courseTitle}" (${matchedEntertainment.category} - ${matchedEntertainment.reason}) hai!\n\nTalentBridge par mazaq ya entertainment links support nahi hotay. Sirf real educational skills (Programming, Design, Languages, Academics, Marketing, E-commerce waghera) ke courses dalein taake AI 30-Day Practical Action Plan banaye!`
+      message: `${matchedEntertainment.icon} Content Gatekeeper Alert:\n\nYeh video "${courseTitle}" (${matchedEntertainment.category} - ${matchedEntertainment.reason}) hai!\n\nPractix par mazaq ya entertainment links support nahi hotay. Sirf real educational skills (Programming, Design, Languages, Academics, Marketing, E-commerce waghera) ke courses dalein taake AI 30-Day Practical Action Plan banaye!`
     });
   }
 
@@ -555,7 +555,7 @@ app.post('/api/courses/link', async (req, res) => {
   if (!matchedSkillTrack && (!hasLearningIndicator || nonLearningFlags.some(f => fullTextToCheck.includes(f)))) {
     return res.status(400).json({
       error: "non_educational_detected",
-      message: `🚫 Content Gatekeeper Alert:\n\nYeh video "${courseTitle}" kisi educational ya practical skill ka course nahi lag rahi.\n\nTalentBridge par kisi genuine skill (Coding, Design, Languages, Science, Business, E-Commerce) ke course ka link dalein!`
+      message: `🚫 Content Gatekeeper Alert:\n\nYeh video "${courseTitle}" kisi educational ya practical skill ka course nahi lag rahi.\n\nPractix par kisi genuine skill (Coding, Design, Languages, Science, Business, E-Commerce) ke course ka link dalein!`
     });
   }
 
@@ -767,7 +767,7 @@ app.use((req, res) => {
 if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL && !process.env.NOW_REGION) {
   app.listen(PORT, () => {
     console.log(`\n======================================================`);
-    console.log(`🚀 TalentBridge Multi-User Platform is running!`);
+    console.log(`🚀 Practix Multi-User Platform is running!`);
     console.log(`🌐 Local URL: http://localhost:${PORT}`);
     console.log(`======================================================\n`);
   });
