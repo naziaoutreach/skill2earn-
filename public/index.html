@@ -1421,6 +1421,14 @@
     }
 
     // Quiz Grading on Click
+    function handleQuizAnswer(idx) {
+      const isEn = currentLang === 'en';
+      const explanation = isEn 
+        ? "Daily deliberate practice compounds faster than irregular binge-watching."
+        : "Consistency ka asal raaz chhota target rozana poori tawajjo se poora karna hai.";
+      checkQuiz(idx, 1, explanation);
+    }
+
     function checkQuiz(selectedIndex, correctIndex, explanation) {
       const fbBox = document.getElementById('quizFeedbackBox');
       fbBox.classList.remove('hidden');
