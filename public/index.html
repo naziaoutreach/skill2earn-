@@ -625,7 +625,7 @@
       <h3 id="customAlertTitle" class="text-xl font-black text-white">Notice</h3>
       <p id="customAlertMsg" class="text-xs text-gray-300 leading-relaxed whitespace-pre-line"></p>
       <button onclick="closeCustomAlert()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-purple-500/30">
-        Theek Hai, Samajh Gaya / Got It 👍
+        Continue →
       </button>
     </div>
   </div>
@@ -752,13 +752,13 @@
     // Override browser window.alert with modern modal UI!
     window.alert = function(msg) {
       const text = String(msg || '');
-      let title = "Practix Notice";
+      let title = "Notice";
       let icon = "info";
       if (text.includes("🎉") || text.includes("Kamyabi") || text.includes("Mubarak") || text.includes("✅")) {
-        title = "Kamyabi! / Success 🎉";
+        title = "Success 🎉";
         icon = "success";
       } else if (text.includes("🚫") || text.includes("Alert") || text.includes("🔒") || text.includes("Locked") || text.includes("Ghalat")) {
-        title = "Important Notice";
+        title = "Alert ⚠️";
         icon = "error";
       }
       showModalAlert(title, text, icon);
