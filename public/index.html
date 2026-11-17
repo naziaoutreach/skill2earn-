@@ -829,6 +829,10 @@
         lblFullName: "Aapka Naam (Username):",
         lblPassword: "Password:",
         lblSkillGoal: "Aap kya seekhna chahte hain?",
+        phName: "Jaise: Sara, Ali, ya apna naam",
+        phPassword: "Apna aasan password rakhein",
+        phLoginUser: "Jaise: Sara ya Ali",
+        phLoginPass: "Apna password likhein",
         btnRegister: "Account Banayein aur Shuru Karein →",
         btnLogIn: "Log In Karein →",
         lblLoginUser: "Aapka Naam ya Username:"
@@ -871,6 +875,10 @@
         lblFullName: "Your Username / Name:",
         lblPassword: "Password:",
         lblSkillGoal: "What skill do you want to master?",
+        phName: "e.g. Sarah, Alex, or your name",
+        phPassword: "Create a secure password",
+        phLoginUser: "e.g. Sarah or Alex",
+        phLoginPass: "Enter your password",
         btnRegister: "Create Account & Start Day 1 →",
         btnLogIn: "Log In to Workspace →",
         lblLoginUser: "Your Username / Name:"
@@ -938,6 +946,10 @@
         if (labels[0]) labels[0].innerText = t.lblFullName;
         if (labels[1]) labels[1].innerText = t.lblPassword;
         if (labels[2]) labels[2].innerText = t.lblSkillGoal;
+        const inputName = document.getElementById('regName');
+        if (inputName) inputName.placeholder = t.phName;
+        const inputPass = document.getElementById('regPassword');
+        if (inputPass) inputPass.placeholder = t.phPassword;
         const subBtn = formReg.querySelector('button[type="submit"]');
         if (subBtn) subBtn.innerText = t.btnRegister;
       }
@@ -947,6 +959,10 @@
         const labels = formLog.querySelectorAll('label');
         if (labels[0]) labels[0].innerText = t.lblLoginUser;
         if (labels[1]) labels[1].innerText = t.lblPassword;
+        const inputUser = document.getElementById('loginUsername');
+        if (inputUser) inputUser.placeholder = t.phLoginUser;
+        const inputPass = document.getElementById('loginPassword');
+        if (inputPass) inputPass.placeholder = t.phLoginPass;
         const subBtn = formLog.querySelector('button[type="submit"]');
         if (subBtn) subBtn.innerText = t.btnLogIn;
       }
