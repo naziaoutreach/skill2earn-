@@ -2,12 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Practix — Learn. Practice. Execute. Build.</title>
   <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; max-width: 100%; }
+    table { max-width: none; }
+    html, body {
+      overflow-x: hidden !important;
+      width: 100% !important;
+      max-width: 100vw !important;
+      margin: 0;
+      padding: 0;
+      -webkit-text-size-adjust: 100%;
+      touch-action: pan-y;
+    }
     body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #0B0F19; color: #E2E8F0; }
     .nav-btn { transition: all 0.2s ease; }
     .nav-btn.active { background: linear-gradient(135deg, #7C3AED 0%, #6366F1 100%); color: #ffffff; box-shadow: 0 4px 15px rgba(124, 58, 237, 0.35); }
@@ -23,10 +33,10 @@
     .scrollbar-custom::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
   </style>
 </head>
-<body class="min-h-screen flex flex-col antialiased">
+<body class="min-h-screen flex flex-col antialiased w-full max-w-full overflow-x-hidden">
 
   <!-- ═════════════════════════ TOP NAVBAR ═════════════════════════ -->
-  <header class="h-16 bg-[#0F1629]/95 border-b border-[#1E293B] sticky top-0 z-40 backdrop-blur-md px-4 sm:px-6 flex items-center justify-between">
+  <header class="h-16 bg-[#0F1629]/95 border-b border-[#1E293B] sticky top-0 z-40 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between w-full max-w-full">
     <div class="flex items-center gap-2 sm:gap-3">
       <!-- Mobile Sidebar Hamburger Toggle -->
       <button onclick="toggleMobileSidebar()" class="md:hidden w-9 h-9 rounded-xl bg-[#18223C] border border-gray-700 flex items-center justify-center text-gray-300 hover:text-white">
@@ -115,7 +125,7 @@
     </div>
   </header>
 
-  <div class="flex flex-1 overflow-hidden relative">
+  <div class="flex flex-1 overflow-hidden relative w-full max-w-full">
     <!-- Mobile Sidebar Backdrop Overlay -->
     <div id="mobileSidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/70 z-30 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
@@ -192,7 +202,7 @@
     </aside>
 
     <!-- ═════════════════════════ MAIN CONTENT ═════════════════════════ -->
-    <main class="flex-1 overflow-y-auto scrollbar-custom p-6 md:p-8 bg-[#0B0F19]">
+    <main class="flex-1 overflow-y-auto overflow-x-hidden scrollbar-custom p-3 sm:p-6 md:p-8 bg-[#0B0F19] w-full max-w-full min-w-0">
 
       <!-- ════════════ TAB 1: DASHBOARD ════════════ -->
       <section id="tab-dashboard" class="tab-content active space-y-6">
@@ -622,8 +632,8 @@
           <p class="text-sm text-gray-400">Students ranking based on daily streaks and practical task execution.</p>
         </div>
 
-        <div class="glass-card rounded-3xl border border-gray-800 overflow-hidden">
-          <table class="w-full text-left text-xs">
+        <div class="glass-card rounded-3xl border border-gray-800 overflow-x-auto">
+          <table class="w-full text-left text-xs min-w-[500px]">
             <thead class="bg-[#141C30] text-gray-400 uppercase font-bold text-[11px] border-b border-gray-800">
               <tr>
                 <th class="p-4">Rank</th>
@@ -674,13 +684,13 @@
 
   <!-- ═════════════════════════ MODERN CUSTOM MODAL POPUP ═════════════════════════ -->
   <div id="customAlertModal" class="fixed inset-0 bg-black/75 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="glass-card max-w-md w-full p-6 rounded-3xl border border-purple-500/40 glow-purple relative text-center space-y-4 animate-in fade-in zoom-in duration-200">
+    <div class="glass-card max-w-sm sm:max-w-md w-[92%] mx-auto p-6 rounded-3xl border border-purple-500/40 glow-purple relative text-center space-y-4 animate-in fade-in zoom-in duration-200">
       <div id="customAlertIcon" class="w-14 h-14 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl mx-auto border border-purple-500/40">
         <i class="fa-solid fa-sparkles"></i>
       </div>
       <h3 id="customAlertTitle" class="text-xl font-black text-white">Notice</h3>
       <p id="customAlertMsg" class="text-xs text-gray-300 leading-relaxed whitespace-pre-line"></p>
-      <button onclick="closeCustomAlert()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-purple-500/30">
+      <button id="customAlertBtn" onclick="closeCustomAlert()" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-purple-500/30">
         Continue →
       </button>
     </div>
@@ -819,17 +829,21 @@
     // Override browser window.alert with modern modal UI!
     window.alert = function(msg) {
       const text = String(msg || '');
-      let title = "Notice";
+      const isEn = currentLang === 'en';
+      let title = isEn ? "Notice" : "Notice";
       let icon = "info";
-      if (text.includes("🎉") || text.includes("Kamyabi") || text.includes("Mubarak") || text.includes("✅")) {
-        title = "Success 🎉";
+      if (text.includes("🎉") || text.includes("Success") || text.includes("Kamyabi") || text.includes("Mubarak") || text.includes("Welcome") || text.includes("✅")) {
+        title = isEn ? "Success 🎉" : "Kamyabi 🎉";
         icon = "success";
-      } else if (text.includes("🚫") || text.includes("Alert") || text.includes("🔒") || text.includes("Locked") || text.includes("Ghalat")) {
-        title = "Alert ⚠️";
+      } else if (text.includes("🚫") || text.includes("Alert") || text.includes("🔒") || text.includes("Locked") || text.includes("Ghalat") || text.includes("Error") || text.includes("Invalid")) {
+        title = isEn ? "Alert ⚠️" : "Dhyan Dein ⚠️";
         icon = "error";
       }
+      const btn = document.getElementById('customAlertBtn');
+      if (btn) btn.innerText = isEn ? "Got It 👍" : "Theek Hai, Samajh Gaya 👍";
       showModalAlert(title, text, icon);
     };
+
     // State
     let currentUserEmail = localStorage.getItem('practix_user_email') || '';
     let currentActiveDayNumber = 1;
@@ -870,6 +884,8 @@
         pomodoroReset: "Reset",
         regTitle: "Apna Account Banayein",
         regSub: "Sirf apna naam aur password likhein!",
+        loginTitle: "Apne Account Mein Log In Karein",
+        loginSub: "Apna username aur password darj karein!",
         tabSignUp: "Naya Account (Sign Up)",
         tabLogIn: "Log In",
         lblFullName: "Aapka Naam (Username):",
@@ -881,7 +897,10 @@
         phLoginPass: "Apna password likhein",
         btnRegister: "Account Banayein aur Shuru Karein →",
         btnLogIn: "Log In Karein →",
-        lblLoginUser: "Aapka Naam ya Username:"
+        lblLoginUser: "Aapka Naam ya Username:",
+        coachGreeting: "As-salamu alaykum! Main aapka AI Accountability Coach hoon. Mera kaam yeh ensure karna hai ke aap course beech mein na chhorein aur roz practice karein. Aaj koi sawaal ya mushkil hai freelancing ke hawalay se?",
+        coachPlaceholder: "Coach se sawaal puchein (e.g. Clients kaise dhoondon? Upwork profile kaise banayein?)",
+        modalAlertBtn: "Theek Hai, Samajh Gaya 👍"
       },
       en: {
         tagline: "Stop Watching. Start Executing.",
@@ -894,40 +913,45 @@
         navPortfolio: "Live Portfolio",
         navPomodoro: "Focus Sprint (25m)",
         navLeaderboard: "Leaderboard",
-        targetTitle: "Target Career Income",
-        targetSprint: "30-Day Action Sprint to First Client",
+        targetTitle: "Target Monthly Income",
+        targetSprint: "30-Day Sprint to First Client",
         dashBadge: "🚀 30-Day Practical Career Sprint",
-        dashWelcome: "Welcome Back",
+        dashWelcome: "Welcome",
         dashSubtext: "Don't just collect courses you never finish. Spend 45 focused minutes on daily hands-on homework and build a client-ready portfolio!",
-        btnStartPractice: "Start Today's Task",
-        btnIngestCourse: "Turn Course into Roadmap",
+        btnStartPractice: "Start Today's Practice",
+        btnIngestCourse: "Ingest Course (YouTube/PDF)",
         streakFreeze: "1 Streak Shield Active",
-        readyClients: "Verified & Client-Ready",
+        readyClients: "Ready for Clients",
         currentActiveTask: "Today's Practical Task",
         openClassroom: "Open Classroom →",
         verifiedPortfolioBadge: "Verified Practix Portfolio",
         portfolioSubtitle: "Your daily assignments automatically convert into a live verified portfolio card that you can share with global clients on Upwork and Fiverr!",
         copyUrlBtn: "Copy Portfolio Link",
         shareWhatsApp: "Share on WhatsApp",
-        pomodoroTitle: "25-Minute Deep Work Sprint",
+        pomodoroTitle: "25-Minute Deep Focus Sprint",
         pomodoroSub: "Mute notifications, close social tabs, and focus completely on executing today's practical homework.",
         pomodoroStart: "Start Focus Sprint",
         pomodoroPause: "Pause",
         pomodoroReset: "Reset",
         regTitle: "Create Your Practix Account",
         regSub: "Enter your username and password to start!",
+        loginTitle: "Log In to Your Practix Account",
+        loginSub: "Access your personalized learning workspace!",
         tabSignUp: "Sign Up (New)",
         tabLogIn: "Log In",
         lblFullName: "Your Username / Name:",
         lblPassword: "Password:",
         lblSkillGoal: "What skill do you want to master?",
         phName: "e.g. Sarah, Alex, or your name",
-        phPassword: "Create a secure password",
+        phPassword: "Enter a secure password",
         phLoginUser: "e.g. Sarah or Alex",
         phLoginPass: "Enter your password",
         btnRegister: "Create Account & Start Day 1 →",
         btnLogIn: "Log In to Workspace →",
-        lblLoginUser: "Your Username / Name:"
+        lblLoginUser: "Your Username / Name:",
+        coachGreeting: "Welcome! I am your AI Accountability Coach. My mission is to ensure you never abandon courses halfway and execute daily deliberate practice. Do you have any questions about freelancing or today's task?",
+        coachPlaceholder: "Ask Coach Asad (e.g. How to find clients? Upwork profile tips?)",
+        modalAlertBtn: "Got It 👍"
       }
     };
 
@@ -953,6 +977,7 @@
       }
 
       applyLanguageTranslations();
+      loadDayLesson(currentActiveDayNumber);
     }
 
     function applyLanguageTranslations() {
@@ -1049,6 +1074,17 @@
         const subBtn = formLog.querySelector('button[type="submit"]');
         if (subBtn) subBtn.innerText = t.btnLogIn;
       }
+
+      // AI Coach Greeting & Input
+      const coachGreeting = document.getElementById('coachGreetingMsg');
+      if (coachGreeting) coachGreeting.innerText = t.coachGreeting;
+      const coachInput = document.getElementById('coachInput');
+      if (coachInput) coachInput.placeholder = t.coachPlaceholder;
+
+      // Modal Alert Button
+      const alertBtn = document.getElementById('customAlertBtn');
+      if (alertBtn) alertBtn.innerText = t.modalAlertBtn;
+    }
     }
 
     // Mobile Sidebar Drawer Toggle
@@ -1104,6 +1140,7 @@
       document.getElementById('authModal').classList.remove('hidden');
       document.getElementById('userDropdown').classList.add('hidden');
       switchAuthMode(mode);
+      applyLanguageTranslations();
     }
 
     function closeAuthModal() {
@@ -1116,20 +1153,25 @@
       const tabReg = document.getElementById('authTabRegister');
       const tabLog = document.getElementById('authTabLogin');
       const title = document.getElementById('authModalTitle');
+      const sub = document.getElementById('authModalSubtitle');
+      const t = TRANSLATIONS[currentLang] || TRANSLATIONS.urdu;
 
       if (mode === 'register') {
         formReg.classList.remove('hidden');
         formLog.classList.add('hidden');
         tabReg.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition bg-purple-600 text-white';
         tabLog.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-400 hover:text-white';
-        title.innerText = 'Create Your Practix Account';
+        if (title) title.innerText = t.regTitle;
+        if (sub) sub.innerText = t.regSub;
       } else {
         formReg.classList.add('hidden');
         formLog.classList.remove('hidden');
         tabLog.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition bg-emerald-600 text-white';
         tabReg.className = 'flex-1 py-2 text-xs font-bold rounded-lg transition text-gray-400 hover:text-white';
-        title.innerText = 'Log In to Your Practix Account';
+        if (title) title.innerText = t.loginTitle;
+        if (sub) sub.innerText = t.loginSub;
       }
+      applyLanguageTranslations();
     }
 
     // Handle Registration
@@ -1143,12 +1185,12 @@
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, password, skill })
+          body: JSON.stringify({ name, password, skill, lang: currentLang })
         });
         const data = await res.json();
 
         if (!res.ok) {
-          alert(data.error || 'Registration failed');
+          alert(data.error || (currentLang === 'en' ? 'Registration failed. Please try again.' : 'Registration mein masla aya. Dobara koshish karein.'));
           return;
         }
 
@@ -1158,7 +1200,7 @@
         closeAuthModal();
         initApp();
       } catch (err) {
-        alert("Registration error. Please try again.");
+        alert(currentLang === 'en' ? "Registration error. Please try again." : "Registration mein masla aya. Dobara koshish karein.");
       }
     }
 
@@ -1172,22 +1214,22 @@
         const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ username, password })
+          body: JSON.stringify({ username, password, lang: currentLang })
         });
         const data = await res.json();
 
         if (!res.ok) {
-          alert(data.error || 'Login failed');
+          alert(data.error || (currentLang === 'en' ? 'Login failed' : 'Log in fail ho gaya'));
           return;
         }
 
-        alert(`👋 Welcome back, ${data.user.name}!`);
+        alert(`👋 ${data.message}`);
         currentUserEmail = data.user.id || data.user.email || data.user.name;
         localStorage.setItem('practix_user_email', currentUserEmail);
         closeAuthModal();
         initApp();
       } catch (err) {
-        alert("Login error. Please try again.");
+        alert(currentLang === 'en' ? "Login error. Please try again." : "Log in mein masla aya. Dobara koshish karein.");
       }
     }
 
@@ -1242,6 +1284,8 @@
         document.getElementById('badgeCurrentDay').innerText = `Day ${currentActiveDayNumber}`;
         document.getElementById('dashTaskTitle').innerText = `Day ${currentActiveDayNumber}: Implementation & Proof`;
 
+        applyLanguageTranslations();
+
         loadRoadmap();
         loadPortfolio();
         loadLeaderboard();
@@ -1261,7 +1305,10 @@
         grid.innerHTML = '';
 
         if (!data.roadmap || data.roadmap.length === 0) {
-          grid.innerHTML = '<div class="col-span-3 text-center py-10 text-gray-400">Abhi koi course ingest nahi kiya. "Ingest Course" tab par click karein!</div>';
+          const emptyMsg = currentLang === 'en'
+            ? 'No courses ingested yet. Click the "Ingest Course" tab to convert any course into a 30-day plan!'
+            : 'Abhi koi course ingest nahi kiya. "Ingest Course" tab par click karein!';
+          grid.innerHTML = `<div class="col-span-3 text-center py-10 text-gray-400">${emptyMsg}</div>`;
           return;
         }
 
@@ -1273,7 +1320,10 @@
           const card = document.createElement('div');
           card.onclick = () => {
             if (isLocked) {
-              alert(`🔒 Day ${item.day} is Locked!\n\nAap direct jump nahi kar saktay! Pehle Day ${currentActiveDayNumber} ka practical task aur homework submit karein taake agla din unlock ho!`);
+              const lockMsg = currentLang === 'en'
+                ? `🔒 Day ${item.day} is Locked!\n\nYou cannot skip ahead! Submit Day ${currentActiveDayNumber}'s practical homework first to unlock this day!`
+                : `🔒 Day ${item.day} Locked Hai!\n\nAap direct jump nahi kar saktay! Pehle Day ${currentActiveDayNumber} ka practical task aur homework submit karein taake agla din unlock ho!`;
+              alert(lockMsg);
               return;
             }
             openDayInClassroom(item.day);
@@ -1318,12 +1368,12 @@
     // Load Specific Day's Lesson & Homework
     async function loadDayLesson(dayNum) {
       try {
-        const urlParam = currentUserEmail ? `?email=${encodeURIComponent(currentUserEmail)}` : '';
-        const res = await fetch(`/api/day/${dayNum}${urlParam}`);
+        const urlParam = currentUserEmail ? `&email=${encodeURIComponent(currentUserEmail)}` : '';
+        const res = await fetch(`/api/day/${dayNum}?lang=${currentLang}${urlParam}`);
         const data = await res.json();
 
         if (!res.ok) {
-          alert(data.message || "Yeh day locked hai!");
+          alert(data.message || (currentLang === 'en' ? "This day is locked!" : "Yeh day locked hai!"));
           switchTab('roadmap');
           return;
         }
@@ -1375,13 +1425,14 @@
     function checkQuiz(selectedIndex, correctIndex, explanation) {
       const fbBox = document.getElementById('quizFeedbackBox');
       fbBox.classList.remove('hidden');
+      const isEn = currentLang === 'en';
 
       if (selectedIndex === correctIndex) {
         fbBox.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
-        fbBox.innerHTML = `✓ Bilkul Sahi Jawab! 🎉 <br><span class="font-normal text-gray-300">${explanation}</span>`;
+        fbBox.innerHTML = `✓ ${isEn ? "Correct Answer! 🎉" : "Bilkul Sahi Jawab! 🎉"}<br><span class="font-normal text-gray-300">${explanation}</span>`;
       } else {
         fbBox.className = 'p-3 rounded-lg text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/40';
-        fbBox.innerHTML = `✗ Yeh ghalat hai. Sahi jawab Option ${String.fromCharCode(65 + correctIndex)} tha.<br><span class="font-normal text-gray-300">${explanation}</span>`;
+        fbBox.innerHTML = `✗ ${isEn ? `Incorrect. The correct answer was Option ${String.fromCharCode(65 + correctIndex)}.` : `Yeh ghalat hai. Sahi jawab Option ${String.fromCharCode(65 + correctIndex)} tha.`}<br><span class="font-normal text-gray-300">${explanation}</span>`;
       }
     }
 
@@ -1397,7 +1448,8 @@
           body: JSON.stringify({
             email: currentUserEmail,
             proofUrl: proofUrl || "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
-            notes: notes || "Practical practice completed."
+            notes: notes || "Practical practice completed.",
+            lang: currentLang
           })
         });
         const data = await res.json();
@@ -1425,7 +1477,7 @@
         const res = await fetch('/api/courses/link', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: currentUserEmail, url, targetDays: 30 })
+          body: JSON.stringify({ email: currentUserEmail, url, targetDays: 30, lang: currentLang })
         });
         const data = await res.json();
 
@@ -1512,7 +1564,7 @@
         const res = await fetch('/api/ai/coach', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: currentUserEmail, message: text })
+          body: JSON.stringify({ email: currentUserEmail, message: text, lang: currentLang })
         });
         const data = await res.json();
 
@@ -1547,7 +1599,10 @@
         document.getElementById('portfolioOwnerTitle').innerText = `${data.user.name}'s Verified Portfolio`;
 
         if (data.portfolio.length === 0) {
-          grid.innerHTML = '<div class="col-span-4 text-center py-10 text-gray-400">Abhi koi project submit nahi hua. Classroom mein homework submit karein to yahan live show hoga!</div>';
+          const emptyMsg = currentLang === 'en'
+            ? 'No projects submitted yet. Complete today\'s classroom homework to auto-generate your live public portfolio!'
+            : 'Abhi koi project submit nahi hua. Classroom mein homework submit karein to yahan live show hoga!';
+          grid.innerHTML = `<div class="col-span-4 text-center py-10 text-gray-400">${emptyMsg}</div>`;
           return;
         }
 
@@ -1651,8 +1706,12 @@
     }
 
     function copyPortfolioLink() {
-      navigator.clipboard.writeText(window.location.origin + '/portfolio/' + (currentUserEmail ? currentUserEmail.split('@')[0] : 'student'));
-      alert("✅ Public Portfolio link copied to clipboard!\n\n" + window.location.origin + '/portfolio/' + (currentUserEmail ? currentUserEmail.split('@')[0] : 'student'));
+      const link = window.location.origin + '/portfolio/' + (currentUserEmail ? currentUserEmail.split('@')[0] : 'student');
+      navigator.clipboard.writeText(link);
+      const msg = currentLang === 'en'
+        ? `✅ Public Portfolio link copied to clipboard!\n\n${link}`
+        : `✅ Public Portfolio ka link copy ho gaya hai!\n\n${link}`;
+      alert(msg);
     }
 
     function shareOnWhatsApp() {

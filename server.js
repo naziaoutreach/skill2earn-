@@ -202,44 +202,101 @@ function generateCurriculum(skillTitle, category = "General") {
   }
 }
 
-function getLessonForDay(dayNum, courseTitle, skillCategory) {
+function getLessonForDay(dayNum, courseTitle, skillCategory, lang = "urdu") {
+  const isEn = lang === "en";
+
+  const theoryNotes = isEn ? [
+    "Dedicate 45 focused minutes each day to turn knowledge into client-ready skills.",
+    "Master the core concept in the first 15 minutes, then execute directly in your tool/software.",
+    "Submit your daily proof of work to maintain your streak and publish verified portfolio cards."
+  ] : [
+    "Har roz ka 45 minute ka practical focus session apke skill ko freelance ready banata hai.",
+    "Pehle conceptual understanding lein, phir baghair kisi distraction ke software/code mein practice karein.",
+    "Proof of work submit karna zaroori hai taake streak intact rahe aur portfolio mein project add ho sakay."
+  ];
+
+  const worksheetQuestions = isEn ? [
+    { id: "q1", prompt: "Explain the core concept learned today in your own words:", userDraft: "" },
+    { id: "q2", prompt: "How would you apply this practical deliverable to solve a real client's problem?", userDraft: "" }
+  ] : [
+    { id: "q1", prompt: "Aaj ke lesson ka core concept apne alfaz mein explain karein:", userDraft: "" },
+    { id: "q2", prompt: "Is practical task ko kisi real client ke project mein kaise use karenge?", userDraft: "" }
+  ];
+
+  const quiz = isEn ? [
+    {
+      id: 1,
+      question: "Which principle is most critical for achieving long-term skill consistency?",
+      options: [
+        "Cramming 10 hours in a single weekend",
+        "Practicing 45 minutes daily with zero distractions",
+        "Passively watching videos without taking notes",
+        "Applying for freelance gigs before building proof"
+      ],
+      correctIndex: 1,
+      explanation: "Daily deliberate practice compounds faster than irregular binge-watching."
+    },
+    {
+      id: 2,
+      question: "What is the primary benefit of submitting daily Proof of Work?",
+      options: [
+        "It only generates a theoretical score",
+        "It automatically compiles your public verified portfolio for clients",
+        "No significant benefit",
+        "It just marks attendance"
+      ],
+      correctIndex: 1,
+      explanation: "Clients hire evidence, not certificates. Daily proofs auto-generate your live client-ready showcase."
+    }
+  ] : [
+    {
+      id: 1,
+      question: "Konsa rule rozana consistency ke liye sab se ahem hai?",
+      options: [
+        "Ek din mein 10 ghante parhna",
+        "Rozana 45 minute baghair distraction ke practice karna",
+        "Sirf lectures dekh kar notes na banana",
+        "Bina practice ke Upwork par apply karna"
+      ],
+      correctIndex: 1,
+      explanation: "Consistency ka asal raaz chhota target rozana poori tawajjo se poora karna hai."
+    },
+    {
+      id: 2,
+      question: "Proof of Work submit karne ka sab se bara faida kya hai?",
+      options: [
+        "Sirf certificate milta hai",
+        "Aapka verified portfolio khud-bakhud ban jata hai",
+        "Koi faida nahi",
+        "Bas marks miltay hain"
+      ],
+      correctIndex: 1,
+      explanation: "Verified proof of work aapka live public portfolio banata hai jo clients ko dikhaya jata hai."
+    }
+  ];
+
+  const homework = isEn ? {
+    title: `Submit Today's Practice Proof for Day ${dayNum}`,
+    instructions: "Attach a screenshot, live Figma link, GitHub repository URL, or proof link demonstrating today's task.",
+    estimatedTime: "45 Minutes",
+    submissionProof: null
+  } : {
+    title: `Submit Today's Practice Proof for Day ${dayNum}`,
+    instructions: "Aaj ke task ka screenshot, Figma link, GitHub repository link, ya live proof yahan paste karein.",
+    estimatedTime: "45 Minutes",
+    submissionProof: null
+  };
+
   return {
     day: dayNum,
     title: `Day ${dayNum}: Practical Implementation & Proof`,
     videoTitle: `Masterclass: Hands-on Practice for ${courseTitle}`,
     duration: "20 Mins",
     videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
-    theoryNotes: [
-      `Har roz ka 45 minute ka practical focus session apke skill ko freelance ready banata hai.`,
-      `Pehle conceptual understanding lein, phir baghair kisi distraction ke software/code mein practice karein.`,
-      `Proof of work submit karna zaroori hai taake streak intact rahe aur portfolio mein project add ho sakay.`
-    ],
-    worksheetQuestions: [
-      { id: "q1", prompt: `Aaj ke lesson ka core concept apne alfaz mein explain karein:`, userDraft: "" },
-      { id: "q2", prompt: `Is practical task ko kisi real client ke project mein kaise use karenge?`, userDraft: "" }
-    ],
-    quiz: [
-      {
-        id: 1,
-        question: "Konsa rule rozana consistency ke liye sab se ahem hai?",
-        options: ["Ek din mein 10 ghante parhna", "Rozana 45 minute baghair distraction ke practice karna", "Sirf lectures dekh kar notes na banana", "Bina practice ke Upwork par apply karna"],
-        correctIndex: 1,
-        explanation: "Consistency ka asal raaz chhota target rozana poori tawajjo se poora karna hai."
-      },
-      {
-        id: 2,
-        question: "Proof of Work submit karne ka sab se bara faida kya hai?",
-        options: ["Sirf certificate milta hai", "Aapka verified portfolio khud-bakhud ban jata hai", "Koi faida nahi", "Bas marks miltay hain"],
-        correctIndex: 1,
-        explanation: "Verified proof of work aapka live public portfolio banata hai jo clients ko dikhaya jata hai."
-      }
-    ],
-    homework: {
-      title: `Submit Today's Practice Proof for Day ${dayNum}`,
-      instructions: "Aaj ke task ka screenshot, Figma link, GitHub repository link, ya live proof yahan paste karein.",
-      estimatedTime: "45 Minutes",
-      submissionProof: null
-    }
+    theoryNotes,
+    worksheetQuestions,
+    quiz,
+    homework
   };
 }
 
@@ -409,9 +466,14 @@ app.post('/api/auth/register', (req, res) => {
 
   saveDb(db);
 
+  const lang = (req.body.lang || "urdu").toLowerCase();
+  const welcomeMsg = lang === "en" 
+    ? `Welcome ${newUser.name}! Your Practix account has been created successfully.`
+    : `Mubarak ho ${newUser.name}! Aapka Practix account kamyabi se ban gaya hai.`;
+
   res.json({
     success: true,
-    message: `Mubarak ho ${newUser.name}! Aapka Practix account kamyabi se ban gaya hai.`,
+    message: welcomeMsg,
     user: newUser
   });
 });
@@ -420,9 +482,11 @@ app.post('/api/auth/register', (req, res) => {
 app.post('/api/auth/login', (req, res) => {
   const db = loadDb();
   const { username, password } = req.body;
+  const lang = (req.body.lang || "urdu").toLowerCase();
+  const isEn = lang === "en";
 
   if (!username || !password) {
-    return res.status(400).json({ error: "Naam aur Password dono lazmi hain!" });
+    return res.status(400).json({ error: isEn ? "Username and Password are required!" : "Naam aur Password dono lazmi hain!" });
   }
 
   const cleanUser = username.trim().toLowerCase();
@@ -438,12 +502,12 @@ app.post('/api/auth/login', (req, res) => {
   }
 
   if (!user || user.password !== password.trim()) {
-    return res.status(401).json({ error: "Ghalat naam ya password! Please check karke dobara try karein." });
+    return res.status(401).json({ error: isEn ? "Invalid username or password! Please check and try again." : "Ghalat naam ya password! Please check karke dobara try karein." });
   }
 
   res.json({
     success: true,
-    message: `Welcome back, ${user.name}!`,
+    message: isEn ? `Welcome back, ${user.name}!` : `Khush-Aamdeed ${user.name}! Aapka account load ho gaya hai.`,
     user: user
   });
 });
@@ -582,9 +646,14 @@ app.post('/api/courses/link', async (req, res) => {
   user.roadmap = newRoadmap;
   saveDb(db);
 
+  const lang = (req.body.lang || "urdu").toLowerCase();
+  const isEn = lang === "en";
+
   res.json({
     success: true,
-    message: `Kamyabi! "${courseTitle}" analyze ho kar 30-Day Step-by-Step Practical Roadmap mein tabdeel ho gaya hai!`,
+    message: isEn
+      ? `Success! "${courseTitle}" has been analyzed and structured into your 30-Day Practical Action Roadmap!`
+      : `Kamyabi! "${courseTitle}" analyze ho kar 30-Day Step-by-Step Practical Roadmap mein tabdeel ho gaya hai!`,
     course: user.activeCourse,
     roadmap: user.roadmap,
     firstDay: user.roadmap[0]
@@ -651,7 +720,8 @@ app.get('/api/day/:dayNumber', (req, res) => {
     });
   }
 
-  const lesson = getLessonForDay(dayNum, courseTitle, user.currentSkill);
+  const lang = (req.query.lang || req.headers['x-lang'] || "urdu").toLowerCase();
+  const lesson = getLessonForDay(dayNum, courseTitle, user.currentSkill, lang);
   
   // Check if user already submitted proof for this day in roadmap
   if (dayItem && dayItem.status === 'completed') {
@@ -706,10 +776,17 @@ app.post('/api/day/:dayNumber/submit-proof', (req, res) => {
 
   saveDb(db);
 
+  const lang = (req.body.lang || "urdu").toLowerCase();
+  const isEn = lang === "en";
+
   res.json({
     success: true,
-    message: `Shabash ${user.name}! Day ${dayNum} ka Proof of Work verify ho gaya hai! 🔥`,
-    feedback: `AI Review: Excellent execution! Design structure, visual balance and attention to details are commercially ready. Added to your Live Public Portfolio!`,
+    message: isEn
+      ? `Great job ${user.name}! Day ${dayNum} Proof of Work has been verified! 🔥`
+      : `Shabash ${user.name}! Day ${dayNum} ka Proof of Work verify ho gaya hai! 🔥`,
+    feedback: isEn
+      ? `AI Review: Excellent execution! Structure, practical application, and attention to detail are commercially client-ready. Added to your Live Public Portfolio!`
+      : `AI Review: Zabardast kaam! Design ki visual hierarchy aur concept bilkul client-ready standard par hai. Yeh project aapke Live Public Portfolio mein shamil kar diya gaya hai!`,
     grade: "A+",
     newStreak: user.streak,
     newXp: user.totalXp,
@@ -724,20 +801,36 @@ app.post('/api/ai/coach', (req, res) => {
   const { message } = req.body;
   if (!message) return res.status(400).json({ error: "Message is required" });
 
+  const lang = (req.body.lang || "urdu").toLowerCase();
+  const isEn = lang === "en";
   const lower = message.toLowerCase();
-  let reply = `As-salamu alaykum ${user.name}! Consistency ka asal raaz chhota target set karna hai. Roz sirf 45 minutes poori concentration se dein, distraction band karein, aur raat ko proof submit kiye baghair soyein mat!`;
 
-  if (lower.includes("client") || lower.includes("freelance") || lower.includes("upwork") || lower.includes("fiverr")) {
-    reply = `Clients ko lambay paragraphs nahi chahiye hotay. Jab aap Day 20 complete kar lengi, to hum aapko '1-Paragraph Cold Pitch' sikhayenge jo directly client ke maslay ko hal karta hai aur aapke verified portfolio ka link share karta hai!`;
-  } else if (lower.includes("price") || lower.includes("rate") || lower.includes("paisa") || lower.includes("kamayi")) {
-    reply = `Pehle 3 clients ko $50-$150 ka value-packed introductory package dein, 5-star review lein, aur uske baad apni hourly rate $25-$40/hr tak barhayen.`;
-  } else if (lower.includes("stuck") || lower.includes("procrastinat") || lower.includes("kal")) {
-    reply = `'Kal se nahi... aaj se!' Agle 25 minutes ka Pomodoro Timer start karein, sirf Day ${user.activeCourse ? user.activeCourse.currentDay : 1} ka pehla worksheet question likhein. Momentum khud ba khud ban jayega!`;
+  let reply;
+  if (isEn) {
+    reply = `Hello ${user.name}! The secret to rapid mastery is compounding daily focus. Dedicate 45 uninterrupted minutes today, close all distractions, and never end your day without uploading your proof of work!`;
+
+    if (lower.includes("client") || lower.includes("freelance") || lower.includes("upwork") || lower.includes("fiverr")) {
+      reply = `Global clients don't read long essays. When you reach Day 20, we will train you on the '1-Paragraph Cold Pitch' that pinpoints the client's problem directly and links your verified Practix portfolio!`;
+    } else if (lower.includes("price") || lower.includes("rate") || lower.includes("money") || lower.includes("earn") || lower.includes("charge")) {
+      reply = `Offer your first 3 clients an introductory package of $50-$150 to secure quick 5-star testimonials, then scale your hourly rate to $25-$40/hr.`;
+    } else if (lower.includes("stuck") || lower.includes("procrastinat") || lower.includes("tomorrow") || lower.includes("lazy")) {
+      reply = `Stop saying 'tomorrow'! Start the 25-minute Pomodoro timer right now and complete just Question 1 of Day ${user.activeCourse ? user.activeCourse.currentDay : 1}. Action produces immediate momentum!`;
+    }
+  } else {
+    reply = `As-salamu alaykum ${user.name}! Consistency ka asal raaz chhota target set karna hai. Roz sirf 45 minutes poori concentration se dein, distraction band karein, aur raat ko proof submit kiye baghair soyein mat!`;
+
+    if (lower.includes("client") || lower.includes("freelance") || lower.includes("upwork") || lower.includes("fiverr")) {
+      reply = `Clients ko lambay paragraphs nahi chahiye hotay. Jab aap Day 20 complete kar lengi, to hum aapko '1-Paragraph Cold Pitch' sikhayenge jo directly client ke maslay ko hal karta hai aur aapke verified portfolio ka link share karta hai!`;
+    } else if (lower.includes("price") || lower.includes("rate") || lower.includes("paisa") || lower.includes("kamayi")) {
+      reply = `Pehle 3 clients ko $50-$150 ka value-packed introductory package dein, 5-star review lein, aur uske baad apni hourly rate $25-$40/hr tak barhayen.`;
+    } else if (lower.includes("stuck") || lower.includes("procrastinat") || lower.includes("kal")) {
+      reply = `'Kal se nahi... aaj se!' Agle 25 minutes ka Pomodoro Timer start karein, sirf Day ${user.activeCourse ? user.activeCourse.currentDay : 1} ka pehla worksheet question likhein. Momentum khud ba khud ban jayega!`;
+    }
   }
 
   res.json({
     reply,
-    coach: "Coach Asad (AI Accountability Lead)",
+    coach: isEn ? "Coach Asad (AI Accountability Lead)" : "Coach Asad (AI Accountability Lead)",
     timestamp: new Date().toLocaleTimeString()
   });
 });
