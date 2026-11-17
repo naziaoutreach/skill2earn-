@@ -49,6 +49,16 @@
 
     <!-- Right Quick Stats: Streak, XP, User Profile -->
     <div class="flex items-center gap-3">
+      <!-- Language Switcher Pill -->
+      <div class="flex items-center bg-[#141C33] border border-gray-700/80 rounded-xl p-1 text-xs font-bold">
+        <button id="langBtnUrdu" onclick="setLanguage('urdu')" class="px-2.5 py-1 rounded-lg transition bg-purple-600 text-white shadow-sm">
+          اردو / Roman
+        </button>
+        <button id="langBtnEng" onclick="setLanguage('en')" class="px-2.5 py-1 rounded-lg transition text-gray-400 hover:text-white">
+          English
+        </button>
+      </div>
+
       <!-- Streak Flame -->
       <div class="flex items-center gap-2 bg-gradient-to-r from-amber-500/15 to-orange-500/15 border border-amber-500/30 px-3 py-1.5 rounded-xl glow-orange">
         <span class="text-base">🔥</span>
@@ -766,6 +776,155 @@
     // State
     let currentUserEmail = localStorage.getItem('practix_user_email') || '';
     let currentActiveDayNumber = 1;
+    let currentLang = localStorage.getItem('practix_lang') || 'urdu';
+
+    // ═════════════════════════ MULTI-LANGUAGE ENGINE (URDU/ROMAN & ENGLISH) ═════════════════════════
+    const TRANSLATIONS = {
+      urdu: {
+        tagline: "Kal se nahi... Aaj se!",
+        workspaceLabel: "Workspace",
+        navDashboard: "Dashboard",
+        navClassroom: "Daily Classroom",
+        navIngest: "Ingest Course (AI)",
+        navRoadmap: "30-Day Roadmap",
+        navCoach: "AI Coach Asad",
+        navPortfolio: "Live Portfolio",
+        navPomodoro: "Focus Timer (25m)",
+        navLeaderboard: "Leaderboard",
+        targetTitle: "Target Monthly Income",
+        targetSprint: "30-Day Sprint to First Client",
+        dashBadge: "🚀 30-Day Practical Career Sprint",
+        dashWelcome: "Khush-Aamdeed",
+        dashSubtext: "Course purchase karke chhor dene walon mein shamil mat hon. Practix par roz sirf 45 minute practical homework karein aur apna client-ready portfolio banayein!",
+        btnStartPractice: "Start Today's Practice",
+        btnIngestCourse: "Ingest Course (YouTube/PDF)",
+        streakFreeze: "1 Streak Freeze Active",
+        readyClients: "Ready for Clients",
+        currentActiveTask: "Current Active Task",
+        openClassroom: "Open Classroom →",
+        verifiedPortfolioBadge: "Verified Practix Portfolio",
+        portfolioSubtitle: "Rozana ki assignments auto-convert ho kar live verified portfolio card ban chuki hain. Client is link par click karke aapka proof-of-work dekh sakta hai!",
+        copyUrlBtn: "Copy Public URL",
+        shareWhatsApp: "Share on WhatsApp",
+        pomodoroTitle: "25-Minute Deep Focus Sprint",
+        pomodoroSub: "Mobile silent karein, tabs band karein, aur sirf aaj ke practical task par dhiyaan dein.",
+        pomodoroStart: "Start Practice Session",
+        pomodoroPause: "Pause",
+        pomodoroReset: "Reset",
+        regTitle: "Apna Account Banayein",
+        regSub: "Sirf apna naam aur password likhein!",
+        tabSignUp: "Naya Account (Sign Up)",
+        tabLogIn: "Log In",
+        lblFullName: "Aapka Naam (Username):",
+        lblPassword: "Password:",
+        lblSkillGoal: "Aap kya seekhna chahte hain?",
+        btnRegister: "Account Banayein aur Shuru Karein →",
+        btnLogIn: "Log In Karein →",
+        lblLoginUser: "Aapka Naam ya Username:"
+      },
+      en: {
+        tagline: "Stop Watching. Start Executing.",
+        workspaceLabel: "Workspace",
+        navDashboard: "Dashboard",
+        navClassroom: "Daily Classroom",
+        navIngest: "Ingest Course (AI)",
+        navRoadmap: "30-Day Roadmap",
+        navCoach: "AI Coach",
+        navPortfolio: "Live Portfolio",
+        navPomodoro: "Focus Sprint (25m)",
+        navLeaderboard: "Leaderboard",
+        targetTitle: "Target Career Income",
+        targetSprint: "30-Day Action Sprint to First Client",
+        dashBadge: "🚀 30-Day Practical Career Sprint",
+        dashWelcome: "Welcome Back",
+        dashSubtext: "Don't just collect courses you never finish. Spend 45 focused minutes on daily hands-on homework and build a client-ready portfolio!",
+        btnStartPractice: "Start Today's Task",
+        btnIngestCourse: "Turn Course into Roadmap",
+        streakFreeze: "1 Streak Shield Active",
+        readyClients: "Verified & Client-Ready",
+        currentActiveTask: "Today's Practical Task",
+        openClassroom: "Open Classroom →",
+        verifiedPortfolioBadge: "Verified Practix Portfolio",
+        portfolioSubtitle: "Your daily assignments automatically convert into a live verified portfolio card that you can share with global clients on Upwork and Fiverr!",
+        copyUrlBtn: "Copy Portfolio Link",
+        shareWhatsApp: "Share on WhatsApp",
+        pomodoroTitle: "25-Minute Deep Work Sprint",
+        pomodoroSub: "Mute notifications, close social tabs, and focus completely on executing today's practical homework.",
+        pomodoroStart: "Start Focus Sprint",
+        pomodoroPause: "Pause",
+        pomodoroReset: "Reset",
+        regTitle: "Create Your Practix Account",
+        regSub: "Enter your username and password to start!",
+        tabSignUp: "Sign Up (New)",
+        tabLogIn: "Log In",
+        lblFullName: "Your Username / Name:",
+        lblPassword: "Password:",
+        lblSkillGoal: "What skill do you want to master?",
+        btnRegister: "Create Account & Start Day 1 →",
+        btnLogIn: "Log In to Workspace →",
+        lblLoginUser: "Your Username / Name:"
+      }
+    };
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      localStorage.setItem('practix_lang', lang);
+
+      const btnUrdu = document.getElementById('langBtnUrdu');
+      const btnEng = document.getElementById('langBtnEng');
+
+      if (lang === 'en') {
+        btnEng.className = 'px-2.5 py-1 rounded-lg transition bg-purple-600 text-white shadow-sm';
+        btnUrdu.className = 'px-2.5 py-1 rounded-lg transition text-gray-400 hover:text-white';
+      } else {
+        btnUrdu.className = 'px-2.5 py-1 rounded-lg transition bg-purple-600 text-white shadow-sm';
+        btnEng.className = 'px-2.5 py-1 rounded-lg transition text-gray-400 hover:text-white';
+      }
+
+      applyLanguageTranslations();
+    }
+
+    function applyLanguageTranslations() {
+      const t = TRANSLATIONS[currentLang] || TRANSLATIONS.urdu;
+
+      // Update Header & Nav
+      const subTag = document.querySelector('header p.text-\\[11px\\]');
+      if (subTag) subTag.innerText = t.tagline;
+
+      const dashSub = document.getElementById('dashSubtext');
+      if (dashSub) dashSub.innerText = t.dashSubtext;
+
+      const authTitle = document.getElementById('authModalTitle');
+      if (authTitle) authTitle.innerText = t.regTitle;
+
+      const authSub = document.getElementById('authModalSubtitle');
+      if (authSub) authSub.innerText = t.regSub;
+
+      const tabReg = document.getElementById('authTabRegister');
+      if (tabReg) tabReg.innerText = t.tabSignUp;
+
+      const tabLog = document.getElementById('authTabLogin');
+      if (tabLog) tabLog.innerText = t.tabLogIn;
+
+      const formReg = document.getElementById('formRegister');
+      if (formReg) {
+        const labels = formReg.querySelectorAll('label');
+        if (labels[0]) labels[0].innerText = t.lblFullName;
+        if (labels[1]) labels[1].innerText = t.lblPassword;
+        if (labels[2]) labels[2].innerText = t.lblSkillGoal;
+        const subBtn = formReg.querySelector('button[type="submit"]');
+        if (subBtn) subBtn.innerText = t.btnRegister;
+      }
+
+      const formLog = document.getElementById('formLogin');
+      if (formLog) {
+        const labels = formLog.querySelectorAll('label');
+        if (labels[0]) labels[0].innerText = t.lblLoginUser;
+        if (labels[1]) labels[1].innerText = t.lblPassword;
+        const subBtn = formLog.querySelector('button[type="submit"]');
+        if (subBtn) subBtn.innerText = t.btnLogIn;
+      }
+    }
 
     // Tab Switching
     function switchTab(tabId) {
@@ -1358,6 +1517,7 @@
 
     // On page load
     window.onload = () => {
+      setLanguage(currentLang);
       if (!currentUserEmail) {
         // Show auth modal on first visit
         openAuthModal('register');
