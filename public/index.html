@@ -182,19 +182,19 @@
               <span>🚀 30-Day Practical Career Sprint</span>
             </div>
             <h2 class="text-2xl md:text-3xl font-black text-white leading-tight">
-              Khush-Aamdeed, <span id="dashGreetingName" class="text-amber-400">Student</span>!
+              <span id="dashGreetingPrefix">Khush-Aamdeed</span>, <span id="dashGreetingName" class="text-amber-400">Student</span>!
             </h2>
             <p class="text-sm text-gray-300 mt-2" id="dashSubtext">
               Course purchase karke chhor dene walon mein shamil mat hon. Practix par roz sirf 45 minute practical homework karein aur apna client-ready portfolio banayein!
             </p>
             <div class="flex flex-wrap gap-3 mt-5">
               <button onclick="switchTab('classroom')" class="bg-gradient-to-r from-[#7C3AED] to-[#6366F1] text-white px-5 py-2.5 rounded-xl font-bold text-sm shadow-lg shadow-purple-500/30 hover:opacity-95 transition flex items-center gap-2">
-                <span>Start Today's Practice</span>
+                <span id="btnStartPracticeText">Start Today's Practice</span>
                 <i class="fa-solid fa-arrow-right"></i>
               </button>
               <button onclick="switchTab('ingest')" class="bg-[#1E293B] text-gray-200 border border-gray-700 px-4 py-2.5 rounded-xl font-semibold text-sm hover:bg-[#28354D] transition flex items-center gap-2">
                 <i class="fa-solid fa-wand-magic-sparkles text-purple-400"></i>
-                <span>Ingest Course (YouTube/PDF)</span>
+                <span id="btnIngestCourseText">Ingest Course (YouTube/PDF)</span>
               </button>
             </div>
           </div>
@@ -893,6 +893,15 @@
 
       const dashSub = document.getElementById('dashSubtext');
       if (dashSub) dashSub.innerText = t.dashSubtext;
+
+      const dashGreet = document.getElementById('dashGreetingPrefix');
+      if (dashGreet) dashGreet.innerText = t.dashWelcome;
+
+      const btnPrac = document.getElementById('btnStartPracticeText');
+      if (btnPrac) btnPrac.innerText = t.btnStartPractice;
+
+      const btnIng = document.getElementById('btnIngestCourseText');
+      if (btnIng) btnIng.innerText = t.btnIngestCourse;
 
       const authTitle = document.getElementById('authModalTitle');
       if (authTitle) authTitle.innerText = t.regTitle;
