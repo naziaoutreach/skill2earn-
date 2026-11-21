@@ -205,7 +205,7 @@
     <main class="flex-1 overflow-y-auto overflow-x-hidden scrollbar-custom p-3 sm:p-6 md:p-8 bg-[#0B0F19] w-full max-w-full min-w-0">
 
       <!-- ════════════ TAB 1: DASHBOARD ════════════ -->
-      <section id="tab-dashboard" class="tab-content active space-y-6">
+      <section id="tab-dashboard" class="tab-content space-y-6">
         <div class="glass-card rounded-3xl p-6 md:p-8 border border-purple-500/30 bg-gradient-to-r from-[#181830] via-[#121B35] to-[#0F1629] relative overflow-hidden">
           <div class="relative z-10 max-w-2xl">
             <div class="inline-flex items-center gap-2 bg-purple-500/20 border border-purple-500/40 text-purple-300 text-xs font-bold px-3 py-1 rounded-full mb-3">
@@ -697,9 +697,9 @@
   </div>
 
   <!-- ═════════════════════════ AUTH MODAL (LOGIN / REGISTER) ═════════════════════════ -->
-  <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+  <div id="authModal" class="fixed inset-0 bg-[#0B0F19] z-50 flex items-center justify-center p-4">
     <div class="glass-card max-w-md w-full p-6 md:p-8 rounded-3xl border border-purple-500/40 glow-purple relative">
-      <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+      <button id="authModalCloseBtn" onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg hidden">
         <i class="fa-solid fa-xmark"></i>
       </button>
 
@@ -977,7 +977,9 @@
       }
 
       applyLanguageTranslations();
-      loadDayLesson(currentActiveDayNumber);
+      if (currentUserEmail) {
+        loadDayLesson(currentActiveDayNumber);
+      }
     }
 
     function applyLanguageTranslations() {
@@ -1136,14 +1138,26 @@
 
     // Auth Modal Controls
     function openAuthModal(mode = 'register') {
-      document.getElementById('authModal').classList.remove('hidden');
-      document.getElementById('userDropdown').classList.add('hidden');
+      const modal = document.getElementById('authModal');
+      const closeBtn = document.getElementById('authModalCloseBtn');
+      if (modal) modal.classList.remove('hidden');
+      if (closeBtn) {
+        if (currentUserEmail) {
+          closeBtn.classList.remove('hidden');
+        } else {
+          closeBtn.classList.add('hidden');
+        }
+      }
+      const drop = document.getElementById('userDropdown');
+      if (drop) drop.classList.add('hidden');
       switchAuthMode(mode);
       applyLanguageTranslations();
     }
 
     function closeAuthModal() {
-      document.getElementById('authModal').classList.add('hidden');
+      if (!currentUserEmail) return; // Cannot close if not logged in
+      const modal = document.getElementById('authModal');
+      if (modal) modal.classList.add('hidden');
     }
 
     function switchAuthMode(mode) {
@@ -1730,9 +1744,11 @@
     window.onload = () => {
       setLanguage(currentLang);
       if (!currentUserEmail) {
-        // Show auth modal on first visit
+        // Show auth modal on first visit - user cannot see dashboard
         openAuthModal('register');
       } else {
+        closeAuthModal();
+        switchTab('dashboard');
         initApp();
       }
     };
