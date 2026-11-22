@@ -35,6 +35,8 @@
 </head>
 <body class="min-h-screen flex flex-col antialiased w-full max-w-full overflow-x-hidden">
 
+  <!-- ═════════════════════════ AUTHENTICATED APP SHELL WRAPPER ═════════════════════════ -->
+  <div id="appShellWrapper" class="flex flex-col flex-1 w-full min-h-screen hidden">
   <!-- ═════════════════════════ TOP NAVBAR ═════════════════════════ -->
   <header class="h-16 bg-[#0F1629]/95 border-b border-[#1E293B] sticky top-0 z-40 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between w-full max-w-full">
     <div class="flex items-center gap-2 sm:gap-3">
@@ -678,6 +680,7 @@
       <span class="text-[10px] font-semibold">Menu</span>
     </button>
   </nav>
+  </div> <!-- ═════════════════════════ END OF #appShellWrapper ═════════════════════════ -->
 
   <!-- ═════════════════════════ MODERN TOAST NOTIFICATION SYSTEM ═════════════════════════ -->
   <div id="toastContainer" class="fixed top-5 right-5 z-50 flex flex-col gap-3 pointer-events-none max-w-sm w-full px-4"></div>
@@ -1140,6 +1143,13 @@
     function openAuthModal(mode = 'register') {
       const modal = document.getElementById('authModal');
       const closeBtn = document.getElementById('authModalCloseBtn');
+      const appShell = document.getElementById('appShellWrapper');
+      
+      // If not logged in, keep app shell completely hidden
+      if (!currentUserEmail && appShell) {
+        appShell.classList.add('hidden');
+      }
+
       if (modal) modal.classList.remove('hidden');
       if (closeBtn) {
         if (currentUserEmail) {
@@ -1158,6 +1168,8 @@
       if (!currentUserEmail) return; // Cannot close if not logged in
       const modal = document.getElementById('authModal');
       if (modal) modal.classList.add('hidden');
+      const appShell = document.getElementById('appShellWrapper');
+      if (appShell) appShell.classList.remove('hidden');
     }
 
     function switchAuthMode(mode) {
@@ -1256,6 +1268,8 @@
     function logoutUser() {
       localStorage.removeItem('practix_user_email');
       currentUserEmail = '';
+      const appShell = document.getElementById('appShellWrapper');
+      if (appShell) appShell.classList.add('hidden');
       openAuthModal('login');
     }
 
