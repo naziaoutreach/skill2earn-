@@ -892,14 +892,14 @@
       </div>
 
       <!-- Register Form -->
-      <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3.5">
+      <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3.5" autocomplete="off">
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1">Aapka Naam (Username):</label>
-          <input type="text" id="regName" placeholder="Jaise: Sara, Ali, ya apna naam" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <input type="text" id="regName" placeholder="Jaise: Sara, Ali, ya apna naam" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1">Password:</label>
-          <input type="password" id="regPassword" placeholder="Apna aasan password rakhein" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <input type="password" id="regPassword" placeholder="Apna aasan password rakhein" autocomplete="new-password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1">Aap kya seekhna chahte hain? (100% Free Tracks)</label>
@@ -923,14 +923,14 @@
       </form>
 
       <!-- Login Form -->
-      <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-3.5 hidden">
+      <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-3.5 hidden" autocomplete="off">
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1">Aapka Naam ya Username:</label>
-          <input type="text" id="loginUsername" placeholder="Jaise: Sara ya Ali" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <input type="text" id="loginUsername" placeholder="Jaise: Sara ya Ali" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1">Password:</label>
-          <input type="password" id="loginPassword" placeholder="Apna password likhein" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <input type="password" id="loginPassword" placeholder="Apna password likhein" autocomplete="current-password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-emerald-500/30">
           Log In Karein →
@@ -1318,6 +1318,22 @@
       const closeBtn = document.getElementById('authModalCloseBtn');
       const appShell = document.getElementById('appShellWrapper');
       
+      // Always reset and clear form fields so browser autofill doesn't prefill passwords
+      try {
+        const formReg = document.getElementById('formRegister');
+        if (formReg) formReg.reset();
+        const formLog = document.getElementById('formLogin');
+        if (formLog) formLog.reset();
+        const p1 = document.getElementById('regPassword');
+        if (p1) p1.value = '';
+        const p2 = document.getElementById('loginPassword');
+        if (p2) p2.value = '';
+        const n1 = document.getElementById('regName');
+        if (n1) n1.value = '';
+        const n2 = document.getElementById('loginUsername');
+        if (n2) n2.value = '';
+      } catch (e) {}
+
       // If not logged in, keep app shell completely hidden
       if (!currentUserEmail && appShell) {
         appShell.classList.add('hidden');
@@ -1357,6 +1373,11 @@
       const title = document.getElementById('authModalTitle');
       const sub = document.getElementById('authModalSubtitle');
       const t = TRANSLATIONS[currentLang] || TRANSLATIONS.urdu;
+
+      const p1 = document.getElementById('regPassword');
+      if (p1) p1.value = '';
+      const p2 = document.getElementById('loginPassword');
+      if (p2) p2.value = '';
 
       if (mode === 'register') {
         formReg.classList.remove('hidden');
