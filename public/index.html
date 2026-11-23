@@ -222,7 +222,7 @@
     <main class="flex-1 overflow-y-auto overflow-x-hidden scrollbar-custom p-3 sm:p-6 md:p-8 bg-[#0B0F19] w-full max-w-full min-w-0">
 
             <!-- ════════════ TAB 1: DASHBOARD ════════════ -->
-      <section id="tab-dashboard" class="tab-content space-y-6">
+      <section id="tab-dashboard" class="tab-content active space-y-6">
         <!-- ════════════ HERO BANNER ════════════ -->
         <div class="glass-card rounded-3xl p-6 md:p-8 border border-purple-500/30 bg-gradient-to-r from-[#181830] via-[#121B35] to-[#0F1629] relative overflow-hidden">
           <div class="relative z-10 max-w-2xl">
@@ -2172,6 +2172,7 @@
         currentUserEmail = data.user.id || data.user.email || data.user.name;
         sessionStorage.setItem('practix_user_session', currentUserEmail);
         closeAuthModal();
+        switchTab('dashboard');
         await initApp();
         if (pendingAction) {
           const act = pendingAction;
@@ -2215,7 +2216,18 @@
         currentUserEmail = data.user.id || data.user.email || data.user.name;
         sessionStorage.setItem('practix_user_session', currentUserEmail);
         closeAuthModal();
-        initApp();
+        switchTab('dashboard');
+        await initApp();
+        if (pendingAction) {
+          const act = pendingAction;
+          pendingAction = null;
+          if (act.type === 'featured') { await enrollFeaturedTrack(act.courseId); }
+          else if (act.type === 'link') {
+            const oi = document.getElementById('courseLinkInput');
+            if (oi) oi.value = act.url;
+            await handleCourseLink();
+          }
+        }
       } catch (err) {
         alert(currentLang === 'en' ? "Login error. Please try again." : "Log in mein masla aya. Dobara koshish karein.");
       }
