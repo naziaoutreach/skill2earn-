@@ -479,65 +479,157 @@ function getLessonForDay(dayNum, user, lang = "urdu") {
     "Proof of work submit karna zaroori hai taake streak intact rahe aur portfolio mein project add ho sakay."
   ];
 
-  const worksheetQuestions = isEn ? [
-    { id: "q1", prompt: "Explain the core concept learned today in your own words:", userDraft: "" },
-    { id: "q2", prompt: "How would you apply this practical deliverable to solve a real client's problem?", userDraft: "" }
-  ] : [
-    { id: "q1", prompt: "Aaj ke lesson ka core concept apne alfaz mein explain karein:", userDraft: "" },
-    { id: "q2", prompt: "Is practical task ko kisi real client ke project mein kaise use karenge?", userDraft: "" }
-  ];
+  let worksheetQuestions = [];
+  let quiz = [];
 
-  const quiz = isEn ? [
-    {
-      id: 1,
-      question: "Which principle is most critical for achieving long-term skill consistency?",
-      options: [
-        "Cramming 10 hours in a single weekend",
-        "Practicing 45 minutes daily with zero distractions",
-        "Passively watching videos without taking notes",
-        "Applying for freelance gigs before building proof"
-      ],
-      correctIndex: 1,
-      explanation: "Daily deliberate practice compounds faster than irregular binge-watching."
-    },
-    {
-      id: 2,
-      question: "What is the primary benefit of submitting daily Proof of Work?",
-      options: [
-        "It only generates a theoretical score",
-        "It automatically compiles your public verified portfolio for clients",
-        "No significant benefit",
-        "It just marks attendance"
-      ],
-      correctIndex: 1,
-      explanation: "Clients hire evidence, not certificates. Daily proofs auto-generate your live client-ready showcase."
-    }
-  ] : [
-    {
-      id: 1,
-      question: "Konsa rule rozana consistency ke liye sab se ahem hai?",
-      options: [
-        "Ek din mein 10 ghante parhna",
-        "Rozana 45 minute baghair distraction ke practice karna",
-        "Sirf lectures dekh kar notes na banana",
-        "Bina practice ke Upwork par apply karna"
-      ],
-      correctIndex: 1,
-      explanation: "Consistency ka asal raaz chhota target rozana poori tawajjo se poora karna hai."
-    },
-    {
-      id: 2,
-      question: "Proof of Work submit karne ka sab se bara faida kya hai?",
-      options: [
-        "Sirf certificate milta hai",
-        "Aapka verified portfolio khud-bakhud ban jata hai",
-        "Koi faida nahi",
-        "Bas marks miltay hain"
-      ],
-      correctIndex: 1,
-      explanation: "Verified proof of work aapka live public portfolio banata hai jo clients ko dikhaya jata hai."
-    }
-  ];
+  const lowerTopic = `${courseTitle} ${userSkill}`.toLowerCase();
+
+  if (lowerTopic.includes("python") || lowerTopic.includes("code") || lowerTopic.includes("programming")) {
+    worksheetQuestions = [
+      { id: "q1", prompt: "Q1. Aaj ke 20-minute Python lesson ka core concept (Syntax, Variables, Data Types ya Setup) apne alfaz mein explain karein:", userDraft: "" },
+      { id: "q2", prompt: "Q2. Aaj jo code aapne computer/VS Code mein likha aur run kiya, uski step-by-step logic aur output kya thi?", userDraft: "" },
+      { id: "q3", prompt: "Q3. Is code ko chalatay waqt agar koi SyntaxError, TypeError ya IndentationError aaye toh usay kaise troubleshoot karenge?", userDraft: "" },
+      { id: "q4", prompt: "Q4. Yeh code real freelance client ke project (Web scraping, Data automation, ya AI script) mein kis tarah use hoga?", userDraft: "" }
+    ];
+
+    quiz = [
+      {
+        id: 1,
+        question: "Python mein variable assign karne ka durust tareeqa konsa hai?",
+        options: ["x = 10", "var x = 10", "int x = 10", "dim x as 10"],
+        correctIndex: 0,
+        explanation: "Python dynamically typed language hai, is liye directly 'variable = value' likha jata hai."
+      },
+      {
+        id: 2,
+        question: "Terminal mein Python script ko run karne ke liye konsi command use hoti hai?",
+        options: ["python filename.py", "run script.exe", "execute code", "start python"],
+        correctIndex: 0,
+        explanation: "Python interpreter file ko 'python filename.py' se execute karta hai."
+      },
+      {
+        id: 3,
+        question: "Screen par output display karne ke liye Python ka konsa standard function use hota hai?",
+        options: ["print(\"...\")", "echo(\"...\")", "output(\"...\")", "console.log(\"...\")"],
+        correctIndex: 0,
+        explanation: "Python mein 'print()' function screen par text aur data display karne ke liye use hota hai."
+      },
+      {
+        id: 4,
+        question: "Binge-watching ke muqablay mein rozana 45 minute practical execution ka kya faida hai?",
+        options: [
+          "Muscle memory aur practical coding confidence banta hai",
+          "Sirf video dekh kar agle din sab bhool jana",
+          "Iska koi khas faida nahi hota",
+          "Sirf certificate download karna"
+        ],
+        correctIndex: 0,
+        explanation: "Hands-on execution se concept permanent memory mein store hota hai."
+      }
+    ];
+  } else if (lowerTopic.includes("design") || lowerTopic.includes("canva") || lowerTopic.includes("figma") || lowerTopic.includes("ui")) {
+    worksheetQuestions = [
+      { id: "q1", prompt: "Q1. Aaj ke design session ki visual hierarchy, focal point, aur layout balance ko apne alfaz mein explain karein:", userDraft: "" },
+      { id: "q2", prompt: "Q2. Aapne is design deliverable mein kon se color harmonies (contrast) aur typography pairing use kiye hain?", userDraft: "" },
+      { id: "q3", prompt: "Q3. Agar client feedback de ke design cluttered ya text unreadable hai, toh aap kya specific adjustments karenge?", userDraft: "" },
+      { id: "q4", prompt: "Q4. Is deliverable ko Upwork/Fiverr gig portfolio mein client ko impress karne ke liye kaise showcase karenge?", userDraft: "" }
+    ];
+
+    quiz = [
+      {
+        id: 1,
+        question: "Visual hierarchy mein viewer ki nazar sab se pehle kis cheez par jani chahiye?",
+        options: ["Primary Focal Point / Main Headline", "Corner background shape", "Footer copyright text", "Border lines"],
+        correctIndex: 0,
+        explanation: "Primary focal point sab se ahem information ko viewer tak foran deliver karta hai."
+      },
+      {
+        id: 2,
+        question: "Digital screens aur social media graphics ke liye konsa color mode use hota hai?",
+        options: ["RGB", "CMYK", "Pantone Spot", "Greyscale Only"],
+        correctIndex: 0,
+        explanation: "Screens aur digital devices par display ke liye RGB (Red Green Blue) color space standard hai."
+      },
+      {
+        id: 3,
+        question: "Transparent background wala logo ya asset export karne ke liye best format konsa hai?",
+        options: ["PNG-24 ya SVG", "JPEG with background", "Low quality GIF", "BMP format"],
+        correctIndex: 0,
+        explanation: "PNG aur SVG transparent alpha channel support karte hain."
+      },
+      {
+        id: 4,
+        question: "Client presentation deck tayyar karte waqt sab se critical rule kya hai?",
+        options: [
+          "Consistent padding, alignment aur clean contrast",
+          "Har slide par alag alag 10 fonts use karna",
+          "Low-resolution stretched images lagana",
+          "Background mein bohot zyada shor machana"
+        ],
+        correctIndex: 0,
+        explanation: "Professional design mein alignment aur visual consistency trust build karti hai."
+      }
+    ];
+  } else {
+    // Universal High-Impact Skill Questions & Quiz
+    worksheetQuestions = [
+      { id: "q1", prompt: "Q1. Aaj ke 20-minute practical session ka core concept apne alfaz mein asaan tareeqe se explain karein:", userDraft: "" },
+      { id: "q2", prompt: "Q2. Aaj aapne jo deliverable/task banaya, uske technical steps aur execution strategy ko detail mein likhein:", userDraft: "" },
+      { id: "q3", prompt: "Q3. Is practical task ko implement karte waqt aapko kya challenge aya aur aapne usay kaise troubleshoot kiya?", userDraft: "" },
+      { id: "q4", prompt: "Q4. Yeh deliverable real client ke freelance project mein kis tarah use hoga aur client ko kya value milegi?", userDraft: "" }
+    ];
+
+    quiz = [
+      {
+        id: 1,
+        question: "Konsa rule freelance market mein high-paying clients attract karne ke liye sab se ahem hai?",
+        options: [
+          "Rozana verified Proof-of-Work ka real portfolio build karna",
+          "Bina kisi portfolio ke clients ko messages bhejte rehna",
+          "Sirf certificates collect karna aur practice na karna",
+          "Ek din mein 10 ghante video dekh kar notes na banana"
+        ],
+        correctIndex: 0,
+        explanation: "Clients certificates nahi dekhte, wo aapka live verified proof of work dekh kar hire karte hain."
+      },
+      {
+        id: 2,
+        question: "Micro-learning methodology mein 20-minute video dekhne ke baad agla step kya hona chahiye?",
+        options: [
+          "Baqi 25 minute foran computer/software mein practical task execute karna",
+          "YouTube par agle 3 ghante videos scroll karte rehna",
+          "Laptop band karke agle hafte tak kuch na karna",
+          "Bina homework ke agle din par jump karna"
+        ],
+        correctIndex: 0,
+        explanation: "Immediate execution se learning 90% zyada retain rehti hai."
+      },
+      {
+        id: 3,
+        question: "Client project submit karte waqt clarity aur presentation ka kya faida hota hai?",
+        options: [
+          "Client 5-star review aur repeat projects deta hai",
+          "Client project cancel kar deta hai",
+          "Is se koi faraq nahi parta",
+          "Payment delay hoti hai"
+        ],
+        correctIndex: 0,
+        explanation: "Clear documentation aur verified proof se client satisfaction aur repeat business milta hai."
+      },
+      {
+        id: 4,
+        question: "Practix par daily homework submit karne ka sab se bara faida kya hai?",
+        options: [
+          "Aapka live verified public portfolio banta hai aur agla din unlock hota hai",
+          "Sirf points milte hain aur kuch nahi hota",
+          "Sirf attendance lagti hai",
+          "Koi faida nahi hota"
+        ],
+        correctIndex: 0,
+        explanation: "Daily proofs auto-generate your live client-ready showcase portfolio."
+      }
+    ];
+  }
 
   const homework = isEn ? {
     title: `Submit Today's Practice Proof for Day ${dayNum}`,
@@ -1214,7 +1306,23 @@ app.post('/api/day/:dayNumber/submit-proof', (req, res) => {
   const db = loadDb();
   const user = getUser(req, db);
   const dayNum = Number(req.params.dayNumber) || 1;
-  const { proofUrl, notes } = req.body;
+  const { proofUrl, notes, worksheetAnswers = {}, quizScore = 0 } = req.body;
+
+  // STRICT VALIDATION: Cannot submit without real proof URL and worksheet answers
+  if (!proofUrl || typeof proofUrl !== 'string' || proofUrl.trim().length < 5) {
+    return res.status(400).json({
+      error: "proof_required",
+      message: "⚠️ Proof of Work Missing!\n\nBaraye meherbani apna practical proof (Figma link, GitHub repo, Google Drive, ya image link) lazmi attach karein taake kaam verify ho sakay."
+    });
+  }
+
+  const validAnswers = Object.values(worksheetAnswers).filter(a => typeof a === 'string' && a.trim().length >= 5);
+  if (validAnswers.length < 2) {
+    return res.status(400).json({
+      error: "worksheet_incomplete",
+      message: "⚠️ Incomplete Worksheet!\n\nBaraye meherbani Part 2 ke tamam sawalat ke mukammal aur tafseeli jawab likhein taake aapka concept mazboot ho."
+    });
+  }
 
   user.totalXp += 150;
   user.streak += 1;

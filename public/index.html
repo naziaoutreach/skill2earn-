@@ -419,21 +419,13 @@
           <div class="flex items-center justify-between">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-pen-to-square text-emerald-400"></i>
-              <span>Part 2: Daily Conceptual Worksheet</span>
+              <span>Part 2: Daily Conceptual Worksheet (4 In-Depth Questions)</span>
             </h3>
-            <span class="text-xs text-emerald-400 font-semibold">Answer to solidify concepts</span>
+            <span class="text-xs text-emerald-400 font-semibold" id="worksheetCounterBadge">0 of 4 Answered</span>
           </div>
 
-          <div class="space-y-3">
-            <div class="bg-[#12192C] p-4 rounded-xl border border-gray-800">
-              <label class="text-xs font-semibold text-gray-300 block mb-2" id="q1Label">Q1. Aaj ke lesson ka core concept apne alfaz mein explain karein:</label>
-              <textarea id="q1Input" placeholder="Yahan apna answer type karein..." class="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500" rows="2"></textarea>
-            </div>
-
-            <div class="bg-[#12192C] p-4 rounded-xl border border-gray-800">
-              <label class="text-xs font-semibold text-gray-300 block mb-2" id="q2Label">Q2. Is practical task ko kisi real client ke project mein kaise use karenge?</label>
-              <textarea id="q2Input" placeholder="Client use-case type karein..." class="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500" rows="2"></textarea>
-            </div>
+          <div class="space-y-4" id="worksheetContainer">
+            <!-- Dynamic 4 questions rendered by JS -->
           </div>
         </div>
 
@@ -442,20 +434,13 @@
           <div class="flex items-center justify-between">
             <h3 class="text-base font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-circle-question text-cyan-400"></i>
-              <span>Part 3: Daily Knowledge Check (Quiz)</span>
+              <span>Part 3: Daily Knowledge Check (4 Interactive MCQs)</span>
             </h3>
-            <span class="text-xs text-cyan-400 font-semibold" id="quizStatusText">Click an answer</span>
+            <span class="text-xs text-cyan-400 font-semibold" id="quizStatusText">0 of 4 Solved</span>
           </div>
 
-          <div class="bg-[#12192C] p-4 rounded-xl border border-gray-800 space-y-3" id="quizContainer">
-            <div class="text-xs font-bold text-white" id="quizQuestionText">Konsa rule rozana consistency ke liye sab se ahem hai?</div>
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2" id="quizOptionsContainer">
-              <button onclick="handleQuizAnswer(0)" class="quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition">A) Ek din mein 10 ghante parhna</button>
-              <button onclick="handleQuizAnswer(1)" class="quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition">B) Rozana 45 minute baghair distraction ke practice karna</button>
-              <button onclick="handleQuizAnswer(2)" class="quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition">C) Sirf lectures dekh kar notes na banana</button>
-              <button onclick="handleQuizAnswer(3)" class="quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition">D) Bina practice ke Upwork par apply karna</button>
-            </div>
-            <div id="quizFeedbackBox" class="hidden p-3 rounded-lg text-xs font-semibold"></div>
+          <div class="space-y-4" id="quizContainer">
+            <!-- Dynamic 4 MCQs rendered by JS -->
           </div>
         </div>
 
@@ -481,22 +466,48 @@
           <!-- Submission Inputs -->
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label class="text-xs font-semibold text-gray-400 block mb-2">Live Proof / Image / Figma / GitHub URL:</label>
-              <input type="text" id="proofUrlInput" placeholder="https://... (Figma, GitHub, Behance ya image link)" class="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500">
+              <label class="text-xs font-semibold text-gray-300 block mb-2">Live Proof / Image / Figma / GitHub URL: <span class="text-rose-400">*</span></label>
+              <input type="text" id="proofUrlInput" oninput="updateHomeworkGateChecklist()" placeholder="https://... (Figma, GitHub, Behance ya image link)" class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500">
             </div>
 
             <div>
-              <label class="text-xs font-semibold text-gray-400 block mb-2">Short Submission Notes:</label>
-              <input type="text" id="proofNotesInput" placeholder="Brief notes about your execution..." class="w-full bg-[#0B0F19] border border-gray-700 rounded-lg p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500">
+              <label class="text-xs font-semibold text-gray-300 block mb-2">Submission Notes & Technical Approach:</label>
+              <input type="text" id="proofNotesInput" placeholder="Brief notes about your execution..." class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500">
             </div>
           </div>
 
-          <div class="flex items-center justify-between pt-2">
-            <div class="text-xs text-gray-400">
-              Submission par <strong class="text-purple-300">+150 XP</strong> aur instant AI Review milega.
+          <!-- Strict Homework Completion Checklist Gate -->
+          <div class="bg-[#0B0F19] p-4 rounded-2xl border border-gray-800 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-white flex items-center gap-1.5">
+                <i class="fa-solid fa-shield-halved text-purple-400"></i>
+                <span>Strict Submission Gate: Complete all 3 tasks to unlock Day Complete</span>
+              </span>
+              <span id="homeworkOverallBadge" class="bg-rose-500/10 text-rose-300 border border-rose-500/30 px-2 py-0.5 rounded-full text-[10px] font-bold">Incomplete (0/3 Done)</span>
             </div>
-            <button onclick="submitHomeworkProof()" class="bg-gradient-to-r from-[#7C3AED] to-[#6366F1] text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:opacity-95 shadow-lg shadow-purple-500/30 transition">
-              <i class="fa-solid fa-check mr-2"></i> Submit & Mark Day Complete
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1 text-xs">
+              <div id="gateWorksheet" class="flex items-center gap-2 bg-[#12192C] px-3 py-2 rounded-xl border border-rose-500/30 text-rose-300 transition">
+                <i class="fa-solid fa-circle-xmark text-rose-400" id="iconGateWorksheet"></i>
+                <span id="textGateWorksheet">Worksheet (0/4)</span>
+              </div>
+              <div id="gateQuiz" class="flex items-center gap-2 bg-[#12192C] px-3 py-2 rounded-xl border border-rose-500/30 text-rose-300 transition">
+                <i class="fa-solid fa-circle-xmark text-rose-400" id="iconGateQuiz"></i>
+                <span id="textGateQuiz">Quiz (0/4)</span>
+              </div>
+              <div id="gateProof" class="flex items-center gap-2 bg-[#12192C] px-3 py-2 rounded-xl border border-rose-500/30 text-rose-300 transition">
+                <i class="fa-solid fa-circle-xmark text-rose-400" id="iconGateProof"></i>
+                <span id="textGateProof">Proof URL Missing</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-between gap-3 pt-2">
+            <div class="text-xs text-gray-400">
+              Mukammal submission par <strong class="text-purple-300">+150 XP</strong> aur instant AI Review milega.
+            </div>
+            <button id="btnSubmitHomework" onclick="submitHomeworkProof()" class="bg-gradient-to-r from-[#7C3AED] to-[#6366F1] text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:opacity-95 shadow-lg shadow-purple-500/30 transition flex items-center gap-2">
+              <i class="fa-solid fa-check"></i>
+              <span>Submit & Mark Day Complete</span>
             </button>
           </div>
         </div>
@@ -1694,27 +1705,15 @@
           takesUl.appendChild(li);
         });
 
-        // Questions
-        if (data.worksheetQuestions && data.worksheetQuestions.length >= 2) {
-          document.getElementById('q1Label').innerText = `Q1. ${data.worksheetQuestions[0].prompt}`;
-          document.getElementById('q2Label').innerText = `Q2. ${data.worksheetQuestions[1].prompt}`;
-        }
+        // Dynamic Questions & Quiz State for Daily Classroom
+        currentDayQuestions = data.worksheetQuestions || [];
+        currentDayQuiz = data.quiz || [];
+        classroomWorksheetAnswers = {};
+        classroomQuizAnswers = {};
 
-        // Quiz
-        if (data.quiz && data.quiz.length > 0) {
-          const q = data.quiz[0];
-          document.getElementById('quizQuestionText').innerText = q.question;
-          const optsBox = document.getElementById('quizOptionsContainer');
-          optsBox.innerHTML = '';
-          q.options.forEach((opt, idx) => {
-            const btn = document.createElement('button');
-            btn.className = 'quiz-opt text-left p-3 rounded-lg bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700 text-xs text-gray-200 transition';
-            btn.innerText = `${String.fromCharCode(65 + idx)}) ${opt}`;
-            btn.onclick = () => checkQuiz(idx, q.correctIndex, q.explanation);
-            optsBox.appendChild(btn);
-          });
-          document.getElementById('quizFeedbackBox').className = 'hidden';
-        }
+        renderClassroomWorksheet(currentDayQuestions);
+        renderClassroomQuiz(currentDayQuiz);
+        updateHomeworkGateChecklist();
 
         // Homework Brief
         document.getElementById('classroomHomeworkDesc').innerText = data.homework.instructions;
@@ -1723,33 +1722,253 @@
       }
     }
 
-    // Quiz Grading on Click
-    function handleQuizAnswer(idx) {
-      const isEn = currentLang === 'en';
-      const explanation = isEn 
-        ? "Daily deliberate practice compounds faster than irregular binge-watching."
-        : "Consistency ka asal raaz chhota target rozana poori tawajjo se poora karna hai.";
-      checkQuiz(idx, 1, explanation);
-    }
+    // ═════════════════════════ CLASSROOM WORKSHEET & QUIZ ENGINE ═════════════════════════
+    let currentDayQuestions = [];
+    let currentDayQuiz = [];
+    let classroomWorksheetAnswers = {};
+    let classroomQuizAnswers = {};
 
-    function checkQuiz(selectedIndex, correctIndex, explanation) {
-      const fbBox = document.getElementById('quizFeedbackBox');
-      fbBox.classList.remove('hidden');
-      const isEn = currentLang === 'en';
+    function renderClassroomWorksheet(questions) {
+      const container = document.getElementById('worksheetContainer');
+      if (!container) return;
+      container.innerHTML = '';
 
-      if (selectedIndex === correctIndex) {
-        fbBox.className = 'p-3 rounded-lg text-xs font-semibold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
-        fbBox.innerHTML = `✓ ${isEn ? "Correct Answer! 🎉" : "Bilkul Sahi Jawab! 🎉"}<br><span class="font-normal text-gray-300">${explanation}</span>`;
-      } else {
-        fbBox.className = 'p-3 rounded-lg text-xs font-semibold bg-rose-500/20 text-rose-300 border border-rose-500/40';
-        fbBox.innerHTML = `✗ ${isEn ? `Incorrect. The correct answer was Option ${String.fromCharCode(65 + correctIndex)}.` : `Yeh ghalat hai. Sahi jawab Option ${String.fromCharCode(65 + correctIndex)} tha.`}<br><span class="font-normal text-gray-300">${explanation}</span>`;
+      if (!questions || questions.length === 0) {
+        container.innerHTML = '<div class="text-xs text-gray-500 text-center py-4">No questions for today.</div>';
+        return;
       }
+
+      questions.forEach((q, idx) => {
+        const box = document.createElement('div');
+        box.className = 'bg-[#12192C] p-4 rounded-xl border border-gray-800 space-y-2';
+        box.innerHTML = `
+          <label class="text-xs font-bold text-white block">${q.prompt || `Q${idx+1}. Core concept explanation`}</label>
+          <textarea id="worksheet_q_${idx}" oninput="handleWorksheetInput('q${idx+1}', this.value)" placeholder="Yahan apna mukammal jawab type karein..." class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500 transition" rows="2"></textarea>
+          <div class="flex justify-end">
+            <span id="ws_status_q${idx+1}" class="text-[10px] text-gray-500 font-semibold">Pending Answer</span>
+          </div>
+        `;
+        container.appendChild(box);
+      });
     }
 
-    // Submit Homework Proof
+    function handleWorksheetInput(qId, val) {
+      classroomWorksheetAnswers[qId] = val.trim();
+      const st = document.getElementById(`ws_status_${qId}`);
+      if (st) {
+        if (val.trim().length >= 5) {
+          st.className = 'text-[10px] text-emerald-400 font-bold flex items-center gap-1';
+          st.innerHTML = '<i class="fa-solid fa-check"></i> Answer Saved';
+        } else {
+          st.className = 'text-[10px] text-gray-500 font-semibold';
+          st.innerText = 'Minimum 5 characters required';
+        }
+      }
+      updateHomeworkGateChecklist();
+    }
+
+    function renderClassroomQuiz(quizList) {
+      const container = document.getElementById('quizContainer');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!quizList || quizList.length === 0) {
+        container.innerHTML = '<div class="text-xs text-gray-500 text-center py-4">No quiz for today.</div>';
+        return;
+      }
+
+      quizList.forEach((q, qIdx) => {
+        const card = document.createElement('div');
+        card.className = 'bg-[#12192C] p-4 rounded-xl border border-gray-800 space-y-3';
+        
+        let optsHtml = '';
+        q.options.forEach((opt, optIdx) => {
+          optsHtml += `
+            <button id="quiz_btn_${qIdx}_${optIdx}" onclick="handleQuizOptionSelect(${qIdx}, ${optIdx})" class="quiz-btn-${qIdx} text-left p-3 rounded-xl bg-[#0B0F19] hover:bg-[#1E293B] border border-gray-700/80 text-xs text-gray-200 transition">
+              <span class="font-bold text-purple-400 mr-1.5">${String.fromCharCode(65 + optIdx)})</span> ${opt}
+            </button>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between">
+            <div class="text-xs font-bold text-white"><span class="text-cyan-400 mr-1.5">MCQ ${qIdx + 1}:</span> ${q.question}</div>
+            <span id="quiz_badge_${qIdx}" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-800 text-gray-400">Unanswered</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            ${optsHtml}
+          </div>
+          <div id="quiz_fb_${qIdx}" class="hidden p-3 rounded-xl text-xs font-semibold"></div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function handleQuizOptionSelect(qIdx, optIdx) {
+      const q = currentDayQuiz[qIdx];
+      if (!q) return;
+
+      classroomQuizAnswers[qIdx] = optIdx;
+      const isCorrect = (optIdx === q.correctIndex);
+
+      // Reset buttons style for this question
+      document.querySelectorAll(`.quiz-btn-${qIdx}`).forEach((btn, idx) => {
+        if (idx === q.correctIndex) {
+          btn.className = `quiz-btn-${qIdx} text-left p-3 rounded-xl bg-emerald-500/20 border border-emerald-500 text-xs text-emerald-200 font-semibold`;
+        } else if (idx === optIdx && !isCorrect) {
+          btn.className = `quiz-btn-${qIdx} text-left p-3 rounded-xl bg-rose-500/20 border border-rose-500 text-xs text-rose-200`;
+        } else {
+          btn.className = `quiz-btn-${qIdx} text-left p-3 rounded-xl bg-[#0B0F19] opacity-40 border border-gray-800 text-xs text-gray-400`;
+        }
+      });
+
+      const badge = document.getElementById(`quiz_badge_${qIdx}`);
+      if (badge) {
+        if (isCorrect) {
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
+          badge.innerText = '✓ Correct';
+        } else {
+          badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
+          badge.innerText = '✗ Incorrect';
+        }
+      }
+
+      const fb = document.getElementById(`quiz_fb_${qIdx}`);
+      if (fb) {
+        fb.classList.remove('hidden');
+        if (isCorrect) {
+          fb.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30';
+          fb.innerHTML = `✓ Bilkul Sahi Jawab! 🎉<br><span class="font-normal text-gray-300 text-[11px] mt-0.5 block">${q.explanation || ''}</span>`;
+        } else {
+          fb.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30';
+          fb.innerHTML = `✗ Yeh ghalat hai. Sahi jawab Option ${String.fromCharCode(65 + q.correctIndex)} tha.<br><span class="font-normal text-gray-300 text-[11px] mt-0.5 block">${q.explanation || ''}</span>`;
+        }
+      }
+
+      updateHomeworkGateChecklist();
+    }
+
+    function updateHomeworkGateChecklist() {
+      const totalQuestions = currentDayQuestions.length || 4;
+      const validWsCount = Object.values(classroomWorksheetAnswers).filter(t => t && t.trim().length >= 5).length;
+      const totalQuiz = currentDayQuiz.length || 4;
+      const answeredQuizCount = Object.keys(classroomQuizAnswers).length;
+      const proofUrl = (document.getElementById('proofUrlInput') ? document.getElementById('proofUrlInput').value : '').trim();
+      const hasProof = proofUrl.length >= 5;
+
+      // Update Worksheet Gate
+      const gateWs = document.getElementById('gateWorksheet');
+      const iconWs = document.getElementById('iconGateWorksheet');
+      const textWs = document.getElementById('textGateWorksheet');
+      const wsBadge = document.getElementById('worksheetCounterBadge');
+      if (wsBadge) wsBadge.innerText = `${validWsCount} of ${totalQuestions} Answered`;
+
+      if (gateWs && iconWs && textWs) {
+        if (validWsCount >= totalQuestions) {
+          gateWs.className = 'flex items-center gap-2 bg-[#121E2C] px-3 py-2 rounded-xl border border-emerald-500/40 text-emerald-300 transition';
+          iconWs.className = 'fa-solid fa-circle-check text-emerald-400';
+          textWs.innerText = `Worksheet (${validWsCount}/${totalQuestions}) Done ✓`;
+        } else {
+          gateWs.className = 'flex items-center gap-2 bg-[#12192C] px-3 py-2 rounded-xl border border-rose-500/30 text-rose-300 transition';
+          iconWs.className = 'fa-solid fa-circle-xmark text-rose-400';
+          textWs.innerText = `Worksheet (${validWsCount}/${totalQuestions})`;
+        }
+      }
+
+      // Update Quiz Gate
+      const gateQ = document.getElementById('gateQuiz');
+      const iconQ = document.getElementById('iconGateQuiz');
+      const textQ = document.getElementById('textGateQuiz');
+      const quizStText = document.getElementById('quizStatusText');
+      if (quizStText) quizStText.innerText = `${answeredQuizCount} of ${totalQuiz} Solved`;
+
+      if (gateQ && iconQ && textQ) {
+        if (answeredQuizCount >= totalQuiz) {
+          gateQ.className = 'flex items-center gap-2 bg-[#121E2C] px-3 py-2 rounded-xl border border-emerald-500/40 text-emerald-300 transition';
+          iconQ.className = 'fa-solid fa-circle-check text-emerald-400';
+          textQ.innerText = `Quiz (${answeredQuizCount}/${totalQuiz}) Solved ✓`;
+        } else {
+          gateQ.className = 'flex items-center gap-2 bg-[#12192C] px-3 py-2 rounded-xl border border-rose-500/30 text-rose-300 transition';
+          iconQ.className = 'fa-solid fa-circle-xmark text-rose-400';
+          textQ.innerText = `Quiz (${answeredQuizCount}/${totalQuiz})`;
+        }
+      }
+
+      // Update Proof Gate
+      const gateP = document.getElementById('gateProof');
+      const iconP = document.getElementById('iconGateProof');
+      const textP = document.getElementById('textGateProof');
+      if (gateP && iconP && textP) {
+        if (hasProof) {
+          gateP.className = 'flex items-center gap-2 bg-[#121E2C] px-3 py-2 rounded-xl border border-emerald-500/40 text-emerald-300 transition';
+          iconP.className = 'fa-solid fa-circle-check text-emerald-400';
+          textP.innerText = 'Proof URL Attached ✓';
+        } else {
+          gateP.className = 'flex items-center gap-2 bg-[#12192C] px-3 py-2 rounded-xl border border-rose-500/30 text-rose-300 transition';
+          iconP.className = 'fa-solid fa-circle-xmark text-rose-400';
+          textP.innerText = 'Proof URL Missing';
+        }
+      }
+
+      // Overall Gate Badge
+      const overallBadge = document.getElementById('homeworkOverallBadge');
+      const completedGates = (validWsCount >= totalQuestions ? 1 : 0) + (answeredQuizCount >= totalQuiz ? 1 : 0) + (hasProof ? 1 : 0);
+      if (overallBadge) {
+        if (completedGates === 3) {
+          overallBadge.className = 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1';
+          overallBadge.innerHTML = '<i class="fa-solid fa-check"></i> Ready to Submit';
+        } else {
+          overallBadge.className = 'bg-rose-500/10 text-rose-300 border border-rose-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold';
+          overallBadge.innerText = `Incomplete (${completedGates}/3 Tasks Done)`;
+        }
+      }
+
+      return {
+        isComplete: (completedGates === 3),
+        validWsCount,
+        totalQuestions,
+        answeredQuizCount,
+        totalQuiz,
+        hasProof,
+        proofUrl
+      };
+    }
+
+    // Submit Homework Proof with STRICT GATEKEEPER
     async function submitHomeworkProof() {
-      const proofUrl = document.getElementById('proofUrlInput').value.trim();
-      const notes = document.getElementById('proofNotesInput').value.trim();
+      const check = updateHomeworkGateChecklist();
+
+      // 1. Strict Worksheet Gate
+      if (check.validWsCount < check.totalQuestions) {
+        alert(`⚠️ Incomplete Worksheet!\n\nBaraye meherbani Part 2 ke tamam ${check.totalQuestions} conceptual sawalat ke mukammal jawab likhein!\n\n(Abhi sirf ${check.validWsCount}/${check.totalQuestions} sawalat ke jawab likhe gaye hain).`);
+        const firstEmpty = currentDayQuestions.findIndex((q, idx) => !classroomWorksheetAnswers[`q${idx+1}`] || classroomWorksheetAnswers[`q${idx+1}`].length < 5);
+        if (firstEmpty !== -1) {
+          const el = document.getElementById(`worksheet_q_${firstEmpty}`);
+          if (el) el.focus();
+        }
+        return;
+      }
+
+      // 2. Strict Quiz Gate
+      if (check.answeredQuizCount < check.totalQuiz) {
+        alert(`⚠️ Incomplete Daily Quiz!\n\nBaraye meherbani Part 3 ke tamam ${check.totalQuiz} MCQs solve karein!\n\n(Abhi sirf ${check.answeredQuizCount}/${check.totalQuiz} MCQs solve huay hain).`);
+        return;
+      }
+
+      // 3. Strict Proof URL Gate
+      if (!check.hasProof) {
+        alert("⚠️ Proof of Work Missing!\n\nBaraye meherbani Part 4 mein apna practical proof (Figma link, GitHub repo, Google Drive, Behance ya image URL) lazmi paste karein!");
+        const proofInput = document.getElementById('proofUrlInput');
+        if (proofInput) proofInput.focus();
+        return;
+      }
+
+      const proofUrl = check.proofUrl;
+      const notes = (document.getElementById('proofNotesInput') ? document.getElementById('proofNotesInput').value : '').trim();
+      const btn = document.getElementById('btnSubmitHomework');
+      const originalText = btn.innerHTML;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Verifying Proof with AI...';
+      btn.disabled = true;
 
       try {
         const res = await fetch(`/api/day/${currentActiveDayNumber}/submit-proof`, {
@@ -1757,18 +1976,29 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             email: currentUserEmail,
-            proofUrl: proofUrl || "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
-            notes: notes || "Practical practice completed.",
+            proofUrl: proofUrl,
+            notes: notes || "Practical practice deliverable submitted.",
+            worksheetAnswers: classroomWorksheetAnswers,
+            quizScore: `${check.answeredQuizCount}/${check.totalQuiz}`,
             lang: currentLang
           })
         });
         const data = await res.json();
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+
+        if (!res.ok) {
+          alert(data.message || data.error);
+          return;
+        }
 
         alert(`🎉 ${data.message}\n\n${data.feedback}`);
-        initApp();
-        switchTab('portfolio');
+        await initApp();
+        switchTab('roadmap');
       } catch (e) {
-        alert("Homework submission recorded!");
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        alert("Homework submission error. Please try again.");
       }
     }
 
