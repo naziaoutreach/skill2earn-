@@ -209,8 +209,86 @@ function generateCurriculum(skillTitle, category = "General") {
   }
 }
 
-function getLessonForDay(dayNum, courseTitle, skillCategory, lang = "urdu") {
+function parseYouTubeVideo(url) {
+  if (!url || typeof url !== 'string') return null;
+  const clean = url.trim();
+  const listMatch = clean.match(/[?&]list=([a-zA-Z0-9_-]+)/);
+  const playlistId = listMatch ? listMatch[1] : null;
+
+  const regExp = /^.*(?:youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = clean.match(regExp);
+  const videoId = (match && match[1].length === 11) ? match[1] : null;
+
+  if (playlistId && !videoId) {
+    return {
+      videoId: null,
+      playlistId,
+      embedUrl: `https://www.youtube.com/embed/videoseries?list=${playlistId}`,
+      watchUrl: clean
+    };
+  }
+
+  if (videoId) {
+    return {
+      videoId,
+      playlistId,
+      embedUrl: playlistId 
+        ? `https://www.youtube.com/embed/${videoId}?list=${playlistId}&rel=0`
+        : `https://www.youtube.com/embed/${videoId}?rel=0`,
+      watchUrl: `https://www.youtube.com/watch?v=${videoId}`
+    };
+  }
+
+  return null;
+}
+
+const DEFAULT_SKILL_VIDEOS = {
+  "Graphic Design": {
+    embedUrl: "https://www.youtube.com/embed/un508f7_6U4?rel=0",
+    watchUrl: "https://www.youtube.com/watch?v=un508f7_6U4"
+  },
+  "Web Development": {
+    embedUrl: "https://www.youtube.com/embed/zJSY8tbf_ys?rel=0",
+    watchUrl: "https://www.youtube.com/watch?v=zJSY8tbf_ys"
+  },
+  "Python": {
+    embedUrl: "https://www.youtube.com/embed/kqtD5dpn9C8?rel=0",
+    watchUrl: "https://www.youtube.com/watch?v=kqtD5dpn9C8"
+  },
+  "Video Editing": {
+    embedUrl: "https://www.youtube.com/embed/u73b22kZ73I?rel=0",
+    watchUrl: "https://www.youtube.com/watch?v=u73b22kZ73I"
+  },
+  "English": {
+    embedUrl: "https://www.youtube.com/embed/JU6qS6dCj2g?rel=0",
+    watchUrl: "https://www.youtube.com/watch?v=JU6qS6dCj2g"
+  }
+};
+
+function getLessonForDay(dayNum, user, lang = "urdu") {
   const isEn = lang === "en";
+  const course = (user && user.activeCourse) || {};
+  const courseTitle = course.title || (user && user.currentSkill) || "Digital Skill Masterclass";
+  const userSkill = (user && user.currentSkill) || "Graphic Design";
+
+  let videoEmbed = "";
+  let videoWatch = "";
+
+  if (course.url) {
+    const parsed = parseYouTubeVideo(course.url);
+    if (parsed) {
+      videoEmbed = parsed.embedUrl;
+      videoWatch = parsed.watchUrl;
+    }
+  }
+
+  if (!videoEmbed) {
+    const key = Object.keys(DEFAULT_SKILL_VIDEOS).find(k => 
+      userSkill.toLowerCase().includes(k.toLowerCase()) || courseTitle.toLowerCase().includes(k.toLowerCase())
+    ) || "Graphic Design";
+    videoEmbed = DEFAULT_SKILL_VIDEOS[key].embedUrl;
+    videoWatch = DEFAULT_SKILL_VIDEOS[key].watchUrl;
+  }
 
   const theoryNotes = isEn ? [
     "Dedicate 45 focused minutes each day to turn knowledge into client-ready skills.",
@@ -297,9 +375,10 @@ function getLessonForDay(dayNum, courseTitle, skillCategory, lang = "urdu") {
   return {
     day: dayNum,
     title: `Day ${dayNum}: Practical Implementation & Proof`,
-    videoTitle: `Masterclass: Hands-on Practice for ${courseTitle}`,
-    duration: "20 Mins",
-    videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
+    videoTitle: `Day ${dayNum}: ${courseTitle}`,
+    duration: "25 Mins",
+    videoUrl: videoEmbed,
+    originalUrl: videoWatch,
     theoryNotes,
     worksheetQuestions,
     quiz,
@@ -528,6 +607,17 @@ app.post('/api/auth/register', (req, res) => {
 
   if (!userKey) {
     return res.status(400).json({ error: "Baraye meherbani koi theek naam likhein." });
+  }
+
+  // 🛡️ SECURITY: Block Reserved Admin & System Usernames
+  const RESERVED_ADMIN_NAMES = [
+    'admin', 'administrator', 'superadmin', 'root', 'owner', 'system',
+    'moderator', 'mod', 'practix_admin', 'support', 'staff', 'official'
+  ];
+  if (RESERVED_ADMIN_NAMES.includes(userKey) || RESERVED_ADMIN_NAMES.some(r => userKey.startsWith(r))) {
+    return res.status(403).json({
+      error: "🚫 Yeh naam reserved hai! Security policies ke mutabiq aap yeh username istemal nahi kar saktay."
+    });
   }
 
   if (db.users[userKey]) {
@@ -835,7 +925,7 @@ app.get('/api/day/:dayNumber', (req, res) => {
   }
 
   const lang = (req.query.lang || req.headers['x-lang'] || "urdu").toLowerCase();
-  const lesson = getLessonForDay(dayNum, courseTitle, user.currentSkill, lang);
+  const lesson = getLessonForDay(dayNum, user, lang);
   
   // Check if user already submitted proof for this day in roadmap
   if (dayItem && dayItem.status === 'completed') {
