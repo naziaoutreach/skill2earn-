@@ -899,7 +899,7 @@ async function syncToSupabase(data) {
     // 1. Sync Users
     const userRows = Object.values(data.users).map(u => ({
       id: u.id || u.email,
-      name: u.name,
+      name: (u.phone && u.phone !== 'Not Provided' && !u.name.includes('|')) ? `${u.name} | ${u.phone}` : u.name,
       email: u.email || `${u.id}@practix.user`,
       password: u.password || '123456',
       currentSkill: u.currentSkill || 'Graphic Design',
@@ -965,16 +965,24 @@ async function hydrateFromSupabase() {
       for (const ru of remoteUsers) {
         const key = ru.id || ru.email.split('@')[0];
         if (key === 'ali' || key === 'test_ali' || (ru.name && ru.name.toLowerCase().includes('ali khan'))) continue;
+        
+        const rawName = ru.name || key;
+        const nameParts = rawName.includes(' | ') ? rawName.split(' | ') : [rawName];
+        const studentName = nameParts[0].trim();
+        const studentPhone = nameParts[1] ? nameParts[1].trim() : (ru.phone || "Not Provided");
+
         if (!db.users[key]) {
           db.users[key] = {
             id: key,
-            name: ru.name,
+            name: studentName,
             email: ru.email,
+            phone: studentPhone,
             password: ru.password,
             currentSkill: ru.currentSkill,
             streak: ru.streak || 1,
             totalXp: ru.xp || 150,
             level: ru.level || 1,
+            isPro: Boolean(ru.isPro),
             activeCourse: {
               id: `course-${key}`,
               title: `${ru.currentSkill} 30-Day Practical Fast-Track`,
@@ -1051,7 +1059,7 @@ function getUser(req, db) {
 // ═════════════════════════ AUTHENTICATION ROUTES ═════════════════════════
 
 // 1. Register New User (Simple Username & Password)
-app.post('/api/auth/register', (req, res) => {
+app.post('/api/auth/register', async (req, res) => {
   const db = loadDb();
   const { name, email, phone, password, skill = "Graphic Design", dailyGoalMins = 45 } = req.body;
   const lang = (req.body.lang || "urdu").toLowerCase();
@@ -1175,6 +1183,14 @@ app.post('/api/auth/register', (req, res) => {
   });
 
   saveDb(db);
+  if (supabase) {
+    try {
+      await Promise.race([
+        syncToSupabase(db),
+        new Promise(r => setTimeout(r, 600))
+      ]);
+    } catch (e) {}
+  }
 
   const welcomeMsg = isEn 
     ? `Welcome ${newUser.name}! Your Practix account has been created successfully.`
@@ -1187,15 +1203,15 @@ app.post('/api/auth/register', (req, res) => {
   });
 });
 
-// 2. Login (Simple Username/Name & Password)
-app.post('/api/auth/login', (req, res) => {
+// 2. Login (Email, WhatsApp/Phone, or Username & Password)
+app.post('/api/auth/login', async (req, res) => {
   const db = loadDb();
   const { username, password } = req.body;
   const lang = (req.body.lang || "urdu").toLowerCase();
   const isEn = lang === "en";
 
   if (!username || !password) {
-    return res.status(400).json({ error: isEn ? "Username and Password are required!" : "Naam aur Password dono lazmi hain!" });
+    return res.status(400).json({ error: isEn ? "Username/Phone/Email and Password are required!" : "Naam/Phone/Email aur Password dono lazmi hain!" });
   }
 
   const cleanUser = username.trim().toLowerCase();
@@ -1203,17 +1219,68 @@ app.post('/api/auth/login', (req, res) => {
   let user = db.users[cleanUser];
 
   if (!user) {
-    // Try matching by name, email, or phone number!
+    // Try matching by name, email, or phone number in memory!
     user = Object.values(db.users).find(u => 
       (u.name && u.name.toLowerCase() === cleanUser) || 
       (u.email && u.email.toLowerCase() === cleanUser) ||
       (u.id && u.id.toLowerCase() === cleanUser) ||
-      (cleanDigits.length >= 7 && u.phone && u.phone.replace(/[^0-9]/g, '').includes(cleanDigits))
+      (cleanDigits.length >= 7 && u.phone && (u.phone.replace(/[^0-9]/g, '') === cleanDigits || u.phone.replace(/[^0-9]/g, '').endsWith(cleanDigits) || cleanDigits.endsWith(u.phone.replace(/[^0-9]/g, ''))))
     );
   }
 
+  // If not found in memory, query Supabase Cloud directly!
+  if (!user && supabase) {
+    try {
+      const { data: remoteUsers } = await supabase.from('users').select('*');
+      if (Array.isArray(remoteUsers)) {
+        for (const ru of remoteUsers) {
+          const rawName = ru.name || '';
+          const nameParts = rawName.includes(' | ') ? rawName.split(' | ') : [rawName];
+          const studentName = nameParts[0].trim();
+          const studentPhone = nameParts[1] ? nameParts[1].trim() : (ru.phone || "Not Provided");
+          const key = ru.id || ru.email.split('@')[0];
+
+          if (!db.users[key]) {
+            db.users[key] = {
+              id: key,
+              name: studentName,
+              email: ru.email,
+              phone: studentPhone,
+              password: ru.password,
+              currentSkill: ru.currentSkill,
+              streak: ru.streak || 1,
+              totalXp: ru.xp || 150,
+              level: ru.level || 1,
+              isPro: Boolean(ru.isPro),
+              activeCourse: {
+                id: `course-${key}`,
+                title: `${ru.currentSkill} Practical Track`,
+                totalDays: 30,
+                completedDays: 0,
+                currentDay: 1,
+                category: ru.currentSkill
+              },
+              roadmap: generateCurriculum(ru.currentSkill),
+              portfolio: []
+            };
+          }
+
+          if (
+            (studentName.toLowerCase() === cleanUser) ||
+            (ru.email && ru.email.toLowerCase() === cleanUser) ||
+            (ru.id && ru.id.toLowerCase() === cleanUser) ||
+            (cleanDigits.length >= 7 && (studentPhone.replace(/[^0-9]/g, '') === cleanDigits || studentPhone.replace(/[^0-9]/g, '').endsWith(cleanDigits) || cleanDigits.endsWith(studentPhone.replace(/[^0-9]/g, ''))))
+          ) {
+            user = db.users[key];
+            break;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
   if (!user || user.password !== password.trim()) {
-    return res.status(401).json({ error: isEn ? "Invalid username or password! Please check and try again." : "Ghalat naam ya password! Please check karke dobara try karein." });
+    return res.status(401).json({ error: isEn ? "Invalid Email/Phone or Password! Please check and try again." : "Ghalat Email/Phone ya Password! Please check karke dobara try karein." });
   }
 
   res.json({
