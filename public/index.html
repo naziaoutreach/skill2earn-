@@ -848,7 +848,13 @@
     };
 
     // State
-    let currentUserEmail = localStorage.getItem('practix_user_email') || '';
+    // Purge old mock demo account so users ALWAYS see registration first unless they explicitly registered
+    let storedUser = localStorage.getItem('practix_user_email');
+    if (storedUser === 'ali' || storedUser === 'ali@practix.app' || storedUser === 'ali@practix.user') {
+      localStorage.removeItem('practix_user_email');
+      storedUser = '';
+    }
+    let currentUserEmail = storedUser || '';
     let currentActiveDayNumber = 1;
     let currentLang = localStorage.getItem('practix_lang') || 'urdu';
 
@@ -1259,7 +1265,7 @@
     }
 
     function loginAsDemoUser() {
-      currentUserEmail = 'ali';
+      currentUserEmail = 'demo_student';
       localStorage.setItem('practix_user_email', currentUserEmail);
       closeAuthModal();
       initApp();
