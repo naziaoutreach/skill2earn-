@@ -962,9 +962,11 @@ async function hydrateFromSupabase() {
     const { data: remoteUsers, error } = await supabase.from('users').select('*');
     if (!error && Array.isArray(remoteUsers) && remoteUsers.length > 0) {
       const db = loadDb();
+      const DUMMY_BLACKLIST = ['ali', 'test_ali', 'pricingtestuser', 'teststudentcontact', 'hamzakhan', 'qatester'];
       for (const ru of remoteUsers) {
         const key = ru.id || ru.email.split('@')[0];
-        if (key === 'ali' || key === 'test_ali' || (ru.name && ru.name.toLowerCase().includes('ali khan'))) continue;
+        const em = (ru.email || '').toLowerCase();
+        if (DUMMY_BLACKLIST.includes(key) || em.endsWith('@example.com') || (ru.name && ru.name.toLowerCase().includes('ali khan'))) continue;
         
         const rawName = ru.name || key;
         const nameParts = rawName.includes(' | ') ? rawName.split(' | ') : [rawName];
@@ -1797,7 +1799,15 @@ app.post('/api/admin/auth', (req, res) => {
 
 // 2. Admin System Overview (Stats, Users, Submissions)
 app.get('/api/admin/overview', verifyAdminAuth, async (req, res) => {
+  await Promise.race([hydrateFromSupabase(), new Promise(r => setTimeout(r, 2500))]);
   const db = loadDb();
+  const DUMMY_BLACKLIST = ['ali', 'test_ali', 'pricingtestuser', 'teststudentcontact', 'hamzakhan', 'qatester'];
+  Object.keys(db.users).forEach(k => {
+    const u = db.users[k];
+    if (DUMMY_BLACKLIST.includes(k) || (u && u.email && u.email.toLowerCase().endsWith('@example.com'))) {
+      delete db.users[k];
+    }
+  });
   const usersList = Object.values(db.users).map(u => ({
     id: u.id,
     name: u.name,
@@ -1846,16 +1856,20 @@ app.get('/api/admin/overview', verifyAdminAuth, async (req, res) => {
 // 3. Admin Delete User
 app.post('/api/admin/user/delete', verifyAdminAuth, async (req, res) => {
   const { userId } = req.body;
+  await Promise.race([hydrateFromSupabase(), new Promise(r => setTimeout(r, 2000))]);
   const db = loadDb();
-  if (db.users[userId]) {
-    delete db.users[userId];
-    saveDb(db);
-    try {
-      await supabase.from('users').delete().eq('id', userId);
-    } catch (e) {}
-    return res.json({ success: true, message: `User ${userId} deleted.` });
-  }
-  return res.status(404).json({ error: "User not found" });
+  const targetUser = db.users[userId] || Object.values(db.users).find(u => u.id === userId || u.email === userId);
+  const targetEmail = targetUser ? targetUser.email : userId;
+  const targetKey = targetUser ? targetUser.id : userId;
+  delete db.users[userId];
+  delete db.users[targetKey];
+  try {
+    if (supabase) {
+      await supabase.from('users').delete().eq('id', targetKey);
+      await supabase.from('users').delete().eq('email', targetEmail);
+    }
+  } catch (e) {}
+  return res.json({ success: true, message: `User ${userId} deleted.` });
 });
 
 // 4. Admin Review / Grade Submission

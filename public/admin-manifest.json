@@ -1,0 +1,19 @@
+{
+  "name": "Practix Admin HQ",
+  "short_name": "Practix HQ",
+  "description": "Practix Master Admin Control Headquarters",
+  "start_url": "/admin-control-hq.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0B0F19",
+  "theme_color": "#7C3AED",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

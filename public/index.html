@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Practix — Learn. Practice. Execute. Build.</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/svg+xml" href="/icon.svg">
+  <link rel="apple-touch-icon" href="/icon.svg">
+  <meta name="theme-color" content="#7C3AED">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Practix">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
@@ -211,8 +219,14 @@
         <div class="text-[11px] text-gray-400 mt-1" id="sidebarSprintText">30-Day Sprint to First Client</div>
       </div>
 
+      <!-- Install Mobile App Button -->
+      <button onclick="installPractixApp()" class="w-full mt-2 bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/30 text-emerald-300 hover:text-white p-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
+        <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
+        <span>📲 Save as Mobile App</span>
+      </button>
+
       <!-- Prominent Sidebar Log Out Button -->
-      <button onclick="logoutUser()" class="w-full mt-3 bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 hover:text-white p-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
+      <button onclick="logoutUser()" class="w-full mt-2 bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/30 text-rose-300 hover:text-white p-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm">
         <i class="fa-solid fa-power-off text-rose-400"></i>
         <span>Log Out / Naya Account</span>
       </button>
@@ -1574,6 +1588,14 @@
           Log In Karein →
         </button>
       </form>
+
+      <!-- 1-Click Install Mobile App Button -->
+      <div class="mt-4 pt-3 border-t border-gray-800/80 text-center">
+        <button type="button" onclick="installPractixApp()" class="w-full py-2.5 px-3 rounded-xl bg-[#121C2E] hover:bg-[#18263E] border border-emerald-500/30 text-emerald-300 text-xs font-bold flex items-center justify-center gap-2 transition">
+          <i class="fa-solid fa-mobile-screen-button text-emerald-400"></i>
+          <span id="btnInstallAppText">📲 Mobile Mein App Ki Tarah Save Karein</span>
+        </button>
+      </div>
     </div>
     </div>
   </div>
@@ -3597,6 +3619,29 @@
         `;
         container.appendChild(errBubble);
         container.scrollTop = container.scrollHeight;
+      }
+    }
+
+    // PWA Service Worker & 1-Click Mobile App Install
+    let deferredPwaPrompt = null;
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(() => {});
+    }
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPwaPrompt = e;
+    });
+
+    async function installPractixApp() {
+      if (deferredPwaPrompt) {
+        deferredPwaPrompt.prompt();
+        await deferredPwaPrompt.userChoice;
+        deferredPwaPrompt = null;
+      } else {
+        const isEn = currentLang === 'en';
+        alert(isEn
+          ? "📲 Save Practix as a Mobile App:\n\n• Android (Chrome): Tap the 3 dots (⋮) at the top-right of your browser and tap 'Install App' or 'Add to Home Screen'.\n\n• iPhone (Safari): Tap the 'Share' button at the bottom and select 'Add to Home Screen'."
+          : "📲 Mobile Mein App Ki Tarah Save Karne Ka Tareeqa:\n\n• Android (Chrome): Browser ke upar right side par 3 dots (⋮) dabayein aur 'Install App' ya 'Add to Home Screen' par click karein.\n\n• iPhone (Safari): Neeche 'Share' button dabayein aur 'Add to Home Screen' select karein.");
       }
     }
 
