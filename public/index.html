@@ -373,6 +373,22 @@
                   <span>YouTube par dekhein</span>
                 </a>
               </div>
+
+              <!-- Micro-Learning Daily Focus Segment Guide -->
+              <div class="bg-gradient-to-r from-[#182038] to-[#12182C] p-3.5 rounded-xl border border-purple-500/30 flex items-start gap-3">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 flex items-center justify-center text-sm flex-shrink-0 mt-0.5">
+                  <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <div class="text-xs space-y-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <span class="font-bold text-white" id="classroomSegmentTitle">🎯 Aaj Ka Target: 00:00 se 20:00 tak dekhein</span>
+                    <span class="bg-purple-500/20 text-purple-300 border border-purple-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">20 Mins Focus Chunk</span>
+                  </div>
+                  <p class="text-[11px] text-gray-300 leading-relaxed" id="classroomSegmentNote">
+                    <strong>Practix Rule:</strong> Poori 1 ghante ki video ek din mein dekh kar bore ya confuse mat hon! Aaj sirf 20 minute ka topic samjhein aur baqi 25 minute foran Part 2 mein ja kar practical homework execute karein.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -1628,21 +1644,44 @@
         document.getElementById('classroomDayTitle').innerText = data.title;
         document.getElementById('classroomVideoHeading').innerText = data.videoTitle || `Day ${data.day} Practical Lesson`;
 
+        // Calculate 20-Minute Focus Chunk for Micro-Learning
+        const startMin = (data.day - 1) * 20;
+        const endMin = startMin + 20;
+        const formatMin = (m) => {
+          const hrs = Math.floor(m / 60);
+          const mins = m % 60;
+          return hrs > 0 ? `${hrs}:${mins < 10 ? '0' + mins : mins}:00` : `${mins < 10 ? '0' + mins : mins}:00`;
+        };
+
+        const segTitle = document.getElementById('classroomSegmentTitle');
+        if (segTitle) {
+          segTitle.innerText = `🎯 Aaj Ka Target: ${formatMin(startMin)} se ${formatMin(endMin)} tak dekhein`;
+        }
+
+        const startSeconds = startMin * 60;
+        let videoSrc = data.videoUrl;
+        if (startSeconds > 0 && !videoSrc.includes('start=')) {
+          videoSrc += (videoSrc.includes('?') ? '&' : '?') + `start=${startSeconds}`;
+        }
+
         // Update Real Video Iframe & Direct Watch Link
         const videoIframe = document.getElementById('classroomVideoIframe');
-        if (videoIframe && data.videoUrl) {
-          if (videoIframe.src !== data.videoUrl) {
-            videoIframe.src = data.videoUrl;
+        if (videoIframe && videoSrc) {
+          if (videoIframe.src !== videoSrc) {
+            videoIframe.src = videoSrc;
           }
         }
         const directLink = document.getElementById('classroomVideoDirectLink');
         if (directLink) {
-          const directUrl = data.originalUrl || data.videoUrl || '#';
+          let directUrl = data.originalUrl || data.videoUrl || '#';
+          if (startSeconds > 0 && !directUrl.includes('t=')) {
+            directUrl += (directUrl.includes('?') ? '&' : '?') + `t=${startSeconds}s`;
+          }
           directLink.href = directUrl;
         }
         const durEl = document.getElementById('classroomVideoDuration');
-        if (durEl && data.duration) {
-          durEl.innerText = `${data.duration} Hands-on Practice`;
+        if (durEl) {
+          durEl.innerText = `20 Mins Video + 25 Mins Hands-on Execution`;
         }
 
         // Takeaways
