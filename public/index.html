@@ -836,9 +836,12 @@
           <span class="text-xs font-bold text-amber-300 uppercase" id="proModalPlanBadge">14-Day / 30-Day Track Pass</span>
           <span class="text-base font-black text-white" id="proModalFeeText">Rs. 499 <span class="text-[10px] text-gray-400 font-normal">/ Track Pass</span></span>
         </div>
-        <div class="text-[11px] text-gray-300 space-y-1 pt-2 border-t border-gray-800">
-          <div>💳 <strong>EasyPaisa / JazzCash / Bank Transfer</strong></div>
-          <p class="text-gray-400">Payment karne ke baad foran WhatsApp par receipt/screenshot bheinjen taake Admin aapka PRO account 5 minute mein activate kar sakein!</p>
+        <div class="text-[11px] text-gray-300 space-y-1.5 pt-2 border-t border-gray-800">
+          <div class="flex items-center justify-between bg-[#0B0F19] px-3 py-2 rounded-xl border border-gray-800">
+            <span class="text-gray-400">💳 EasyPaisa / JazzCash:</span>
+            <span class="text-amber-300 font-bold tracking-wider select-all">0322 0426593</span>
+          </div>
+          <p class="text-[10px] text-gray-400 leading-relaxed">Fee bhej kar neeche diye gaye WhatsApp button se receipt ka screenshot bheinjen taake Admin aapka PRO account foran activate kar sakein!</p>
         </div>
       </div>
 
@@ -846,7 +849,7 @@
       <div class="space-y-2">
         <button onclick="contactOnWhatsAppForPro()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/30">
           <i class="fa-brands fa-whatsapp text-lg"></i>
-          <span>WhatsApp par Rabta Karein (Send Payment Proof)</span>
+          <span>WhatsApp Par Screenshot Bheinjen (+92 322 0426593)</span>
         </button>
         <button onclick="closeProModal()" class="w-full py-2 text-xs text-gray-400 hover:text-white">
           Abhi nahi, baad mein karunga
@@ -2134,8 +2137,9 @@
       const courseTitle = (currentActiveCourse && currentActiveCourse.title) || 'Digital Skill';
       const trackLabel = is14 ? '14-Day Skill Track (Days 8–14)' : '30-Day Career Masterclass (Days 8–30)';
 
-      const text = encodeURIComponent(`Assalam o Alaikum! Maine Practix 7-Day Free Trial complete kar lia hai. Mera username "${user}" hai aur mera course "${courseTitle}" (${totalDays} Days) hai. Main "${trackLabel}" (Rs. ${fee}) unlock karna chahta/chahti hoon. Baraye meherbani EasyPaisa / JazzCash payment details aur activation process guide kar dein.`);
-      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+      const text = encodeURIComponent(`Assalam o Alaikum! Maine Practix 7-Day Free Trial complete kar lia hai. Mera username "${user}" hai aur mera course "${courseTitle}" (${totalDays} Days) hai. Main "${trackLabel}" (Rs. ${fee}) unlock karna chahta/chahti hoon. Maine EasyPaisa/JazzCash par fee bhej di hai, baraye meherbani payment verify karke mera account PRO activate kar dein.`);
+      const phone = "923220426593";
+      window.open(`https://api.whatsapp.com/send?phone=${phone}&text=${text}`, '_blank');
     }
 
     // On page load
