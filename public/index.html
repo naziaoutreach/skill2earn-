@@ -847,14 +847,14 @@
       showModalAlert(title, text, icon);
     };
 
-    // State
-    // Purge old mock demo account so users ALWAYS see registration first unless they explicitly registered
-    let storedUser = localStorage.getItem('practix_user_email');
-    if (storedUser === 'ali' || storedUser === 'ali@practix.app' || storedUser === 'ali@practix.user') {
+    // State - Always start fresh unless real logged-in user explicitly saved
+    // Clear any demo or test accounts completely
+    let storedUser = localStorage.getItem('practix_user_email') || '';
+    if (storedUser === 'ali' || storedUser === 'demo_student' || storedUser.includes('ali@')) {
       localStorage.removeItem('practix_user_email');
       storedUser = '';
     }
-    let currentUserEmail = storedUser || '';
+    let currentUserEmail = storedUser;
     let currentActiveDayNumber = 1;
     let currentLang = localStorage.getItem('practix_lang') || 'urdu';
 
@@ -1764,7 +1764,7 @@
     window.onload = () => {
       setLanguage(currentLang);
       if (!currentUserEmail) {
-        // Show auth modal on first visit - user cannot see dashboard
+        // Enforce: Always open auth modal when no user is logged in
         openAuthModal('register');
       } else {
         closeAuthModal();
