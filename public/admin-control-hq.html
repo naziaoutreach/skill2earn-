@@ -297,12 +297,20 @@
         tr.className = 'hover:bg-[#12192C] transition';
         tr.innerHTML = `
           <td class="p-4 flex items-center gap-3">
-            <div class="w-8 h-8 rounded-full bg-purple-600/30 text-purple-300 font-bold flex items-center justify-center border border-purple-500/40">
+            <div class="w-9 h-9 rounded-full bg-purple-600/30 text-purple-300 font-bold flex items-center justify-center border border-purple-500/40 flex-shrink-0">
               ${u.name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <div class="font-bold text-white">${u.name}</div>
-              <div class="text-[11px] text-gray-400">${u.email}</div>
+              <div class="font-bold text-white flex items-center gap-2">
+                <span>${u.name}</span>
+                ${u.phone && u.phone !== 'No Phone' && u.phone !== 'Not Provided' 
+                  ? `<a href="https://wa.me/${u.phone.replace(/[^0-9]/g, '').startsWith('0') ? '92' + u.phone.replace(/[^0-9]/g, '').slice(1) : u.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Assalam o Alaikum ' + u.name + '! Main Practix Admin team se rabta kar rahi hoon.')}" target="_blank" class="px-2 py-0.5 rounded-md bg-emerald-600/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-bold hover:bg-emerald-600/30 flex items-center gap-1 shadow-sm transition" title="Open WhatsApp Chat"><i class="fa-brands fa-whatsapp text-emerald-400 text-xs"></i> WhatsApp</a>` 
+                  : ''}
+              </div>
+              <div class="text-[11px] text-gray-400 flex flex-wrap items-center gap-2 mt-0.5">
+                <span class="flex items-center gap-1 text-gray-300"><i class="fa-solid fa-envelope text-[10px] text-purple-400"></i> ${u.email}</span>
+                ${u.phone && u.phone !== 'No Phone' && u.phone !== 'Not Provided' ? `<span class="flex items-center gap-1 text-emerald-400 font-mono"><i class="fa-solid fa-phone text-[10px]"></i> ${u.phone}</span>` : ''}
+              </div>
             </div>
           </td>
           <td class="p-4">
@@ -367,7 +375,12 @@
 
     function filterStudents() {
       const q = document.getElementById('searchStudentInput').value.toLowerCase();
-      const filtered = cachedUsers.filter(u => u.name.toLowerCase().includes(q) || u.currentSkill.toLowerCase().includes(q) || u.email.toLowerCase().includes(q));
+      const filtered = cachedUsers.filter(u => 
+        u.name.toLowerCase().includes(q) || 
+        (u.phone && u.phone.toLowerCase().includes(q)) || 
+        (u.email && u.email.toLowerCase().includes(q)) || 
+        u.currentSkill.toLowerCase().includes(q)
+      );
       renderStudents(filtered);
     }
 

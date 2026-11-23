@@ -1045,15 +1045,28 @@
       <!-- Register Form -->
       <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3.5" autocomplete="off">
         <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Aapka Naam (Username):</label>
-          <input type="text" id="regName" placeholder="Jaise: Sara, Ali, ya apna naam" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegFullName">Aapka Mukammal Naam (Full Name):</label>
+          <input type="text" id="regName" placeholder="Jaise: Sara Ahmed ya Ali Khan" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
+
+        <!-- Phone & Email Inputs for Customer Reach -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegPhone">WhatsApp / Mobile No: <span class="text-rose-400">*</span></label>
+            <input type="tel" id="regPhone" placeholder="0322 1234567" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegEmail">Email Address: <span class="text-rose-400">*</span></label>
+            <input type="email" id="regEmail" placeholder="name@gmail.com" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          </div>
+        </div>
+
         <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Password:</label>
+          <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegPassword">Password:</label>
           <input type="password" id="regPassword" placeholder="Apna aasan password rakhein" autocomplete="new-password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Aap kya seekhna chahte hain? (100% Free Tracks)</label>
+          <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegSkill">Aap kya seekhna chahte hain? (100% Free Tracks)</label>
           <select id="regSkill" class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
             <option value="Python & AI">🔥 Python Programming & AI Automation (14 Days)</option>
             <option value="Canva Graphics">⚡ Canva Pro & Social Media Brand Kit (7 Days Sprint)</option>
@@ -1068,7 +1081,7 @@
             <option value="Graphic Design">🎨 Complete Freelance Graphic Design Masterclass (30 Days)</option>
           </select>
         </div>
-        <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-purple-500/30">
+        <button type="submit" id="btnSubmitRegister" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-purple-500/30">
           Account Banayein aur Shuru Karein →
         </button>
       </form>
@@ -1076,14 +1089,14 @@
       <!-- Login Form -->
       <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-3.5 hidden" autocomplete="off">
         <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Aapka Naam ya Username:</label>
-          <input type="text" id="loginUsername" placeholder="Jaise: Sara ya Ali" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblLoginIdentifier">Email, Phone / WhatsApp ya Username:</label>
+          <input type="text" id="loginUsername" placeholder="03XX XXXXXXX, email ya username" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Password:</label>
+          <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblLoginPassword">Password:</label>
           <input type="password" id="loginPassword" placeholder="Apna password likhein" autocomplete="current-password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
-        <button type="submit" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-emerald-500/30">
+        <button type="submit" id="btnSubmitLogin" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-emerald-500/30">
           Log In Karein →
         </button>
       </form>
@@ -1210,21 +1223,25 @@
         pomodoroPause: "Pause",
         pomodoroReset: "Reset",
         regTitle: "Apna Account Banayein",
-        regSub: "Sirf apna naam aur password likhein!",
+        regSub: "Apna naam, WhatsApp number aur email darj karein!",
         loginTitle: "Apne Account Mein Log In Karein",
-        loginSub: "Apna username aur password darj karein!",
+        loginSub: "Email, WhatsApp number ya username se log in karein!",
         tabSignUp: "Naya Account (Sign Up)",
         tabLogIn: "Log In",
-        lblFullName: "Aapka Naam (Username):",
+        lblFullName: "Aapka Mukammal Naam (Full Name):",
+        lblPhone: "WhatsApp / Mobile Number:",
+        lblEmail: "Email Address:",
         lblPassword: "Password:",
-        lblSkillGoal: "Aap kya seekhna chahte hain?",
-        phName: "Jaise: Sara, Ali, ya apna naam",
+        lblSkillGoal: "Aap kya seekhna chahte hain? (100% Free Tracks)",
+        phName: "Jaise: Sara Ahmed ya Ali Khan",
+        phPhone: "0322 1234567",
+        phEmail: "name@gmail.com",
         phPassword: "Apna aasan password rakhein",
-        phLoginUser: "Jaise: Sara ya Ali",
+        phLoginUser: "03XX XXXXXXX, email ya username",
         phLoginPass: "Apna password likhein",
         btnRegister: "Account Banayein aur Shuru Karein →",
         btnLogIn: "Log In Karein →",
-        lblLoginUser: "Aapka Naam ya Username:",
+        lblLoginUser: "Email, Phone / WhatsApp ya Username:",
         coachGreeting: "As-salamu alaykum! Main aapka AI Accountability Coach hoon. Mera kaam yeh ensure karna hai ke aap course beech mein na chhorein aur roz practice karein. Aaj koi sawaal ya mushkil hai freelancing ke hawalay se?",
         coachPlaceholder: "Coach se sawaal puchein (e.g. Clients kaise dhoondon? Upwork profile kaise banayein?)",
         modalAlertBtn: "Theek Hai, Samajh Gaya 👍"
@@ -1261,21 +1278,25 @@
         pomodoroPause: "Pause",
         pomodoroReset: "Reset",
         regTitle: "Create Your Practix Account",
-        regSub: "Enter your username and password to start!",
+        regSub: "Enter your name, WhatsApp number, and email to start!",
         loginTitle: "Log In to Your Practix Account",
-        loginSub: "Access your personalized learning workspace!",
+        loginSub: "Log in using your Email, WhatsApp number, or username!",
         tabSignUp: "Sign Up (New)",
         tabLogIn: "Log In",
-        lblFullName: "Your Username / Name:",
+        lblFullName: "Full Name:",
+        lblPhone: "WhatsApp / Mobile Number:",
+        lblEmail: "Email Address:",
         lblPassword: "Password:",
         lblSkillGoal: "What skill do you want to master?",
-        phName: "e.g. Sarah, Alex, or your name",
+        phName: "e.g. Sarah Jenkins or Alex",
+        phPhone: "+92 3XX XXXXXXX",
+        phEmail: "name@gmail.com",
         phPassword: "Enter a secure password",
-        phLoginUser: "e.g. Sarah or Alex",
+        phLoginUser: "Mobile number, email, or username",
         phLoginPass: "Enter your password",
         btnRegister: "Create Account & Start Day 1 →",
         btnLogIn: "Log In to Workspace →",
-        lblLoginUser: "Your Username / Name:",
+        lblLoginUser: "Email, WhatsApp / Phone or Username:",
         coachGreeting: "Welcome! I am your AI Accountability Coach. My mission is to ensure you never abandon courses halfway and execute daily deliberate practice. Do you have any questions about freelancing or today's task?",
         coachPlaceholder: "Ask Coach Asad (e.g. How to find clients? Upwork profile tips?)",
         modalAlertBtn: "Got It 👍"
@@ -1377,32 +1398,51 @@
       const tabLog = document.getElementById('authTabLogin');
       if (tabLog) tabLog.innerText = t.tabLogIn;
 
-      const formReg = document.getElementById('formRegister');
-      if (formReg) {
-        const labels = formReg.querySelectorAll('label');
-        if (labels[0]) labels[0].innerText = t.lblFullName;
-        if (labels[1]) labels[1].innerText = t.lblPassword;
-        if (labels[2]) labels[2].innerText = t.lblSkillGoal;
-        const inputName = document.getElementById('regName');
-        if (inputName) inputName.placeholder = t.phName;
-        const inputPass = document.getElementById('regPassword');
-        if (inputPass) inputPass.placeholder = t.phPassword;
-        const subBtn = formReg.querySelector('button[type="submit"]');
-        if (subBtn) subBtn.innerText = t.btnRegister;
-      }
+      // Auth Form Labels & Placeholders
+      const lblName = document.getElementById('lblRegFullName');
+      if (lblName) lblName.innerText = t.lblFullName;
 
-      const formLog = document.getElementById('formLogin');
-      if (formLog) {
-        const labels = formLog.querySelectorAll('label');
-        if (labels[0]) labels[0].innerText = t.lblLoginUser;
-        if (labels[1]) labels[1].innerText = t.lblPassword;
-        const inputUser = document.getElementById('loginUsername');
-        if (inputUser) inputUser.placeholder = t.phLoginUser;
-        const inputPass = document.getElementById('loginPassword');
-        if (inputPass) inputPass.placeholder = t.phLoginPass;
-        const subBtn = formLog.querySelector('button[type="submit"]');
-        if (subBtn) subBtn.innerText = t.btnLogIn;
-      }
+      const lblPhone = document.getElementById('lblRegPhone');
+      if (lblPhone) lblPhone.innerHTML = `${t.lblPhone} <span class="text-rose-400">*</span>`;
+
+      const lblEmail = document.getElementById('lblRegEmail');
+      if (lblEmail) lblEmail.innerHTML = `${t.lblEmail} <span class="text-rose-400">*</span>`;
+
+      const lblPass = document.getElementById('lblRegPassword');
+      if (lblPass) lblPass.innerText = t.lblPassword;
+
+      const lblSkill = document.getElementById('lblRegSkill');
+      if (lblSkill) lblSkill.innerText = t.lblSkillGoal;
+
+      const inpName = document.getElementById('regName');
+      if (inpName) inpName.placeholder = t.phName;
+
+      const inpPhone = document.getElementById('regPhone');
+      if (inpPhone) inpPhone.placeholder = t.phPhone;
+
+      const inpEmail = document.getElementById('regEmail');
+      if (inpEmail) inpEmail.placeholder = t.phEmail;
+
+      const inpPass = document.getElementById('regPassword');
+      if (inpPass) inpPass.placeholder = t.phPassword;
+
+      const btnReg = document.getElementById('btnSubmitRegister');
+      if (btnReg) btnReg.innerText = t.btnRegister;
+
+      const lblLogUser = document.getElementById('lblLoginIdentifier');
+      if (lblLogUser) lblLogUser.innerText = t.lblLoginUser;
+
+      const lblLogPass = document.getElementById('lblLoginPassword');
+      if (lblLogPass) lblLogPass.innerText = t.lblPassword;
+
+      const inpLogUser = document.getElementById('loginUsername');
+      if (inpLogUser) inpLogUser.placeholder = t.phLoginUser;
+
+      const inpLogPass = document.getElementById('loginPassword');
+      if (inpLogPass) inpLogPass.placeholder = t.phLoginPass;
+
+      const btnLog = document.getElementById('btnSubmitLogin');
+      if (btnLog) btnLog.innerText = t.btnLogIn;
 
       // AI Coach Greeting & Input
       const coachGreeting = document.getElementById('coachGreetingMsg');
@@ -1594,6 +1634,8 @@
     async function handleRegister(e) {
       e.preventDefault();
       const name = document.getElementById('regName').value.trim();
+      const phone = document.getElementById('regPhone') ? document.getElementById('regPhone').value.trim() : '';
+      const email = document.getElementById('regEmail') ? document.getElementById('regEmail').value.trim() : '';
       const password = document.getElementById('regPassword').value.trim();
       const skill = document.getElementById('regSkill').value;
 
@@ -1601,7 +1643,7 @@
         const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, password, skill, lang: currentLang })
+          body: JSON.stringify({ name, phone, email, password, skill, lang: currentLang })
         });
         const data = await res.json();
 

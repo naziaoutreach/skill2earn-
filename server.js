@@ -1053,17 +1053,30 @@ function getUser(req, db) {
 // 1. Register New User (Simple Username & Password)
 app.post('/api/auth/register', (req, res) => {
   const db = loadDb();
-  const { name, password, skill = "Graphic Design", dailyGoalMins = 45 } = req.body;
+  const { name, email, phone, password, skill = "Graphic Design", dailyGoalMins = 45 } = req.body;
+  const lang = (req.body.lang || "urdu").toLowerCase();
+  const isEn = lang === "en";
 
   if (!name || !password) {
-    return res.status(400).json({ error: "Naam aur Password dono lazmi hain!" });
+    return res.status(400).json({ error: isEn ? "Full Name and Password are required!" : "Naam aur Password dono lazmi hain!" });
   }
 
   const cleanName = name.trim();
-  const userKey = cleanName.toLowerCase().replace(/[^a-z0-9_-]/g, '');
+  const cleanPhone = (phone || "").trim();
+  const cleanEmail = (email || "").trim().toLowerCase();
+
+  if (!cleanPhone && !cleanEmail) {
+    return res.status(400).json({ 
+      error: isEn 
+        ? "Please provide either your WhatsApp/Phone Number or Email Address so our mentors can support you!" 
+        : "Baraye meherbani apna WhatsApp/Phone Number ya Email address lazmi enter karein taake support aur guidance di ja sakay!" 
+    });
+  }
+
+  const userKey = cleanName.toLowerCase().replace(/[^a-z0-9_-]/g, '') || (cleanPhone.replace(/[^0-9]/g, '') || ('user_' + Date.now()));
 
   if (!userKey) {
-    return res.status(400).json({ error: "Baraye meherbani koi theek naam likhein." });
+    return res.status(400).json({ error: isEn ? "Please enter a valid name." : "Baraye meherbani koi theek naam likhein." });
   }
 
   // 🛡️ SECURITY: Block Reserved Admin & System Usernames
@@ -1073,12 +1086,25 @@ app.post('/api/auth/register', (req, res) => {
   ];
   if (RESERVED_ADMIN_NAMES.includes(userKey) || RESERVED_ADMIN_NAMES.some(r => userKey.startsWith(r))) {
     return res.status(403).json({
-      error: "🚫 Yeh naam reserved hai! Security policies ke mutabiq aap yeh username istemal nahi kar saktay."
+      error: isEn 
+        ? "🚫 This name is reserved for security. Please choose another username." 
+        : "🚫 Yeh naam reserved hai! Security policies ke mutabiq aap yeh username istemal nahi kar saktay."
     });
   }
 
-  if (db.users[userKey]) {
-    return res.status(400).json({ error: `Yeh naam (${cleanName}) pehle se registered hai! Log In karein ya koi aur naam rakhein.` });
+  // Check if username, email, or phone is already registered
+  const existingUser = Object.values(db.users).find(u => 
+    (u.id && u.id.toLowerCase() === userKey) ||
+    (cleanEmail && u.email && u.email.toLowerCase() === cleanEmail) ||
+    (cleanPhone && u.phone && u.phone.replace(/[^0-9]/g, '').length >= 7 && u.phone.replace(/[^0-9]/g, '') === cleanPhone.replace(/[^0-9]/g, ''))
+  );
+
+  if (existingUser) {
+    return res.status(400).json({ 
+      error: isEn 
+        ? `This Email, Phone Number, or Username is already registered (${existingUser.name})! Please log in.` 
+        : `Yeh Email, Phone Number ya Username pehle se registered hai (${existingUser.name})! Baraye meherbani Log In karein.` 
+    });
   }
 
   // Intelligent matching against Curated Featured Courses
@@ -1107,7 +1133,8 @@ app.post('/api/auth/register', (req, res) => {
   const newUser = {
     id: userKey,
     name: cleanName,
-    email: `${userKey}@practix.user`,
+    email: cleanEmail || `${userKey}@practix.user`,
+    phone: cleanPhone || "Not Provided",
     password: password.trim(),
     role: "Freelance Student",
     currentSkill: matchedCourse.category,
@@ -1149,8 +1176,7 @@ app.post('/api/auth/register', (req, res) => {
 
   saveDb(db);
 
-  const lang = (req.body.lang || "urdu").toLowerCase();
-  const welcomeMsg = lang === "en" 
+  const welcomeMsg = isEn 
     ? `Welcome ${newUser.name}! Your Practix account has been created successfully.`
     : `Mubarak ho ${newUser.name}! Aapka Practix account kamyabi se ban gaya hai.`;
 
@@ -1173,14 +1199,16 @@ app.post('/api/auth/login', (req, res) => {
   }
 
   const cleanUser = username.trim().toLowerCase();
+  const cleanDigits = username.replace(/[^0-9]/g, '');
   let user = db.users[cleanUser];
 
   if (!user) {
-    // Try matching by name or email
+    // Try matching by name, email, or phone number!
     user = Object.values(db.users).find(u => 
       (u.name && u.name.toLowerCase() === cleanUser) || 
       (u.email && u.email.toLowerCase() === cleanUser) ||
-      (u.id && u.id.toLowerCase() === cleanUser)
+      (u.id && u.id.toLowerCase() === cleanUser) ||
+      (cleanDigits.length >= 7 && u.phone && u.phone.replace(/[^0-9]/g, '').includes(cleanDigits))
     );
   }
 
@@ -1706,7 +1734,8 @@ app.get('/api/admin/overview', verifyAdminAuth, async (req, res) => {
   const usersList = Object.values(db.users).map(u => ({
     id: u.id,
     name: u.name,
-    email: u.email,
+    email: u.email || "No Email",
+    phone: u.phone || "Not Provided",
     currentSkill: u.currentSkill,
     streak: u.streak || 0,
     totalXp: u.totalXp || 0,
