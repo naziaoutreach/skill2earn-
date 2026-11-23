@@ -36,12 +36,43 @@ const upload = multer({ storage });
 
 const DATA_FILE = path.join(os.tmpdir(), 'practix_data.json');
 
-// Helper to generate 30-Day Roadmap based on course topic
-function generateCurriculum(skillTitle, category = "General") {
+// Helper to adapt roadmap days dynamically (7, 14, 30 days)
+function adaptRoadmapDays(list, targetDays = 30) {
+  const days = Number(targetDays) || 30;
+  if (!Array.isArray(list) || list.length === 0) return [];
+  if (days >= list.length) {
+    return list.slice(0, days).map((item, idx) => ({
+      ...item,
+      day: idx + 1,
+      status: idx === 0 ? "in-progress" : "locked",
+      xp: idx === 0 ? 150 : 0
+    }));
+  }
+  
+  const result = [];
+  const step = (list.length - 1) / (days - 1);
+  for (let i = 0; i < days - 1; i++) {
+    const srcIndex = Math.round(i * step);
+    result.push(list[srcIndex]);
+  }
+  result.push(list[list.length - 1]);
+
+  return result.map((item, idx) => ({
+    day: idx + 1,
+    title: item.title,
+    status: idx === 0 ? "in-progress" : "locked",
+    xp: idx === 0 ? 150 : 0,
+    grade: null
+  }));
+}
+
+// Helper to generate Roadmap based on course topic and duration
+function generateCurriculum(skillTitle, targetDays = 30) {
   const titleLower = skillTitle.toLowerCase();
+  let list = [];
   
   if (titleLower.includes("python") || titleLower.includes("code") || titleLower.includes("programming")) {
-    return [
+    list = [
       { day: 1, title: "Python Setup, VS Code & Hello World", status: "in-progress", xp: 150, grade: null },
       { day: 2, title: "Variables, Data Types & Type Casting", status: "locked", xp: 0, grade: null },
       { day: 3, title: "Strings Manipulation, Slicing & f-Strings", status: "locked", xp: 0, grade: null },
@@ -74,7 +105,7 @@ function generateCurriculum(skillTitle, category = "General") {
       { day: 30, title: "Client Proposals & Official Graduation", status: "locked", xp: 0, grade: null }
     ];
   } else if (titleLower.includes("web") || titleLower.includes("html") || titleLower.includes("react") || titleLower.includes("javascript")) {
-    return [
+    list = [
       { day: 1, title: "HTML5 Semantic Tags & Web Structure", status: "in-progress", xp: 150, grade: null },
       { day: 2, title: "CSS3 Fundamentals, Selectors & Colors", status: "locked", xp: 0, grade: null },
       { day: 3, title: "The Box Model, Margins, Borders & Padding", status: "locked", xp: 0, grade: null },
@@ -107,7 +138,7 @@ function generateCurriculum(skillTitle, category = "General") {
       { day: 30, title: "Client Proposals, Upwork Launch & Graduation", status: "locked", xp: 0, grade: null }
     ];
   } else if (titleLower.includes("english") || titleLower.includes("german") || titleLower.includes("arabic") || titleLower.includes("ielts") || titleLower.includes("language") || titleLower.includes("spoken") || titleLower.includes("french") || titleLower.includes("spanish") || titleLower.includes("grammar") || titleLower.includes("vocabulary")) {
-    return [
+    list = [
       { day: 1, title: "Phonetics, Pronunciation & Basic Greetings", status: "in-progress", xp: 150, grade: null },
       { day: 2, title: "Core Vocabulary: 100 Most Essential Everyday Words", status: "locked", xp: 0, grade: null },
       { day: 3, title: "Sentence Framing & Present Tense Routine Drills", status: "locked", xp: 0, grade: null },
@@ -140,7 +171,7 @@ function generateCurriculum(skillTitle, category = "General") {
       { day: 30, title: "Official Language Fluency Certification & Graduation", status: "locked", xp: 0, grade: null }
     ];
   } else if (titleLower.includes("physics") || titleLower.includes("chemistry") || titleLower.includes("biology") || titleLower.includes("science") || titleLower.includes("matric") || titleLower.includes("9th") || titleLower.includes("10th") || titleLower.includes("fsc") || titleLower.includes("math") || titleLower.includes("algebra")) {
-    return [
+    list = [
       { day: 1, title: "Physical Quantities, Base & Derived SI Units", status: "in-progress", xp: 150, grade: null },
       { day: 2, title: "Measuring Instruments: Vernier Callipers & Screw Gauge", status: "locked", xp: 0, grade: null },
       { day: 3, title: "Kinematics: Rest, Motion & Translatory/Rotatory Motion", status: "locked", xp: 0, grade: null },
@@ -174,7 +205,7 @@ function generateCurriculum(skillTitle, category = "General") {
     ];
   } else {
     // Default Graphic Design / General High-Income Skill
-    return [
+    list = [
       { day: 1, title: "Core Design Principles & Visual Hierarchy", status: "in-progress", xp: 150, grade: null },
       { day: 2, title: "Color Harmonies & Palette Construction", status: "locked", xp: 0, grade: null },
       { day: 3, title: "Typography Pairing, Kerning & Hierarchy", status: "locked", xp: 0, grade: null },
@@ -207,6 +238,8 @@ function generateCurriculum(skillTitle, category = "General") {
       { day: 30, title: "First 5 Client Pitches & Official Graduation", status: "locked", xp: 0, grade: null }
     ];
   }
+
+  return adaptRoadmapDays(list, targetDays);
 }
 
 function parseYouTubeVideo(url) {
@@ -264,6 +297,152 @@ const DEFAULT_SKILL_VIDEOS = {
     watchUrl: "https://www.youtube.com/watch?v=JU6qS6dCj2g"
   }
 };
+
+const FEATURED_COURSES = [
+  {
+    id: "fc_python_14",
+    title: "Python Programming & AI Automation Masterclass",
+    category: "Python & AI",
+    durationDays: 14,
+    badge: "Hot 🔥",
+    icon: "fa-brands fa-python text-yellow-400",
+    level: "Beginner Friendly",
+    description: "Learn Python from scratch, write automation scripts, scrape web data, and build AI projects in 14 focused days.",
+    url: "https://www.youtube.com/watch?v=kqtD5dpn9C8",
+    embedUrl: "https://www.youtube.com/embed/kqtD5dpn9C8?rel=0",
+    image: "https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_canva_7",
+    title: "Canva Pro & Social Media Brand Kit Sprint",
+    category: "Canva Graphics",
+    durationDays: 7,
+    badge: "7-Day Fast Sprint ⚡",
+    icon: "fa-solid fa-palette text-cyan-400",
+    level: "Beginner",
+    description: "Master Canva tools, create client-ready social media posts, YouTube thumbnails, flyers, and branding kits in 7 days.",
+    url: "https://www.youtube.com/watch?v=un508f7_6U4",
+    embedUrl: "https://www.youtube.com/embed/un508f7_6U4?rel=0",
+    image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_prompt_7",
+    title: "AI Prompt Engineering & ChatGPT Workflows",
+    category: "AI Prompt Engineering",
+    durationDays: 7,
+    badge: "Latest 2026 🤖",
+    icon: "fa-solid fa-brain text-purple-400",
+    level: "All Levels",
+    description: "Master prompt engineering, workflow automations, content generation, and building AI tools with ChatGPT & Claude.",
+    url: "https://www.youtube.com/watch?v=jC4v5AS4RIM",
+    embedUrl: "https://www.youtube.com/embed/jC4v5AS4RIM?rel=0",
+    image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_webdev_30",
+    title: "Full-Stack Web Development Bootcamp (React & Node)",
+    category: "Web Development",
+    durationDays: 30,
+    badge: "Career Track 💻",
+    icon: "fa-solid fa-code text-indigo-400",
+    level: "Zero to Hero",
+    description: "Master modern responsive front-end and back-end development with hands-on projects and deploy live to Vercel.",
+    url: "https://www.youtube.com/watch?v=zJSY8tbf_ys",
+    embedUrl: "https://www.youtube.com/embed/zJSY8tbf_ys?rel=0",
+    image: "https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_design_30",
+    title: "Complete Freelance Graphic Design Masterclass",
+    category: "Graphic Design",
+    durationDays: 30,
+    badge: "High Income 🎨",
+    icon: "fa-solid fa-bezier-curve text-pink-400",
+    level: "Beginner to Pro",
+    description: "Logo design, branding, typography, color theory, social media carousels, and client presentation decks.",
+    url: "https://www.youtube.com/watch?v=un508f7_6U4",
+    embedUrl: "https://www.youtube.com/embed/un508f7_6U4?rel=0",
+    image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_video_7",
+    title: "Shorts, Reels & CapCut Video Editing Sprint",
+    category: "Video Editing",
+    durationDays: 7,
+    badge: "Trending 🎬",
+    icon: "fa-solid fa-film text-rose-400",
+    level: "Beginner Friendly",
+    description: "Create viral short-form videos, sound design, animated captions, color grading, and b-roll transitions.",
+    url: "https://www.youtube.com/watch?v=u73b22kZ73I",
+    embedUrl: "https://www.youtube.com/embed/u73b22kZ73I?rel=0",
+    image: "https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_figma_14",
+    title: "UI/UX Design & Figma Prototyping Masterclass",
+    category: "UI/UX Design",
+    durationDays: 14,
+    badge: "High Demand 📱",
+    icon: "fa-brands fa-figma text-violet-400",
+    level: "Intermediate",
+    description: "Design mobile apps and modern web dashboards, wireframes, auto-layout, and clickable client prototypes in Figma.",
+    url: "https://www.youtube.com/watch?v=FTFaQWZBqQ8",
+    embedUrl: "https://www.youtube.com/embed/FTFaQWZBqQ8?rel=0",
+    image: "https://images.unsplash.com/photo-1581291518655-9523c932deb8?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_english_14",
+    title: "Spoken English & Client Interview Communication",
+    category: "Spoken English",
+    durationDays: 14,
+    badge: "Career Essential 🗣️",
+    icon: "fa-solid fa-comments text-emerald-400",
+    level: "All Levels",
+    description: "Overcome hesitation, master everyday conversation drills, client proposal calls, and Upwork interview preparation.",
+    url: "https://www.youtube.com/watch?v=JU6qS6dCj2g",
+    embedUrl: "https://www.youtube.com/embed/JU6qS6dCj2g?rel=0",
+    image: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_excel_7",
+    title: "Excel Data Analysis, Formulas & Dashboard Sprint",
+    category: "Excel Analysis",
+    durationDays: 7,
+    badge: "Quick Job Skill 📊",
+    icon: "fa-solid fa-file-excel text-emerald-500",
+    level: "Beginner",
+    description: "VLOOKUP, XLOOKUP, Pivot Tables, interactive dashboards, and business report automation in 7 days.",
+    url: "https://www.youtube.com/watch?v=Vl0H-qTclOg",
+    embedUrl: "https://www.youtube.com/embed/Vl0H-qTclOg?rel=0",
+    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_marketing_14",
+    title: "Digital Marketing & Meta/TikTok Ads Masterclass",
+    category: "Digital Marketing",
+    durationDays: 14,
+    badge: "Earning Skill 📈",
+    icon: "fa-solid fa-bullhorn text-amber-500",
+    level: "Beginner Friendly",
+    description: "Targeted advertising, audience targeting, conversion tracking, sales funnels, and managing freelance client ad budgets.",
+    url: "https://www.youtube.com/watch?v=bixR-KIJKYM",
+    embedUrl: "https://www.youtube.com/embed/bixR-KIJKYM?rel=0",
+    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    id: "fc_shopify_14",
+    title: "Shopify E-Commerce Store Design & Dropshipping",
+    category: "Shopify Store",
+    durationDays: 14,
+    badge: "Business Track 🛒",
+    icon: "fa-solid fa-bag-shopping text-teal-400",
+    level: "Beginner",
+    description: "Build high-converting Shopify stores, product hunting, supplier integration, and running profitable stores.",
+    url: "https://www.youtube.com/watch?v=p0A3F1F1T50",
+    embedUrl: "https://www.youtube.com/embed/p0A3F1F1T50?rel=0",
+    image: "https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=600&q=80"
+  }
+];
 
 function getLessonForDay(dayNum, user, lang = "urdu") {
   const isEn = lang === "en";
@@ -550,35 +729,41 @@ function getUser(req, db) {
     if (match) return match;
   }
 
-  // Check if any registered user exists in memory
-  const firstKey = Object.keys(db.users)[0];
-  if (firstKey) {
-    return db.users[firstKey];
-  }
-
-  // Dynamic user for the identifier (never a hardcoded mock user)
+  // Dynamic user for the identifier (never bleed another user's session or hardcoded mock user)
   const cleanId = identifier ? identifier.replace(/[^a-z0-9_-]/g, '') : "student";
   const displayName = identifier ? (identifier.charAt(0).toUpperCase() + identifier.slice(1)) : "Student";
+  const defCourse = (typeof FEATURED_COURSES !== 'undefined' && FEATURED_COURSES.length > 0) ? FEATURED_COURSES[0] : null;
+
   const fallbackUser = {
     id: cleanId,
     name: displayName,
     email: `${cleanId}@practix.user`,
-    currentSkill: "Graphic Design",
+    currentSkill: defCourse ? defCourse.category : "Python & AI",
     streak: 1,
     totalXp: 150,
     level: 1,
-    activeCourse: {
-      id: `course-${cleanId}`,
-      title: "Graphic Design 30-Day Practical Fast-Track",
-      totalDays: 30,
+    activeCourse: defCourse ? {
+      id: defCourse.id,
+      title: defCourse.title,
+      source: "Practix Curated Free Track",
+      totalDays: defCourse.durationDays,
       completedDays: 0,
       currentDay: 1,
-      category: "Graphic Design"
+      category: defCourse.category,
+      url: defCourse.url,
+      embedUrl: defCourse.embedUrl,
+      estimatedIncomePotential: "$600 - $2,500 / Month"
+    } : {
+      id: `course-${cleanId}`,
+      title: "Python Programming & AI Automation Masterclass",
+      totalDays: 14,
+      completedDays: 0,
+      currentDay: 1,
+      category: "Python & AI"
     },
-    roadmap: generateCurriculum("Graphic Design"),
+    roadmap: generateCurriculum(defCourse ? defCourse.title : "Python", defCourse ? defCourse.durationDays : 14),
     portfolio: []
   };
-  db.users[cleanId] = fallbackUser;
   return fallbackUser;
 }
 
@@ -615,8 +800,28 @@ app.post('/api/auth/register', (req, res) => {
     return res.status(400).json({ error: `Yeh naam (${cleanName}) pehle se registered hai! Log In karein ya koi aur naam rakhein.` });
   }
 
-  const defaultCourseTitle = `${skill} 30-Day Practical Fast-Track`;
-  const initialRoadmap = generateCurriculum(skill);
+  // Intelligent matching against Curated Featured Courses
+  const skillLower = (skill || "").toLowerCase();
+  const matchedCourse = FEATURED_COURSES.find(c => 
+    c.id.toLowerCase() === skillLower ||
+    c.category.toLowerCase().includes(skillLower) ||
+    skillLower.includes(c.category.toLowerCase()) ||
+    c.title.toLowerCase().includes(skillLower) ||
+    (skillLower.includes("python") && c.id === "fc_python_14") ||
+    (skillLower.includes("canva") && c.id === "fc_canva_7") ||
+    (skillLower.includes("prompt") && c.id === "fc_prompt_7") ||
+    (skillLower.includes("web") && c.id === "fc_webdev_30") ||
+    (skillLower.includes("design") && c.id === "fc_design_30") ||
+    (skillLower.includes("video") && c.id === "fc_video_7") ||
+    (skillLower.includes("figma") && c.id === "fc_figma_14") ||
+    (skillLower.includes("english") && c.id === "fc_english_14") ||
+    (skillLower.includes("excel") && c.id === "fc_excel_7") ||
+    (skillLower.includes("marketing") && c.id === "fc_marketing_14") ||
+    (skillLower.includes("shopify") && c.id === "fc_shopify_14")
+  ) || FEATURED_COURSES[0];
+
+  const durationDays = matchedCourse.durationDays || 30;
+  const initialRoadmap = generateCurriculum(matchedCourse.title, durationDays);
 
   const newUser = {
     id: userKey,
@@ -624,9 +829,9 @@ app.post('/api/auth/register', (req, res) => {
     email: `${userKey}@practix.user`,
     password: password.trim(),
     role: "Freelance Student",
-    currentSkill: skill,
-    dailyGoalMins: Number(dailyGoalMins),
-    targetDays: 30,
+    currentSkill: matchedCourse.category,
+    dailyGoalMins: Number(dailyGoalMins) || 45,
+    targetDays: durationDays,
     streak: 1,
     bestStreak: 1,
     totalXp: 150,
@@ -634,14 +839,16 @@ app.post('/api/auth/register', (req, res) => {
     freezeAvailable: 1,
     avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
     activeCourse: {
-      id: `course-${Date.now()}`,
-      title: defaultCourseTitle,
-      source: "Self-Initiated Fast-Track",
-      totalDays: 30,
+      id: matchedCourse.id,
+      title: matchedCourse.title,
+      source: "Practix Curated Free Track",
+      totalDays: durationDays,
       completedDays: 0,
       currentDay: 1,
-      category: skill,
-      estimatedIncomePotential: "$600 - $2,000 / Month"
+      category: matchedCourse.category,
+      url: matchedCourse.url,
+      embedUrl: matchedCourse.embedUrl,
+      estimatedIncomePotential: "$600 - $2,500 / Month"
     },
     roadmap: initialRoadmap,
     portfolio: []
@@ -708,6 +915,54 @@ app.post('/api/auth/login', (req, res) => {
 });
 
 // ═════════════════════════ USER & COURSE WORKSPACE ROUTES ═════════════════════════
+
+// Curated Free Practice Tracks Catalog
+app.get('/api/courses/featured', (req, res) => {
+  res.json(FEATURED_COURSES);
+});
+
+// 1-Click Enrollment in Featured Track
+app.post('/api/courses/enroll-featured', (req, res) => {
+  const db = loadDb();
+  const user = getUser(req, db);
+  const { courseId } = req.body;
+  const lang = (req.body.lang || "urdu").toLowerCase();
+  const isEn = lang === "en";
+
+  const course = FEATURED_COURSES.find(c => c.id === courseId);
+  if (!course) {
+    return res.status(404).json({ error: isEn ? "Track not found!" : "Course nahi mila!" });
+  }
+
+  const durationDays = course.durationDays || 30;
+  user.currentSkill = course.category;
+  user.targetDays = durationDays;
+  user.activeCourse = {
+    id: course.id,
+    title: course.title,
+    source: "Practix Curated Free Track",
+    totalDays: durationDays,
+    completedDays: 0,
+    currentDay: 1,
+    category: course.category,
+    url: course.url,
+    embedUrl: course.embedUrl,
+    estimatedIncomePotential: "$600 - $2,500 / Month"
+  };
+  user.roadmap = generateCurriculum(course.title, durationDays);
+
+  saveDb(db);
+
+  res.json({
+    success: true,
+    message: isEn
+      ? `Enrolled successfully in "${course.title}" (${durationDays}-Day Track)!`
+      : `Mubarak ho! Aap "${course.title}" (${durationDays} Din ka Track) mein kamyabi se enroll ho gaye hain.`,
+    user: user,
+    course: user.activeCourse,
+    roadmap: user.roadmap
+  });
+});
 
 // 3. Get Active User Profile
 app.get('/api/user', (req, res) => {
@@ -818,19 +1073,21 @@ app.post('/api/courses/link', async (req, res) => {
     });
   }
 
-  // Valid Skill Course - Generate Fresh 30-Day Roadmap for THIS user!
-  const newRoadmap = generateCurriculum(courseTitle);
+  // Valid Skill Course - Generate Fresh Roadmap with targetDays for THIS user!
+  const sprintDays = Number(targetDays) || 30;
+  const newRoadmap = generateCurriculum(courseTitle, sprintDays);
 
   // Dynamic Category and Earning Potential from Global Taxonomy
   const category = matchedSkillTrack ? matchedSkillTrack.name : (user.currentSkill || "Global Professional Skill");
   const estimatedOutcome = matchedSkillTrack ? matchedSkillTrack.earningPotential : (category.includes("Academics") ? "Target: Grade A+ (90%+ Marks)" : "$800 - $2,500 / Month");
   user.currentSkill = category;
+  user.targetDays = sprintDays;
 
   user.activeCourse = {
     id: `course-${Date.now()}`,
     title: courseTitle,
     source: `YouTube: ${channelName}`,
-    totalDays: Number(targetDays),
+    totalDays: sprintDays,
     completedDays: 0,
     currentDay: 1,
     category: category,
@@ -847,8 +1104,8 @@ app.post('/api/courses/link', async (req, res) => {
   res.json({
     success: true,
     message: isEn
-      ? `Success! "${courseTitle}" has been analyzed and structured into your 30-Day Practical Action Roadmap!`
-      : `Kamyabi! "${courseTitle}" analyze ho kar 30-Day Step-by-Step Practical Roadmap mein tabdeel ho gaya hai!`,
+      ? `Success! "${courseTitle}" has been analyzed and structured into your ${sprintDays}-Day Practical Action Roadmap!`
+      : `Kamyabi! "${courseTitle}" analyze ho kar ${sprintDays}-Day Step-by-Step Practical Roadmap mein tabdeel ho gaya hai!`,
     course: user.activeCourse,
     roadmap: user.roadmap,
     firstDay: user.roadmap[0]
@@ -863,7 +1120,8 @@ app.post('/api/courses/upload', upload.single('courseFile'), (req, res) => {
   const targetDays = Number(req.body.targetDays || 30);
   const rawName = file ? file.originalname.replace(/\.[^/.]+$/, "").replace(/_/g, " ") : "Custom Course Material";
 
-  const newRoadmap = generateCurriculum(rawName);
+  const newRoadmap = generateCurriculum(rawName, targetDays);
+  user.targetDays = targetDays;
 
   user.activeCourse = {
     id: `course-${Date.now()}`,
@@ -881,7 +1139,7 @@ app.post('/api/courses/upload', upload.single('courseFile'), (req, res) => {
 
   res.json({
     success: true,
-    message: `File "${rawName}" analyze ho gayi aur 30-Day Action Plan tayyar hai!`,
+    message: `File "${rawName}" analyze ho gayi aur ${targetDays}-Day Action Plan tayyar hai!`,
     course: user.activeCourse,
     roadmap: user.roadmap
   });

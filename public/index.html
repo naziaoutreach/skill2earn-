@@ -288,6 +288,32 @@
             </button>
           </div>
         </div>
+
+        <!-- ════════════ CURATED FREE PRACTICE TRACKS CATALOG ════════════ -->
+        <div class="space-y-4 pt-2">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="inline-flex items-center gap-1.5 bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[11px] font-bold px-2.5 py-0.5 rounded-full mb-1">
+                <i class="fa-solid fa-gift"></i> 100% Free Practice Tracks
+              </div>
+              <h3 class="text-xl font-black text-white" id="dashTracksHeading">Ready-Made Free Practice Courses</h3>
+              <p class="text-xs text-gray-400 mt-0.5" id="dashTracksSubtext">Agar aapke paas koi YouTube ya PDF link nahi hai, toh in high-demand skills mein se 1-click mein practice shuru karein:</p>
+            </div>
+
+            <!-- Duration Filter Pills -->
+            <div class="flex items-center gap-1.5 bg-[#0B0F19] p-1 rounded-xl border border-gray-800 text-xs">
+              <button onclick="filterFeaturedTracks('all', 'dash')" class="filter-dash-pill active px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white transition" data-filter="all">All Tracks (11)</button>
+              <button onclick="filterFeaturedTracks(7, 'dash')" class="filter-dash-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="7">⚡ 7 Days Sprint</button>
+              <button onclick="filterFeaturedTracks(14, 'dash')" class="filter-dash-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="14">🚀 14 Days Skill</button>
+              <button onclick="filterFeaturedTracks(30, 'dash')" class="filter-dash-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="30">🏆 30 Days Pro</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Grid Container for Dashboard -->
+          <div id="dashFeaturedTracksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated dynamically by loadFeaturedTracks() -->
+          </div>
+        </div>
       </section>
 
       <!-- ════════════ TAB 2: DAILY CLASSROOM ════════════ -->
@@ -468,8 +494,24 @@
           </div>
           <h2 class="text-2xl font-black text-white">Intelligent Course Ingestion Engine</h2>
           <p class="text-sm text-gray-400 max-w-2xl mt-1">
-            Apna koi bhi PDF course upload karein ya YouTube link paste karein. Hamara AI system usay foran 30-Day Step-by-Step practical tasks mein badal dega!
+            Apna koi bhi YouTube link paste karein ya PDF notes upload karein. Hamara AI system usay foran structured practical tasks mein badal dega!
           </p>
+        </div>
+
+        <!-- Sprint Target Duration Selector -->
+        <div class="glass-card p-4 rounded-2xl border border-gray-800 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div class="text-xs font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-stopwatch text-amber-400"></i>
+              <span>Sprint Target Duration (Course Kitne Din Ka Hoga?):</span>
+            </div>
+            <div class="text-[11px] text-gray-400 mt-0.5">Apni sahulat ke mutabiq duration chunein — algorithm automatically curriculum ko adapt kar lega!</div>
+          </div>
+          <div class="flex items-center gap-2" id="sprintDurationSelectorGroup">
+            <button type="button" onclick="setSprintDuration(7)" id="btnSprint7" class="sprint-btn px-3.5 py-2 rounded-xl border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white transition">⚡ 7 Days Sprint</button>
+            <button type="button" onclick="setSprintDuration(14)" id="btnSprint14" class="sprint-btn px-3.5 py-2 rounded-xl border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white transition">🚀 14 Days Skill</button>
+            <button type="button" onclick="setSprintDuration(30)" id="btnSprint30" class="sprint-btn active px-3.5 py-2 rounded-xl border border-purple-500 bg-purple-600/30 text-white font-bold text-xs transition">🏆 30 Days Masterclass</button>
+          </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -534,12 +576,38 @@
             </div>
             <div>
               <h4 class="text-base font-bold text-white" id="ingestResultTitle">Course Successfully Processed!</h4>
-              <p class="text-xs text-emerald-400" id="ingestResultSub">30-Day Step-by-Step Action Roadmap is now active for you.</p>
+              <p class="text-xs text-emerald-400" id="ingestResultSub">Practical Action Roadmap is now active for you.</p>
             </div>
           </div>
           <button onclick="switchTab('roadmap')" class="bg-emerald-500 text-black px-5 py-2.5 rounded-xl font-bold text-xs hover:bg-emerald-400 transition">
-            View Your 30-Day Roadmap →
+            View Your Roadmap →
           </button>
+        </div>
+
+        <!-- ════════════ DIRECT OPTION 3: CURATED FREE TRACKS CATALOG ════════════ -->
+        <div class="space-y-4 pt-4 border-t border-gray-800/80">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <div class="inline-flex items-center gap-1.5 bg-purple-500/10 border border-purple-500/30 text-purple-300 text-[11px] font-bold px-2.5 py-0.5 rounded-full mb-1">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Option 3: Direct 1-Click Enrollment
+              </div>
+              <h3 class="text-xl font-black text-white">Ya Direct Humare Ready-Made Free Tracks Mein Se Chunein</h3>
+              <p class="text-xs text-gray-400 mt-0.5">Agar aapke paas apna koi link nahi hai, toh in modern skills par 1-click karein aur foran seekhna shuru karein:</p>
+            </div>
+
+            <!-- Duration Filter Pills for Ingest -->
+            <div class="flex items-center gap-1.5 bg-[#0B0F19] p-1 rounded-xl border border-gray-800 text-xs">
+              <button onclick="filterFeaturedTracks('all', 'ingest')" class="filter-ingest-pill active px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white transition" data-filter="all">All Tracks</button>
+              <button onclick="filterFeaturedTracks(7, 'ingest')" class="filter-ingest-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="7">⚡ 7D</button>
+              <button onclick="filterFeaturedTracks(14, 'ingest')" class="filter-ingest-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="14">🚀 14D</button>
+              <button onclick="filterFeaturedTracks(30, 'ingest')" class="filter-ingest-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="30">🏆 30D</button>
+            </div>
+          </div>
+
+          <!-- Dynamic Grid Container for Ingest Tab -->
+          <div id="ingestFeaturedTracksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <!-- Populated dynamically by loadFeaturedTracks() -->
+          </div>
         </div>
       </section>
 
@@ -831,13 +899,19 @@
           <input type="password" id="regPassword" placeholder="Apna aasan password rakhein" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
-          <label class="text-xs font-semibold text-gray-300 block mb-1">Aap kya seekhna chahte hain?</label>
+          <label class="text-xs font-semibold text-gray-300 block mb-1">Aap kya seekhna chahte hain? (100% Free Tracks)</label>
           <select id="regSkill" class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
-            <option value="Graphic Design">Graphic Design & Brand Identity</option>
-            <option value="Web Development">Full-Stack Web Development</option>
-            <option value="Python & AI">Python Programming & AI</option>
-            <option value="Video Editing">Video Editing & Motion</option>
-            <option value="Spoken English">Spoken English & Communication</option>
+            <option value="Python & AI">🔥 Python Programming & AI Automation (14 Days)</option>
+            <option value="Canva Graphics">⚡ Canva Pro & Social Media Brand Kit (7 Days Sprint)</option>
+            <option value="AI Prompt Engineering">🤖 AI Prompt Engineering & ChatGPT Workflows (7 Days Sprint)</option>
+            <option value="Video Editing">🎬 Shorts, Reels & CapCut Video Editing (7 Days Sprint)</option>
+            <option value="Excel Analysis">📊 Excel Data Analysis & Business Dashboards (7 Days Sprint)</option>
+            <option value="UI/UX Design">📱 UI/UX Design & Figma Prototyping (14 Days)</option>
+            <option value="Spoken English">🗣️ Spoken English & Client Interview Communication (14 Days)</option>
+            <option value="Digital Marketing">📈 Digital Marketing & Meta/TikTok Ads (14 Days)</option>
+            <option value="Shopify Store">🛒 Shopify Store Design & Dropshipping (14 Days)</option>
+            <option value="Web Development">💻 Full-Stack Web Development Bootcamp (30 Days)</option>
+            <option value="Graphic Design">🎨 Complete Freelance Graphic Design Masterclass (30 Days)</option>
           </select>
         </div>
         <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-purple-500/30">
@@ -1429,6 +1503,7 @@
         loadRoadmap();
         loadPortfolio();
         loadLeaderboard();
+        loadFeaturedTracks();
         loadDayLesson(currentActiveDayNumber);
       } catch (err) {
         console.error("Initialization error:", err);
@@ -1647,7 +1722,7 @@
         const res = await fetch('/api/courses/link', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: currentUserEmail, url, targetDays: 30, lang: currentLang })
+          body: JSON.stringify({ email: currentUserEmail, url, targetDays: selectedSprintDays, lang: currentLang })
         });
         const data = await res.json();
 
@@ -1663,7 +1738,7 @@
         alert(`🎉 ${data.message}`);
         document.getElementById('ingestResultBox').classList.remove('hidden');
         document.getElementById('ingestResultTitle').innerText = data.course.title;
-        document.getElementById('ingestResultSub').innerText = `30-Day Step-by-Step Practical Roadmap is now live in your account!`;
+        document.getElementById('ingestResultSub').innerText = `${selectedSprintDays}-Day Step-by-Step Practical Roadmap is now live in your account!`;
         
         await initApp();
         openDayInClassroom(1);
@@ -1686,11 +1761,11 @@
       const file = fileInput.files[0];
       if (!file) return alert("Please select a file to upload!");
 
-      alert("⚡ AI Ingestion Engine is analyzing file chapters and creating your 30-Day Practical Roadmap...");
+      alert(`⚡ AI Ingestion Engine is analyzing file chapters and creating your ${selectedSprintDays}-Day Practical Roadmap...`);
       const formData = new FormData();
       formData.append('courseFile', file);
       formData.append('email', currentUserEmail);
-      formData.append('targetDays', 30);
+      formData.append('targetDays', selectedSprintDays);
 
       try {
         const res = await fetch('/api/courses/upload', {
@@ -1704,6 +1779,137 @@
         openDayInClassroom(1);
       } catch (e) {
         console.error(e);
+      }
+    }
+
+    // ═════════════════════════ CURATED TRACKS & SPRINT ENGINE ═════════════════════════
+    let selectedSprintDays = 30;
+    let allFeaturedTracks = [];
+
+    function setSprintDuration(days) {
+      selectedSprintDays = Number(days) || 30;
+      ['7', '14', '30'].forEach(d => {
+        const btn = document.getElementById(`btnSprint${d}`);
+        if (btn) {
+          if (Number(d) === selectedSprintDays) {
+            btn.className = 'sprint-btn active px-3.5 py-2 rounded-xl border border-purple-500 bg-purple-600/30 text-white font-bold text-xs transition';
+          } else {
+            btn.className = 'sprint-btn px-3.5 py-2 rounded-xl border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white transition';
+          }
+        }
+      });
+    }
+
+    async function loadFeaturedTracks() {
+      try {
+        const res = await fetch('/api/courses/featured');
+        allFeaturedTracks = await res.json();
+        renderFeaturedTracks(allFeaturedTracks, 'dashFeaturedTracksGrid');
+        renderFeaturedTracks(allFeaturedTracks, 'ingestFeaturedTracksGrid');
+      } catch (e) {
+        console.warn("Failed to load featured tracks", e);
+      }
+    }
+
+    function renderFeaturedTracks(tracks, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (!tracks || tracks.length === 0) {
+        container.innerHTML = `<div class="col-span-3 text-center py-6 text-gray-500 text-xs">Koi course nahi mila.</div>`;
+        return;
+      }
+
+      tracks.forEach(track => {
+        const card = document.createElement('div');
+        card.className = 'glass-card p-5 rounded-2xl border border-gray-800 hover:border-purple-500/50 transition flex flex-col justify-between group';
+        
+        const badgeColor = track.durationDays === 7 
+          ? 'bg-amber-500/10 text-amber-300 border-amber-500/30'
+          : track.durationDays === 14
+          ? 'bg-purple-500/10 text-purple-300 border-purple-500/30'
+          : 'bg-indigo-500/10 text-indigo-300 border-indigo-500/30';
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full border ${badgeColor}">
+                ${track.durationDays} Days • ${track.durationDays === 7 ? 'Sprint ⚡' : track.durationDays === 14 ? 'Skill 🚀' : 'Masterclass 🏆'}
+              </span>
+              <span class="text-xs font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                100% Free
+              </span>
+            </div>
+
+            <div class="flex items-start gap-3 mb-2">
+              <div class="w-10 h-10 rounded-xl bg-[#161F38] border border-gray-700/60 flex items-center justify-center text-lg flex-shrink-0 group-hover:scale-110 transition">
+                <i class="${track.icon || 'fa-solid fa-graduation-cap text-purple-400'}"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-bold text-white group-hover:text-purple-300 transition line-clamp-1">${track.title}</h4>
+                <p class="text-[11px] text-gray-400 mt-0.5 line-clamp-2">${track.description}</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 mt-2 border-t border-gray-800/80 flex items-center justify-between">
+            <span class="text-[11px] text-gray-400 font-semibold">${track.category}</span>
+            <button onclick="enrollFeaturedTrack('${track.id}')" class="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white text-xs font-bold px-3.5 py-1.5 rounded-xl shadow-md shadow-purple-900/30 transition flex items-center gap-1.5">
+              <span>Start Free</span>
+              <i class="fa-solid fa-arrow-right text-[10px]"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterFeaturedTracks(filter, targetView) {
+      const containerId = targetView === 'dash' ? 'dashFeaturedTracksGrid' : 'ingestFeaturedTracksGrid';
+      const pillClass = targetView === 'dash' ? 'filter-dash-pill' : 'filter-ingest-pill';
+
+      document.querySelectorAll(`.${pillClass}`).forEach(btn => {
+        if (btn.dataset.filter === String(filter)) {
+          btn.className = `${pillClass} active px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white transition`;
+        } else {
+          btn.className = `${pillClass} px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition`;
+        }
+      });
+
+      if (filter === 'all') {
+        renderFeaturedTracks(allFeaturedTracks, containerId);
+      } else {
+        const days = Number(filter);
+        const filtered = allFeaturedTracks.filter(t => t.durationDays === days);
+        renderFeaturedTracks(filtered, containerId);
+      }
+    }
+
+    async function enrollFeaturedTrack(courseId) {
+      if (!currentUserEmail) {
+        openAuthModal('register');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/courses/enroll-featured', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: currentUserEmail, courseId, lang: currentLang })
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          alert(data.error || "Enrollment fail ho gaya");
+          return;
+        }
+
+        alert(`🎉 ${data.message}`);
+        await initApp();
+        openDayInClassroom(1);
+      } catch (err) {
+        alert("Enrollment error. Please try again.");
       }
     }
 
