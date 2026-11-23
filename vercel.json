@@ -6,8 +6,16 @@
       "destination": "/api/index.js"
     },
     {
+      "source": "/admin-control-hq.html",
+      "destination": "/admin-control-hq.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin-control-hq.html"
+    },
+    {
       "source": "/(.*)",
-      "destination": "/public/index.html"
+      "destination": "/index.html"
     }
   ]
 }

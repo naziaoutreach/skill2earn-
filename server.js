@@ -389,52 +389,12 @@ function getLessonForDay(dayNum, user, lang = "urdu") {
 // In-Memory Multi-User DB
 function getInitialDb() {
   return {
-    users: {
-      "ali": {
-        id: "ali",
-        name: "Ali Khan",
-        email: "ali@practix.user",
-        password: "123",
-        role: "Aspiring Freelance Designer",
-        currentSkill: "Graphic Design & Brand Identity",
-        dailyGoalMins: 45,
-        targetDays: 30,
-        streak: 14,
-        bestStreak: 14,
-        totalXp: 2450,
-        level: 4,
-        freezeAvailable: 1,
-        avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
-        activeCourse: {
-          id: "gd-masterclass-30",
-          title: "Complete Freelance Graphic Design Masterclass",
-          source: "Upload: Graphic_Design_Masterclass_Complete.pdf",
-          totalDays: 30,
-          completedDays: 13,
-          currentDay: 14,
-          category: "Design",
-          estimatedIncomePotential: "$800 - $2,500 / Month"
-        },
-        roadmap: generateCurriculum("Graphic Design"),
-        portfolio: [
-          {
-            id: "p1",
-            title: "Aura Coffee Co. - Minimalist Identity",
-            category: "Branding & Identity",
-            image: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80",
-            description: "Geometric monogram logo, custom typography, and kraft paper packaging mockups.",
-            dayCreated: 14,
-            verified: true
-          }
-        ]
-      }
-    },
+    users: {},
     leaderboard: [
       { rank: 1, name: "Hamza Tariq", streak: 28, xp: 4820, avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=80&q=80", skill: "Full-Stack Dev" },
       { rank: 2, name: "Sara Ahmed", streak: 22, xp: 3750, avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=80&q=80", skill: "Graphic Design" },
-      { rank: 3, name: "Ali Khan", streak: 14, xp: 2450, avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=80&q=80", skill: "UI/UX Design" },
-      { rank: 4, name: "Bilal Ahmed", streak: 12, xp: 2100, avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=80&q=80", skill: "Video Editing" },
-      { rank: 5, name: "Zainab Raza", streak: 9, xp: 1620, avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=80&q=80", skill: "Python AI" }
+      { rank: 3, name: "Bilal Ahmed", streak: 12, xp: 2100, avatar: "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=80&q=80", skill: "Video Editing" },
+      { rank: 4, name: "Zainab Raza", streak: 9, xp: 1620, avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=80&q=80", skill: "Python AI" }
     ]
   };
 }
@@ -447,6 +407,9 @@ function loadDb() {
     if (fs.existsSync(DATA_FILE)) {
       const data = JSON.parse(fs.readFileSync(DATA_FILE, 'utf-8'));
       if (data && data.users) {
+        delete data.users['ali'];
+        delete data.users['test_ali'];
+        delete data.users['ali.khan@example.com'];
         inMemoryDb = data;
         return inMemoryDb;
       }
@@ -541,6 +504,7 @@ async function hydrateFromSupabase() {
       const db = loadDb();
       for (const ru of remoteUsers) {
         const key = ru.id || ru.email.split('@')[0];
+        if (key === 'ali' || key === 'test_ali' || (ru.name && ru.name.toLowerCase().includes('ali khan'))) continue;
         if (!db.users[key]) {
           db.users[key] = {
             id: key,
@@ -586,9 +550,36 @@ function getUser(req, db) {
     if (match) return match;
   }
 
-  // Fallback to first user in list
+  // Check if any registered user exists in memory
   const firstKey = Object.keys(db.users)[0];
-  return db.users[firstKey];
+  if (firstKey) {
+    return db.users[firstKey];
+  }
+
+  // Dynamic user for the identifier (never a hardcoded mock user)
+  const cleanId = identifier ? identifier.replace(/[^a-z0-9_-]/g, '') : "student";
+  const displayName = identifier ? (identifier.charAt(0).toUpperCase() + identifier.slice(1)) : "Student";
+  const fallbackUser = {
+    id: cleanId,
+    name: displayName,
+    email: `${cleanId}@practix.user`,
+    currentSkill: "Graphic Design",
+    streak: 1,
+    totalXp: 150,
+    level: 1,
+    activeCourse: {
+      id: `course-${cleanId}`,
+      title: "Graphic Design 30-Day Practical Fast-Track",
+      totalDays: 30,
+      completedDays: 0,
+      currentDay: 1,
+      category: "Graphic Design"
+    },
+    roadmap: generateCurriculum("Graphic Design"),
+    portfolio: []
+  };
+  db.users[cleanId] = fallbackUser;
+  return fallbackUser;
 }
 
 // ═════════════════════════ AUTHENTICATION ROUTES ═════════════════════════
@@ -1053,6 +1044,106 @@ app.get('/api/portfolio', (req, res) => {
 app.get('/api/leaderboard', (req, res) => {
   const db = loadDb();
   res.json(db.leaderboard);
+});
+
+// ═════════════════════════ 🛡️ ADMIN MANAGEMENT ROUTES ═════════════════════════
+const ADMIN_SECRET = process.env.ADMIN_SECRET_KEY || 'practix_admin_2026';
+
+function verifyAdminAuth(req, res, next) {
+  const key = req.headers['x-admin-key'] || req.query.key || (req.body && req.body.adminKey);
+  if (key === ADMIN_SECRET) {
+    return next();
+  }
+  return res.status(401).json({ error: "Unauthorized: Invalid Admin Key" });
+}
+
+// 1. Admin Login Verification
+app.post('/api/admin/auth', (req, res) => {
+  const { key } = req.body;
+  if (key === ADMIN_SECRET) {
+    return res.json({ success: true, message: "Admin access granted!" });
+  }
+  return res.status(401).json({ error: "Ghalat Admin Secret PIN!" });
+});
+
+// 2. Admin System Overview (Stats, Users, Submissions)
+app.get('/api/admin/overview', verifyAdminAuth, async (req, res) => {
+  const db = loadDb();
+  const usersList = Object.values(db.users).map(u => ({
+    id: u.id,
+    name: u.name,
+    email: u.email,
+    currentSkill: u.currentSkill,
+    streak: u.streak || 0,
+    totalXp: u.totalXp || 0,
+    level: u.level || 1,
+    activeCourseTitle: u.activeCourse ? u.activeCourse.title : "No Course",
+    completedDays: u.activeCourse ? u.activeCourse.completedDays || 0 : 0,
+    submissionsCount: (u.portfolio && u.portfolio.length) || 0
+  }));
+
+  const allSubmissions = [];
+  Object.values(db.users).forEach(u => {
+    if (Array.isArray(u.portfolio)) {
+      u.portfolio.forEach(p => {
+        allSubmissions.push({
+          ...p,
+          userName: u.name,
+          userEmail: u.email,
+          userSkill: u.currentSkill
+        });
+      });
+    }
+  });
+
+  const totalXp = Object.values(db.users).reduce((acc, u) => acc + (u.totalXp || 0), 0);
+
+  res.json({
+    success: true,
+    stats: {
+      totalStudents: usersList.length,
+      totalSubmissions: allSubmissions.length,
+      totalXpAwarded: totalXp,
+      cloudDatabase: "Supabase Connected 🟢"
+    },
+    users: usersList,
+    submissions: allSubmissions
+  });
+});
+
+// 3. Admin Delete User
+app.post('/api/admin/user/delete', verifyAdminAuth, async (req, res) => {
+  const { userId } = req.body;
+  const db = loadDb();
+  if (db.users[userId]) {
+    delete db.users[userId];
+    saveDb(db);
+    try {
+      await supabase.from('users').delete().eq('id', userId);
+    } catch (e) {}
+    return res.json({ success: true, message: `User ${userId} deleted.` });
+  }
+  return res.status(404).json({ error: "User not found" });
+});
+
+// 4. Admin Review / Grade Submission
+app.post('/api/admin/submission/grade', verifyAdminAuth, (req, res) => {
+  const { userEmail, submissionId, grade, feedback } = req.body;
+  const db = loadDb();
+  const user = Object.values(db.users).find(u => u.email === userEmail || u.id === userEmail);
+  if (!user || !user.portfolio) {
+    return res.status(404).json({ error: "Submission or user not found" });
+  }
+
+  const sub = user.portfolio.find(p => p.id === submissionId);
+  if (sub) {
+    if (grade) sub.grade = grade;
+    if (feedback) sub.feedback = feedback;
+    sub.verified = true;
+    saveDb(db);
+    return res.json({ success: true, message: "Submission updated!", submission: sub });
+  }
+  return res.status(404).json({ error: "Submission not found" });
 });
 
 // Fallback middleware to serve index.html for any frontend route
