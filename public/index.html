@@ -345,33 +345,60 @@
             
             <!-- Real Interactive Video Lesson Player -->
             <div class="space-y-3">
-              <div class="w-full aspect-video bg-black rounded-2xl border border-purple-500/40 overflow-hidden relative shadow-2xl shadow-purple-950/40">
-                <iframe id="classroomVideoIframe" 
-                        class="w-full h-full" 
-                        src="" 
-                        title="Course Video Lesson" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                        allowfullscreen>
-                </iframe>
+              <div id="videoPlayerContainer" class="w-full bg-black rounded-2xl border border-purple-500/40 overflow-hidden relative shadow-2xl shadow-purple-950/40">
+                <div class="w-full aspect-video relative">
+                  <iframe id="classroomVideoIframe" 
+                          class="w-full h-full" 
+                          src="" 
+                          title="Course Video Lesson" 
+                          frameborder="0" 
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                          allowfullscreen>
+                  </iframe>
+                </div>
+
+                <!-- Custom Practix 20-Minute Focus Bar (NO YouTube Branding, NO 1-Hour Bar!) -->
+                <div class="bg-[#10172A] border-t border-purple-500/20 p-3 flex items-center gap-3">
+                  <!-- Play / Pause Button -->
+                  <button id="btnCustomPlayPause" onclick="toggleCustomVideoPlay()" class="w-9 h-9 rounded-xl bg-purple-600 hover:bg-purple-500 text-white flex items-center justify-center text-xs transition shadow-lg shadow-purple-600/40 flex-shrink-0" title="Play / Pause">
+                    <i id="customPlayIcon" class="fa-solid fa-play"></i>
+                  </button>
+
+                  <!-- Progress Track (0 to 20:00) -->
+                  <div class="flex-1 flex flex-col gap-1 cursor-pointer" onclick="seekCustomVideo(event)">
+                    <div class="w-full bg-gray-800/90 rounded-full h-2.5 overflow-hidden relative border border-gray-700/50">
+                      <div id="customVideoProgressBar" class="bg-gradient-to-r from-purple-500 via-indigo-500 to-emerald-400 h-full w-0 rounded-full transition-all duration-200"></div>
+                    </div>
+                  </div>
+
+                  <!-- Time Display: ALWAYS out of 20:00 -->
+                  <div class="text-xs font-mono font-bold text-purple-300 bg-purple-950/60 border border-purple-500/30 px-2.5 py-1 rounded-lg flex-shrink-0" id="customVideoTimer">
+                    00:00 / 20:00
+                  </div>
+
+                  <!-- Fullscreen Button -->
+                  <button onclick="toggleVideoFullscreen()" class="w-8 h-8 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 hover:text-white flex items-center justify-center text-xs transition flex-shrink-0" title="Fullscreen">
+                    <i class="fa-solid fa-expand"></i>
+                  </button>
+                </div>
               </div>
 
-              <!-- Video Meta & Direct Actions -->
+              <!-- Video Meta & 20-Min Focus Badge (Zero External YouTube Links) -->
               <div class="flex flex-wrap items-center justify-between gap-3 bg-[#12192C] p-3 rounded-xl border border-gray-800">
                 <div class="flex items-center gap-2.5 min-w-0">
-                  <div class="w-8 h-8 rounded-lg bg-red-600/20 text-red-400 flex items-center justify-center text-sm border border-red-500/30 flex-shrink-0">
-                    <i class="fa-brands fa-youtube"></i>
+                  <div class="w-8 h-8 rounded-lg bg-purple-600/20 text-purple-400 flex items-center justify-center text-sm border border-purple-500/30 flex-shrink-0">
+                    <i class="fa-solid fa-circle-play"></i>
                   </div>
                   <div class="min-w-0">
                     <h4 class="text-xs font-bold text-white truncate" id="classroomVideoHeading">Lesson Video</h4>
-                    <span class="text-[10px] text-gray-400" id="classroomVideoDuration">25 Mins Hands-on Practice</span>
+                    <span class="text-[10px] text-gray-400" id="classroomVideoDuration">20:00 Focus Micro-Lesson</span>
                   </div>
                 </div>
                 
-                <a id="classroomVideoDirectLink" href="#" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-red-600 hover:bg-red-500 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-sm flex-shrink-0">
-                  <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
-                  <span>YouTube par dekhein</span>
-                </a>
+                <div class="px-3 py-1.5 rounded-lg bg-purple-600/20 text-purple-300 border border-purple-500/30 font-bold text-xs flex items-center gap-1.5 shadow-sm flex-shrink-0">
+                  <i class="fa-solid fa-stopwatch text-purple-400 text-[11px]"></i>
+                  <span id="classroomBadge20Min">20:00 Daily Class (No External Links)</span>
+                </div>
               </div>
 
               <!-- Micro-Learning Daily Focus Segment Guide -->
@@ -1773,6 +1800,100 @@
       loadDayLesson(dayNum);
     }
 
+    // ════════════════════ PRACTIX CUSTOM 20-MINUTE FOCUS VIDEO CONTROLS ════════════════════
+    let isVideoPlaying = false;
+    let videoElapsedSeconds = 0;
+    let videoTimerInterval = null;
+    const TOTAL_FOCUS_SECONDS = 1200; // Exact 20 minutes
+
+    function resetCustomVideoPlayer() {
+      isVideoPlaying = false;
+      videoElapsedSeconds = 0;
+      if (videoTimerInterval) clearInterval(videoTimerInterval);
+      const icon = document.getElementById('customPlayIcon');
+      if (icon) icon.className = 'fa-solid fa-play';
+      updateCustomVideoUI();
+    }
+
+    function toggleCustomVideoPlay() {
+      const iframe = document.getElementById('classroomVideoIframe');
+      if (!iframe || !iframe.contentWindow) return;
+
+      const icon = document.getElementById('customPlayIcon');
+
+      if (isVideoPlaying) {
+        iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        isVideoPlaying = false;
+        if (icon) icon.className = 'fa-solid fa-play';
+        if (videoTimerInterval) clearInterval(videoTimerInterval);
+      } else {
+        iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+        isVideoPlaying = true;
+        if (icon) icon.className = 'fa-solid fa-pause';
+
+        if (videoTimerInterval) clearInterval(videoTimerInterval);
+        videoTimerInterval = setInterval(() => {
+          if (videoElapsedSeconds < TOTAL_FOCUS_SECONDS) {
+            videoElapsedSeconds++;
+            updateCustomVideoUI();
+          } else {
+            // Reached 20:00! Pause automatically!
+            iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+            isVideoPlaying = false;
+            if (icon) icon.className = 'fa-solid fa-rotate-right';
+            if (videoTimerInterval) clearInterval(videoTimerInterval);
+            
+            const isEn = currentLang === 'en';
+            alert(isEn 
+              ? "🎯 Today's 20-minute focus lesson is complete!\n\nNow head down to Part 2 (Worksheet), Part 3 (Quiz) & Part 4 (Homework) to solidify your practice!"
+              : "🎯 Aaj ka 20-minute focus lesson mukammal ho gaya!\n\nAb foran neeche Part 2 (Worksheet), Part 3 (Quiz) aur Part 4 (Homework) submit karein!");
+          }
+        }, 1000);
+      }
+    }
+
+    function updateCustomVideoUI() {
+      const mins = Math.floor(videoElapsedSeconds / 60);
+      const secs = videoElapsedSeconds % 60;
+      const timeStr = `${mins < 10 ? '0' + mins : mins}:${secs < 10 ? '0' + secs : secs} / 20:00`;
+      
+      const timerEl = document.getElementById('customVideoTimer');
+      if (timerEl) timerEl.innerText = timeStr;
+
+      const pct = (videoElapsedSeconds / TOTAL_FOCUS_SECONDS) * 100;
+      const bar = document.getElementById('customVideoProgressBar');
+      if (bar) bar.style.width = `${pct}%`;
+    }
+
+    function seekCustomVideo(e) {
+      const track = e.currentTarget;
+      const rect = track.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const pct = Math.max(0, Math.min(1, clickX / rect.width));
+      videoElapsedSeconds = Math.floor(pct * TOTAL_FOCUS_SECONDS);
+      updateCustomVideoUI();
+
+      const iframe = document.getElementById('classroomVideoIframe');
+      if (iframe && iframe.contentWindow) {
+        const startSec = (currentActiveDayNumber - 1) * 1200 + videoElapsedSeconds;
+        iframe.contentWindow.postMessage(JSON.stringify({
+          event: "command",
+          func: "seekTo",
+          args: [startSec, true]
+        }), '*');
+      }
+    }
+
+    function toggleVideoFullscreen() {
+      const container = document.getElementById('videoPlayerContainer');
+      if (!container) return;
+      if (!document.fullscreenElement) {
+        container.requestFullscreen().catch(err => console.log(err));
+      } else {
+        document.exitFullscreen().catch(err => console.log(err));
+      }
+    }
+
     // Load Specific Day's Lesson & Homework
     async function loadDayLesson(dayNum) {
       try {
@@ -1821,32 +1942,30 @@
             : `<strong>Practix Micro-Learning:</strong> Ghanton lambi video dekhne ki zaroorat nahi! Aaj ka lesson exactly 20:00 minute tak mehdood kiya gaya hai. Baqi 25 minute foran Part 2, 3, aur 4 mein practical homework solve karein.`;
         }
 
-        // Clip YouTube Player to EXACT 20 minutes with start and end params
+        // Clip Video Player to EXACT 20 minutes (No native YouTube controls, No 1-Hour bar!)
         let videoSrc = data.videoUrl || '';
         if (videoSrc) {
-          videoSrc = videoSrc.replace(/([?&])(start|end)=\d+/g, '');
+          videoSrc = videoSrc.replace(/([?&])(start|end|controls|modestbranding|rel|enablejsapi|iv_load_policy|disablekb)=\d+/g, '');
           const sep = videoSrc.includes('?') ? '&' : '?';
-          videoSrc += `${sep}start=${startSeconds}&end=${endSeconds}&rel=0`;
+          videoSrc += `${sep}start=${startSeconds}&end=${endSeconds}&controls=0&modestbranding=1&rel=0&iv_load_policy=3&disablekb=1&enablejsapi=1`;
         }
 
-        // Update Real Video Iframe & Direct Watch Link
+        // Update Real Video Iframe
         const videoIframe = document.getElementById('classroomVideoIframe');
         if (videoIframe && videoSrc) {
           if (videoIframe.src !== videoSrc) {
             videoIframe.src = videoSrc;
           }
         }
-        const directLink = document.getElementById('classroomVideoDirectLink');
-        if (directLink) {
-          let directUrl = data.originalUrl || data.videoUrl || '#';
-          if (startSeconds > 0 && !directUrl.includes('t=')) {
-            directUrl += (directUrl.includes('?') ? '&' : '?') + `t=${startSeconds}s`;
-          }
-          directLink.href = directUrl;
-        }
+        resetCustomVideoPlayer();
+
         const durEl = document.getElementById('classroomVideoDuration');
         if (durEl) {
-          durEl.innerText = isEn ? `20:00 Focus Video + 25 Mins Hands-on Execution` : `20:00 Focus Video + 25 Mins Hands-on Execution`;
+          durEl.innerText = isEn ? `20:00 Focus Micro-Lesson` : `20:00 Focus Micro-Lesson`;
+        }
+        const b20 = document.getElementById('classroomBadge20Min');
+        if (b20) {
+          b20.innerText = isEn ? `20:00 Daily Class (No External Links)` : `20:00 Daily Class (No External Links)`;
         }
 
         // Takeaways
