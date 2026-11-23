@@ -1463,8 +1463,9 @@
   </button>
 
   <!-- ═════════════════════════ AUTH MODAL (LOGIN / REGISTER) ═════════════════════════ -->
-  <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
-    <div class="glass-card max-w-md w-full p-6 md:p-8 rounded-3xl border border-purple-500/40 glow-purple relative">
+  <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 overflow-y-auto p-4 hidden" style="-webkit-overflow-scrolling:touch;">
+    <div class="min-h-full flex items-center justify-center py-6">
+    <div class="glass-card max-w-md w-full p-5 md:p-8 rounded-3xl border border-purple-500/40 glow-purple relative">
       <button id="authModalCloseBtn" onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
         <i class="fa-solid fa-xmark"></i>
       </button>
@@ -1571,6 +1572,7 @@
           Log In Karein →
         </button>
       </form>
+    </div>
     </div>
   </div>
 
@@ -2036,20 +2038,31 @@
     }
 
     // Forcefully wipe any browser autofill values
+    const AUTH_FIELDS = ['loginPassword', 'loginUsername', 'regPassword', 'regName', 'regPhone', 'regEmail'];
     function enforceBlankInputs() {
-      const fields = ['loginPassword', 'loginUsername', 'regPassword', 'regName', 'regPhone', 'regEmail'];
-      fields.forEach(id => {
+      AUTH_FIELDS.forEach(id => {
         const el = document.getElementById(id);
-        if (el) {
-          el.value = '';
-          el.setAttribute('readonly', 'readonly');
-        }
+        if (!el) return;
+        if (el.dataset.userTyped === '1' || document.activeElement === el) return; // never wipe user input
+        el.value = '';
       });
     }
 
     function runAntiAutofillSweep() {
+      AUTH_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.dataset.userTyped = '';
+        if (!el.dataset.typedHook) {
+          el.addEventListener('input', () => { el.dataset.userTyped = '1'; });
+          el.addEventListener('keydown', () => { el.dataset.userTyped = '1'; });
+          el.dataset.typedHook = '1';
+        }
+      });
       enforceBlankInputs();
       [50, 150, 300, 600, 1000].forEach(ms => setTimeout(enforceBlankInputs, ms));
+      // Release readonly so mobile keyboards open on first tap
+      setTimeout(() => AUTH_FIELDS.forEach(id => { const el = document.getElementById(id); if (el) el.removeAttribute('readonly'); }), 1100);
     }
 
     // Auth Modal Controls
