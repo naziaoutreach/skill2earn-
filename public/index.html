@@ -1655,24 +1655,39 @@
         document.getElementById('classroomDayTitle').innerText = data.title;
         document.getElementById('classroomVideoHeading').innerText = data.videoTitle || `Day ${data.day} Practical Lesson`;
 
-        // Calculate 20-Minute Focus Chunk for Micro-Learning
+        // Calculate EXACT 20-Minute Focus Chunk for Micro-Learning
         const startMin = (data.day - 1) * 20;
         const endMin = startMin + 20;
+        const startSeconds = startMin * 60;
+        const endSeconds = endMin * 60;
+
         const formatMin = (m) => {
           const hrs = Math.floor(m / 60);
           const mins = m % 60;
           return hrs > 0 ? `${hrs}:${mins < 10 ? '0' + mins : mins}:00` : `${mins < 10 ? '0' + mins : mins}:00`;
         };
 
+        const isEn = currentLang === 'en';
         const segTitle = document.getElementById('classroomSegmentTitle');
         if (segTitle) {
-          segTitle.innerText = `🎯 Aaj Ka Target: ${formatMin(startMin)} se ${formatMin(endMin)} tak dekhein`;
+          segTitle.innerText = isEn 
+            ? `🎯 Today's 20-Min Focus Chunk: ${formatMin(startMin)} to ${formatMin(endMin)}`
+            : `🎯 Aaj Ka 20-Minute Focus Chunk: ${formatMin(startMin)} se ${formatMin(endMin)} tak`;
         }
 
-        const startSeconds = startMin * 60;
-        let videoSrc = data.videoUrl;
-        if (startSeconds > 0 && !videoSrc.includes('start=')) {
-          videoSrc += (videoSrc.includes('?') ? '&' : '?') + `start=${startSeconds}`;
+        const segNote = document.getElementById('classroomSegmentNote');
+        if (segNote) {
+          segNote.innerHTML = isEn
+            ? `<strong>Practix Micro-Learning:</strong> You do NOT need to watch hours of video! Today's lesson is trimmed to exactly 20:00 minutes. Spend the remaining 25 minutes executing the practical tasks in Part 2, 3, and 4.`
+            : `<strong>Practix Micro-Learning:</strong> Ghanton lambi video dekhne ki zaroorat nahi! Aaj ka lesson exactly 20:00 minute tak mehdood kiya gaya hai. Baqi 25 minute foran Part 2, 3, aur 4 mein practical homework solve karein.`;
+        }
+
+        // Clip YouTube Player to EXACT 20 minutes with start and end params
+        let videoSrc = data.videoUrl || '';
+        if (videoSrc) {
+          videoSrc = videoSrc.replace(/([?&])(start|end)=\d+/g, '');
+          const sep = videoSrc.includes('?') ? '&' : '?';
+          videoSrc += `${sep}start=${startSeconds}&end=${endSeconds}&rel=0`;
         }
 
         // Update Real Video Iframe & Direct Watch Link
@@ -1692,7 +1707,7 @@
         }
         const durEl = document.getElementById('classroomVideoDuration');
         if (durEl) {
-          durEl.innerText = `20 Mins Video + 25 Mins Hands-on Execution`;
+          durEl.innerText = isEn ? `20:00 Focus Video + 25 Mins Hands-on Execution` : `20:00 Focus Video + 25 Mins Hands-on Execution`;
         }
 
         // Takeaways
@@ -1732,9 +1747,10 @@
       const container = document.getElementById('worksheetContainer');
       if (!container) return;
       container.innerHTML = '';
+      const isEn = currentLang === 'en';
 
       if (!questions || questions.length === 0) {
-        container.innerHTML = '<div class="text-xs text-gray-500 text-center py-4">No questions for today.</div>';
+        container.innerHTML = `<div class="text-xs text-gray-500 text-center py-4">${isEn ? 'No questions for today.' : 'Aaj ke koi sawalat nahi.'}</div>`;
         return;
       }
 
@@ -1743,9 +1759,9 @@
         box.className = 'bg-[#12192C] p-4 rounded-xl border border-gray-800 space-y-2';
         box.innerHTML = `
           <label class="text-xs font-bold text-white block">${q.prompt || `Q${idx+1}. Core concept explanation`}</label>
-          <textarea id="worksheet_q_${idx}" oninput="handleWorksheetInput('q${idx+1}', this.value)" placeholder="Yahan apna mukammal jawab type karein..." class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500 transition" rows="2"></textarea>
+          <textarea id="worksheet_q_${idx}" oninput="handleWorksheetInput('q${idx+1}', this.value)" placeholder="${isEn ? 'Type your comprehensive answer here...' : 'Yahan apna mukammal jawab type karein...'}" class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-gray-200 focus:outline-none focus:border-purple-500 transition" rows="2"></textarea>
           <div class="flex justify-end">
-            <span id="ws_status_q${idx+1}" class="text-[10px] text-gray-500 font-semibold">Pending Answer</span>
+            <span id="ws_status_q${idx+1}" class="text-[10px] text-gray-500 font-semibold">${isEn ? 'Pending Answer' : 'Jawab Darj Karein'}</span>
           </div>
         `;
         container.appendChild(box);
@@ -1754,14 +1770,15 @@
 
     function handleWorksheetInput(qId, val) {
       classroomWorksheetAnswers[qId] = val.trim();
+      const isEn = currentLang === 'en';
       const st = document.getElementById(`ws_status_${qId}`);
       if (st) {
         if (val.trim().length >= 5) {
           st.className = 'text-[10px] text-emerald-400 font-bold flex items-center gap-1';
-          st.innerHTML = '<i class="fa-solid fa-check"></i> Answer Saved';
+          st.innerHTML = `<i class="fa-solid fa-check"></i> ${isEn ? 'Answer Saved' : 'Jawab Save Ho Gaya'}`;
         } else {
           st.className = 'text-[10px] text-gray-500 font-semibold';
-          st.innerText = 'Minimum 5 characters required';
+          st.innerText = isEn ? 'Minimum 5 characters required' : 'Kam az kam 5 alfaz lazmi hain';
         }
       }
       updateHomeworkGateChecklist();
@@ -1771,9 +1788,10 @@
       const container = document.getElementById('quizContainer');
       if (!container) return;
       container.innerHTML = '';
+      const isEn = currentLang === 'en';
 
       if (!quizList || quizList.length === 0) {
-        container.innerHTML = '<div class="text-xs text-gray-500 text-center py-4">No quiz for today.</div>';
+        container.innerHTML = `<div class="text-xs text-gray-500 text-center py-4">${isEn ? 'No quiz for today.' : 'Aaj ka koi quiz nahi.'}</div>`;
         return;
       }
 
@@ -1793,7 +1811,7 @@
         card.innerHTML = `
           <div class="flex items-center justify-between">
             <div class="text-xs font-bold text-white"><span class="text-cyan-400 mr-1.5">MCQ ${qIdx + 1}:</span> ${q.question}</div>
-            <span id="quiz_badge_${qIdx}" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-800 text-gray-400">Unanswered</span>
+            <span id="quiz_badge_${qIdx}" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-gray-800 text-gray-400">${isEn ? 'Unanswered' : 'Hal Karein'}</span>
           </div>
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
             ${optsHtml}
@@ -1810,6 +1828,7 @@
 
       classroomQuizAnswers[qIdx] = optIdx;
       const isCorrect = (optIdx === q.correctIndex);
+      const isEn = currentLang === 'en';
 
       // Reset buttons style for this question
       document.querySelectorAll(`.quiz-btn-${qIdx}`).forEach((btn, idx) => {
@@ -1826,10 +1845,10 @@
       if (badge) {
         if (isCorrect) {
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30';
-          badge.innerText = '✓ Correct';
+          badge.innerText = isEn ? '✓ Correct' : '✓ Bilkul Sahi';
         } else {
           badge.className = 'text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30';
-          badge.innerText = '✗ Incorrect';
+          badge.innerText = isEn ? '✗ Incorrect' : '✗ Ghalat';
         }
       }
 
@@ -1838,10 +1857,10 @@
         fb.classList.remove('hidden');
         if (isCorrect) {
           fb.className = 'p-3 rounded-xl text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/30';
-          fb.innerHTML = `✓ Bilkul Sahi Jawab! 🎉<br><span class="font-normal text-gray-300 text-[11px] mt-0.5 block">${q.explanation || ''}</span>`;
+          fb.innerHTML = `✓ ${isEn ? 'Correct Answer! 🎉' : 'Bilkul Sahi Jawab! 🎉'}<br><span class="font-normal text-gray-300 text-[11px] mt-0.5 block">${q.explanation || ''}</span>`;
         } else {
           fb.className = 'p-3 rounded-xl text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/30';
-          fb.innerHTML = `✗ Yeh ghalat hai. Sahi jawab Option ${String.fromCharCode(65 + q.correctIndex)} tha.<br><span class="font-normal text-gray-300 text-[11px] mt-0.5 block">${q.explanation || ''}</span>`;
+          fb.innerHTML = `✗ ${isEn ? `Incorrect. The correct answer was Option ${String.fromCharCode(65 + q.correctIndex)}.` : `Yeh ghalat hai. Sahi jawab Option ${String.fromCharCode(65 + q.correctIndex)} tha.`}<br><span class="font-normal text-gray-300 text-[11px] mt-0.5 block">${q.explanation || ''}</span>`;
         }
       }
 
@@ -1849,6 +1868,7 @@
     }
 
     function updateHomeworkGateChecklist() {
+      const isEn = currentLang === 'en';
       const totalQuestions = currentDayQuestions.length || 4;
       const validWsCount = Object.values(classroomWorksheetAnswers).filter(t => t && t.trim().length >= 5).length;
       const totalQuiz = currentDayQuiz.length || 4;
@@ -1861,17 +1881,17 @@
       const iconWs = document.getElementById('iconGateWorksheet');
       const textWs = document.getElementById('textGateWorksheet');
       const wsBadge = document.getElementById('worksheetCounterBadge');
-      if (wsBadge) wsBadge.innerText = `${validWsCount} of ${totalQuestions} Answered`;
+      if (wsBadge) wsBadge.innerText = isEn ? `${validWsCount} of ${totalQuestions} Answered` : `${validWsCount} of ${totalQuestions} Hal Kiye`;
 
       if (gateWs && iconWs && textWs) {
         if (validWsCount >= totalQuestions) {
           gateWs.className = 'flex items-center gap-2 bg-[#121E2C] px-3 py-2 rounded-xl border border-emerald-500/40 text-emerald-300 transition';
           iconWs.className = 'fa-solid fa-circle-check text-emerald-400';
-          textWs.innerText = `Worksheet (${validWsCount}/${totalQuestions}) Done ✓`;
+          textWs.innerText = isEn ? `Worksheet (${validWsCount}/${totalQuestions}) Done ✓` : `Worksheet (${validWsCount}/${totalQuestions}) Done ✓`;
         } else {
           gateWs.className = 'flex items-center gap-2 bg-[#12192C] px-3 py-2 rounded-xl border border-rose-500/30 text-rose-300 transition';
           iconWs.className = 'fa-solid fa-circle-xmark text-rose-400';
-          textWs.innerText = `Worksheet (${validWsCount}/${totalQuestions})`;
+          textWs.innerText = isEn ? `Worksheet (${validWsCount}/${totalQuestions})` : `Worksheet (${validWsCount}/${totalQuestions})`;
         }
       }
 
@@ -1880,17 +1900,17 @@
       const iconQ = document.getElementById('iconGateQuiz');
       const textQ = document.getElementById('textGateQuiz');
       const quizStText = document.getElementById('quizStatusText');
-      if (quizStText) quizStText.innerText = `${answeredQuizCount} of ${totalQuiz} Solved`;
+      if (quizStText) quizStText.innerText = isEn ? `${answeredQuizCount} of ${totalQuiz} Solved` : `${answeredQuizCount} of ${totalQuiz} Hal Kiye`;
 
       if (gateQ && iconQ && textQ) {
         if (answeredQuizCount >= totalQuiz) {
           gateQ.className = 'flex items-center gap-2 bg-[#121E2C] px-3 py-2 rounded-xl border border-emerald-500/40 text-emerald-300 transition';
           iconQ.className = 'fa-solid fa-circle-check text-emerald-400';
-          textQ.innerText = `Quiz (${answeredQuizCount}/${totalQuiz}) Solved ✓`;
+          textQ.innerText = isEn ? `Quiz (${answeredQuizCount}/${totalQuiz}) Solved ✓` : `Quiz (${answeredQuizCount}/${totalQuiz}) Solved ✓`;
         } else {
           gateQ.className = 'flex items-center gap-2 bg-[#12192C] px-3 py-2 rounded-xl border border-rose-500/30 text-rose-300 transition';
           iconQ.className = 'fa-solid fa-circle-xmark text-rose-400';
-          textQ.innerText = `Quiz (${answeredQuizCount}/${totalQuiz})`;
+          textQ.innerText = isEn ? `Quiz (${answeredQuizCount}/${totalQuiz})` : `Quiz (${answeredQuizCount}/${totalQuiz})`;
         }
       }
 
@@ -1902,11 +1922,11 @@
         if (hasProof) {
           gateP.className = 'flex items-center gap-2 bg-[#121E2C] px-3 py-2 rounded-xl border border-emerald-500/40 text-emerald-300 transition';
           iconP.className = 'fa-solid fa-circle-check text-emerald-400';
-          textP.innerText = 'Proof URL Attached ✓';
+          textP.innerText = isEn ? 'Proof URL Attached ✓' : 'Proof Link Lag Gaya ✓';
         } else {
           gateP.className = 'flex items-center gap-2 bg-[#12192C] px-3 py-2 rounded-xl border border-rose-500/30 text-rose-300 transition';
           iconP.className = 'fa-solid fa-circle-xmark text-rose-400';
-          textP.innerText = 'Proof URL Missing';
+          textP.innerText = isEn ? 'Proof URL Missing' : 'Proof Link Missing';
         }
       }
 
@@ -1916,10 +1936,10 @@
       if (overallBadge) {
         if (completedGates === 3) {
           overallBadge.className = 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 px-2.5 py-0.5 rounded-full text-[10px] font-bold flex items-center gap-1';
-          overallBadge.innerHTML = '<i class="fa-solid fa-check"></i> Ready to Submit';
+          overallBadge.innerHTML = `<i class="fa-solid fa-check"></i> ${isEn ? 'Ready to Submit' : 'Submit Ke Liye Tayyar'}`;
         } else {
           overallBadge.className = 'bg-rose-500/10 text-rose-300 border border-rose-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold';
-          overallBadge.innerText = `Incomplete (${completedGates}/3 Tasks Done)`;
+          overallBadge.innerText = isEn ? `Incomplete (${completedGates}/3 Tasks Done)` : `Adhoora (${completedGates}/3 Mukammal)`;
         }
       }
 
@@ -1937,10 +1957,14 @@
     // Submit Homework Proof with STRICT GATEKEEPER
     async function submitHomeworkProof() {
       const check = updateHomeworkGateChecklist();
+      const isEn = currentLang === 'en';
 
       // 1. Strict Worksheet Gate
       if (check.validWsCount < check.totalQuestions) {
-        alert(`⚠️ Incomplete Worksheet!\n\nBaraye meherbani Part 2 ke tamam ${check.totalQuestions} conceptual sawalat ke mukammal jawab likhein!\n\n(Abhi sirf ${check.validWsCount}/${check.totalQuestions} sawalat ke jawab likhe gaye hain).`);
+        const msg = isEn
+          ? `⚠️ Incomplete Worksheet!\n\nPlease answer all ${check.totalQuestions} conceptual questions in Part 2 before submitting.\n\n(Currently only ${check.validWsCount}/${check.totalQuestions} answered).`
+          : `⚠️ Incomplete Worksheet!\n\nBaraye meherbani Part 2 ke tamam ${check.totalQuestions} conceptual sawalat ke mukammal jawab likhein!\n\n(Abhi sirf ${check.validWsCount}/${check.totalQuestions} sawalat ke jawab likhe gaye hain).`;
+        alert(msg);
         const firstEmpty = currentDayQuestions.findIndex((q, idx) => !classroomWorksheetAnswers[`q${idx+1}`] || classroomWorksheetAnswers[`q${idx+1}`].length < 5);
         if (firstEmpty !== -1) {
           const el = document.getElementById(`worksheet_q_${firstEmpty}`);
@@ -1951,13 +1975,19 @@
 
       // 2. Strict Quiz Gate
       if (check.answeredQuizCount < check.totalQuiz) {
-        alert(`⚠️ Incomplete Daily Quiz!\n\nBaraye meherbani Part 3 ke tamam ${check.totalQuiz} MCQs solve karein!\n\n(Abhi sirf ${check.answeredQuizCount}/${check.totalQuiz} MCQs solve huay hain).`);
+        const msg = isEn
+          ? `⚠️ Incomplete Daily Quiz!\n\nPlease solve all ${check.totalQuiz} MCQs in Part 3 before submitting.\n\n(Currently only ${check.answeredQuizCount}/${check.totalQuiz} solved).`
+          : `⚠️ Incomplete Daily Quiz!\n\nBaraye meherbani Part 3 ke tamam ${check.totalQuiz} MCQs solve karein!\n\n(Abhi sirf ${check.answeredQuizCount}/${check.totalQuiz} MCQs solve huay hain).`;
+        alert(msg);
         return;
       }
 
       // 3. Strict Proof URL Gate
       if (!check.hasProof) {
-        alert("⚠️ Proof of Work Missing!\n\nBaraye meherbani Part 4 mein apna practical proof (Figma link, GitHub repo, Google Drive, Behance ya image URL) lazmi paste karein!");
+        const msg = isEn
+          ? "⚠️ Proof of Work Missing!\n\nPlease paste your practical proof link (Figma, GitHub, Google Drive, or image URL) in Part 4 before submitting!"
+          : "⚠️ Proof of Work Missing!\n\nBaraye meherbani Part 4 mein apna practical proof (Figma link, GitHub repo, Google Drive, Behance ya image URL) lazmi paste karein!";
+        alert(msg);
         const proofInput = document.getElementById('proofUrlInput');
         if (proofInput) proofInput.focus();
         return;
@@ -1967,7 +1997,7 @@
       const notes = (document.getElementById('proofNotesInput') ? document.getElementById('proofNotesInput').value : '').trim();
       const btn = document.getElementById('btnSubmitHomework');
       const originalText = btn.innerHTML;
-      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Verifying Proof with AI...';
+      btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin mr-2"></i> ${isEn ? 'Verifying Proof with AI...' : 'AI Se Proof Verify Ho Raha Hai...'}`;
       btn.disabled = true;
 
       try {
@@ -1977,7 +2007,7 @@
           body: JSON.stringify({
             email: currentUserEmail,
             proofUrl: proofUrl,
-            notes: notes || "Practical practice deliverable submitted.",
+            notes: notes || (isEn ? "Practical deliverable submitted." : "Practical practice deliverable submitted."),
             worksheetAnswers: classroomWorksheetAnswers,
             quizScore: `${check.answeredQuizCount}/${check.totalQuiz}`,
             lang: currentLang
@@ -1998,7 +2028,7 @@
       } catch (e) {
         btn.innerHTML = originalText;
         btn.disabled = false;
-        alert("Homework submission error. Please try again.");
+        alert(isEn ? "Homework submission error. Please try again." : "Homework submission error. Please try again.");
       }
     }
 

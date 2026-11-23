@@ -485,14 +485,53 @@ function getLessonForDay(dayNum, user, lang = "urdu") {
   const lowerTopic = `${courseTitle} ${userSkill}`.toLowerCase();
 
   if (lowerTopic.includes("python") || lowerTopic.includes("code") || lowerTopic.includes("programming")) {
-    worksheetQuestions = [
+    worksheetQuestions = isEn ? [
+      { id: "q1", prompt: "Q1. Explain the core concept of today's 20-minute Python lesson (Syntax, Variables, Setup, or Logic) in your own words:", userDraft: "" },
+      { id: "q2", prompt: "Q2. Detail the step-by-step logic and terminal output of the code you wrote and executed on your machine today:", userDraft: "" },
+      { id: "q3", prompt: "Q3. If you encounter an error (e.g. SyntaxError, TypeError, IndentationError) while running this task, how would you troubleshoot and fix it?", userDraft: "" },
+      { id: "q4", prompt: "Q4. How would this practical Python deliverable solve a real freelance client's automation or data processing need?", userDraft: "" }
+    ] : [
       { id: "q1", prompt: "Q1. Aaj ke 20-minute Python lesson ka core concept (Syntax, Variables, Data Types ya Setup) apne alfaz mein explain karein:", userDraft: "" },
       { id: "q2", prompt: "Q2. Aaj jo code aapne computer/VS Code mein likha aur run kiya, uski step-by-step logic aur output kya thi?", userDraft: "" },
       { id: "q3", prompt: "Q3. Is code ko chalatay waqt agar koi SyntaxError, TypeError ya IndentationError aaye toh usay kaise troubleshoot karenge?", userDraft: "" },
       { id: "q4", prompt: "Q4. Yeh code real freelance client ke project (Web scraping, Data automation, ya AI script) mein kis tarah use hoga?", userDraft: "" }
     ];
 
-    quiz = [
+    quiz = isEn ? [
+      {
+        id: 1,
+        question: "What is the correct syntax to declare and assign a variable in Python?",
+        options: ["x = 10", "var x = 10", "int x = 10", "dim x as 10"],
+        correctIndex: 0,
+        explanation: "Python is dynamically typed, so variables are assigned directly without type declarations."
+      },
+      {
+        id: 2,
+        question: "Which terminal command executes a Python script file?",
+        options: ["python filename.py", "run script.exe", "execute code", "start python"],
+        correctIndex: 0,
+        explanation: "The Python interpreter executes script files via 'python filename.py'."
+      },
+      {
+        id: 3,
+        question: "Which built-in function outputs text to the screen in Python?",
+        options: ["print(\"...\")", "echo(\"...\")", "output(\"...\")", "console.log(\"...\")"],
+        correctIndex: 0,
+        explanation: "The 'print()' function prints formatted strings and variables to standard output."
+      },
+      {
+        id: 4,
+        question: "Why is 45 minutes of daily deliberate practice superior to binge-watching multi-hour tutorials?",
+        options: [
+          "It builds practical muscle memory and long-term retention",
+          "Binge-watching without practice causes rapid forgetting",
+          "It has no significant difference",
+          "Watching videos is faster than executing code"
+        ],
+        correctIndex: 0,
+        explanation: "Direct hands-on coding compounds faster than passive watching."
+      }
+    ] : [
       {
         id: 1,
         question: "Python mein variable assign karne ka durust tareeqa konsa hai?",
@@ -528,14 +567,53 @@ function getLessonForDay(dayNum, user, lang = "urdu") {
       }
     ];
   } else if (lowerTopic.includes("design") || lowerTopic.includes("canva") || lowerTopic.includes("figma") || lowerTopic.includes("ui")) {
-    worksheetQuestions = [
+    worksheetQuestions = isEn ? [
+      { id: "q1", prompt: "Q1. Explain the visual hierarchy, focal point, and layout balance applied in today's 20-minute design session:", userDraft: "" },
+      { id: "q2", prompt: "Q2. Which specific color harmonies (contrast ratios) and typography pairings did you select for this deliverable?", userDraft: "" },
+      { id: "q3", prompt: "Q3. If a client requests revisions stating the layout feels cluttered, what specific structural adjustments would you make?", userDraft: "" },
+      { id: "q4", prompt: "Q4. How will this design deliverable help a freelance client increase conversions, engagement, or brand credibility?", userDraft: "" }
+    ] : [
       { id: "q1", prompt: "Q1. Aaj ke design session ki visual hierarchy, focal point, aur layout balance ko apne alfaz mein explain karein:", userDraft: "" },
       { id: "q2", prompt: "Q2. Aapne is design deliverable mein kon se color harmonies (contrast) aur typography pairing use kiye hain?", userDraft: "" },
       { id: "q3", prompt: "Q3. Agar client feedback de ke design cluttered ya text unreadable hai, toh aap kya specific adjustments karenge?", userDraft: "" },
       { id: "q4", prompt: "Q4. Is deliverable ko Upwork/Fiverr gig portfolio mein client ko impress karne ke liye kaise showcase karenge?", userDraft: "" }
     ];
 
-    quiz = [
+    quiz = isEn ? [
+      {
+        id: 1,
+        question: "In visual hierarchy, where should the viewer's eye be drawn first?",
+        options: ["Primary Focal Point / Main Headline", "Corner background shape", "Footer copyright text", "Border lines"],
+        correctIndex: 0,
+        explanation: "The primary focal point anchors user attention to the most important message first."
+      },
+      {
+        id: 2,
+        question: "Which color space is standard for digital screens and web graphics?",
+        options: ["RGB", "CMYK", "Pantone Spot", "Greyscale Only"],
+        correctIndex: 0,
+        explanation: "Screens emit light and use the additive RGB (Red, Green, Blue) color model."
+      },
+      {
+        id: 3,
+        question: "Which format is best for exporting a transparent logo or UI icon?",
+        options: ["PNG-24 or SVG", "JPEG with background", "Low quality GIF", "BMP format"],
+        correctIndex: 0,
+        explanation: "PNG-24 and vector SVG natively support alpha transparency channels."
+      },
+      {
+        id: 4,
+        question: "What is the most critical guideline when creating a client-ready presentation deck?",
+        options: [
+          "Consistent padding, alignment, and clean contrast",
+          "Using 10 different novelty fonts",
+          "Stretching low-resolution images",
+          "Overcrowding slides with animated clutter"
+        ],
+        correctIndex: 0,
+        explanation: "Visual consistency and whitespace convey commercial polish and executive credibility."
+      }
+    ] : [
       {
         id: 1,
         question: "Visual hierarchy mein viewer ki nazar sab se pehle kis cheez par jani chahiye?",
@@ -572,14 +650,68 @@ function getLessonForDay(dayNum, user, lang = "urdu") {
     ];
   } else {
     // Universal High-Impact Skill Questions & Quiz
-    worksheetQuestions = [
+    worksheetQuestions = isEn ? [
+      { id: "q1", prompt: "Q1. Explain the core practical concept covered in today's 20-minute session in your own words:", userDraft: "" },
+      { id: "q2", prompt: "Q2. Detail the exact technical steps and execution workflow you used to create today's deliverable:", userDraft: "" },
+      { id: "q3", prompt: "Q3. What specific challenge or roadblock did you overcome while executing this task, and how did you resolve it?", userDraft: "" },
+      { id: "q4", prompt: "Q4. How does this deliverable demonstrate commercial value for a freelance client on Upwork or Fiverr?", userDraft: "" }
+    ] : [
       { id: "q1", prompt: "Q1. Aaj ke 20-minute practical session ka core concept apne alfaz mein asaan tareeqe se explain karein:", userDraft: "" },
       { id: "q2", prompt: "Q2. Aaj aapne jo deliverable/task banaya, uske technical steps aur execution strategy ko detail mein likhein:", userDraft: "" },
       { id: "q3", prompt: "Q3. Is practical task ko implement karte waqt aapko kya challenge aya aur aapne usay kaise troubleshoot kiya?", userDraft: "" },
       { id: "q4", prompt: "Q4. Yeh deliverable real client ke freelance project mein kis tarah use hoga aur client ko kya value milegi?", userDraft: "" }
     ];
 
-    quiz = [
+    quiz = isEn ? [
+      {
+        id: 1,
+        question: "Which strategy is most effective for attracting high-paying freelance clients?",
+        options: [
+          "Building a verified public portfolio of real practical proof-of-work",
+          "Cold messaging clients without any proof of ability",
+          "Collecting theory certificates without practicing",
+          "Watching 10 hours of video without applying anything"
+        ],
+        correctIndex: 0,
+        explanation: "Global clients hire proven execution and proof-of-work, not theoretical certificates."
+      },
+      {
+        id: 2,
+        question: "In the micro-learning framework, what should you do immediately after watching a 20-minute lesson?",
+        options: [
+          "Spend the remaining 25 minutes executing the hands-on deliverable in your software/tools",
+          "Scroll through YouTube recommendations for the next hour",
+          "Close your computer without taking notes or practicing",
+          "Skip ahead without verifying today's homework"
+        ],
+        correctIndex: 0,
+        explanation: "Immediate execution achieves up to 90% retention and practical mastery."
+      },
+      {
+        id: 3,
+        question: "What is the direct commercial benefit of clean, client-ready project submission?",
+        options: [
+          "Higher client satisfaction, 5-star ratings, and repeat contracts",
+          "Client cancellations and disputes",
+          "Payment holds and project scope creep",
+          "No measurable difference"
+        ],
+        correctIndex: 0,
+        explanation: "Professional delivery builds client trust and leads to high-rate long-term retainers."
+      },
+      {
+        id: 4,
+        question: "What is the primary benefit of submitting daily homework proofs on Practix?",
+        options: [
+          "It automatically compiles your verified public portfolio and unlocks the next day",
+          "It only logs attendance without portfolio generation",
+          "It is only a theoretical score",
+          "No tangible outcome"
+        ],
+        correctIndex: 0,
+        explanation: "Daily proofs automatically compile your verified portfolio showcase for real clients."
+      }
+    ] : [
       {
         id: 1,
         question: "Konsa rule freelance market mein high-paying clients attract karne ke liye sab se ahem hai?",
