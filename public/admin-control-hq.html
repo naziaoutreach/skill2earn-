@@ -306,11 +306,15 @@
           </td>
           <td class="p-4">
             ${u.isPro 
-              ? `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-1 rounded-full font-bold text-[10px] flex items-center gap-1 w-max"><i class="fa-solid fa-crown text-amber-400"></i> PRO Plan</span>` 
-              : `<span class="bg-gray-800 text-gray-400 px-2.5 py-1 rounded-full font-semibold text-[10px]">Free Trial (7D)</span>`}
+              ? `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-1 rounded-full font-bold text-[10px] flex items-center gap-1 w-max"><i class="fa-solid fa-crown text-amber-400"></i> PRO Active ⭐</span>` 
+              : u.totalDays <= 7 
+              ? `<span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-2.5 py-1 rounded-full font-semibold text-[10px]">100% Free Sprint (Rs. 0)</span>`
+              : u.totalDays <= 14
+              ? `<span class="bg-purple-500/20 text-purple-300 border border-purple-500/30 px-2.5 py-1 rounded-full font-semibold text-[10px]">Free Trial (14D - Rs. 499)</span>`
+              : `<span class="bg-indigo-500/20 text-indigo-300 border border-indigo-500/30 px-2.5 py-1 rounded-full font-semibold text-[10px]">Free Trial (30D - Rs. 999)</span>`}
           </td>
           <td class="p-4">
-            <span class="font-bold text-white">${u.completedDays}</span> / 30 Days
+            <span class="font-bold text-white">${u.completedDays}</span> / ${u.totalDays || 30} Days
           </td>
           <td class="p-4">
             <span class="text-amber-400 font-bold">🔥 ${u.streak}D</span> · <span class="text-purple-300 font-bold">⭐ ${u.totalXp} XP</span>

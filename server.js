@@ -1173,12 +1173,24 @@ app.get('/api/day/:dayNumber', (req, res) => {
     });
   }
 
-  // 7-Day Free Trial Gate: Days 8 to 30 require PRO upgrade
-  if (dayNum > 7 && !user.isPro) {
+  // Dynamic Fair Pricing Gate:
+  // 7-Day Sprints: 100% FREE!
+  // 14-Day Skill Tracks: Day 8-14 requires PRO (Rs. 499)
+  // 30-Day Masterclasses: Day 8-30 requires PRO (Rs. 999)
+  const courseTotalDays = (user.activeCourse && Number(user.activeCourse.totalDays)) || 30;
+
+  if (courseTotalDays > 7 && dayNum > 7 && !user.isPro) {
+    const is14Day = courseTotalDays <= 14;
+    const fee = is14Day ? 499 : 999;
+    const trackLabel = is14Day ? "14-Day Skill Track" : "30-Day Career Masterclass";
+
     return res.status(402).json({
       error: "pro_required",
-      message: `🌟 7-Day Free Trial Mukammal!\n\nMubarak ho! Aapne pehle 7 din kamyabi se complete kar liye hain. Days 8 se 30 aur Client Portfolio Launch unlock karne ke liye Practix PRO mein upgrade karein!`,
-      isProRequired: true
+      isProRequired: true,
+      fee: fee,
+      totalDays: courseTotalDays,
+      trackLabel: trackLabel,
+      message: `🌟 7-Day Free Trial Mukammal!\n\nMubarak ho! Aapne pehle 7 din kamyabi se complete kar liye hain.\n\n"${trackLabel}" ke baqi days (${dayNum} se ${courseTotalDays}) aur verified certificate unlock karne ke liye Practix PRO (Sirf Rs. ${fee}) mein upgrade karein!`
     });
   }
 
@@ -1346,6 +1358,7 @@ app.get('/api/admin/overview', verifyAdminAuth, async (req, res) => {
     level: u.level || 1,
     activeCourseTitle: u.activeCourse ? u.activeCourse.title : "No Course",
     completedDays: u.activeCourse ? u.activeCourse.completedDays || 0 : 0,
+    totalDays: (u.activeCourse && u.activeCourse.totalDays) || u.targetDays || 30,
     isPro: Boolean(u.isPro),
     submissionsCount: (u.portfolio && u.portfolio.length) || 0
   }));

@@ -806,15 +806,15 @@
         <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center text-black text-2xl mx-auto shadow-lg shadow-amber-500/30">
           <i class="fa-solid fa-crown"></i>
         </div>
-        <h3 class="text-xl font-black text-white">Upgrade to Practix PRO ⭐</h3>
-        <p class="text-xs text-gray-300">7-Day Free Trial Mukammal! Days 8 se 30 aur Freelance Client Launch unlock karein.</p>
+        <h3 class="text-xl font-black text-white" id="proModalHeading">Upgrade to Practix PRO ⭐</h3>
+        <p class="text-xs text-gray-300" id="proModalSubtext">7-Day Free Trial Mukammal! Aagay ke practical days unlock karein.</p>
       </div>
 
       <!-- Features Checklist -->
       <div class="bg-[#12192C] p-4 rounded-2xl border border-gray-800 space-y-2 text-xs text-gray-300">
         <div class="flex items-center gap-2">
           <span class="text-emerald-400 font-bold">✓</span>
-          <span>Full 30-Day Practical Action Roadmap (All Days Unlocked)</span>
+          <span id="proModalFeature1">Remaining Practical Action Roadmap Unlocked</span>
         </div>
         <div class="flex items-center gap-2">
           <span class="text-emerald-400 font-bold">✓</span>
@@ -826,15 +826,15 @@
         </div>
         <div class="flex items-center gap-2">
           <span class="text-emerald-400 font-bold">✓</span>
-          <span>Upwork & Fiverr Winning Proposals & Cold Pitch (Days 26-30)</span>
+          <span id="proModalFeature4">Official Graduation & Upwork Portfolio Verification</span>
         </div>
       </div>
 
       <!-- Payment Details Box -->
       <div class="bg-gradient-to-r from-[#18223C] to-[#12192C] p-4 rounded-2xl border border-amber-500/30 space-y-2">
         <div class="flex items-center justify-between">
-          <span class="text-xs font-bold text-amber-300 uppercase">Special Launch Fee</span>
-          <span class="text-base font-black text-white">Rs. 999 <span class="text-[10px] text-gray-400 font-normal">/ Month</span></span>
+          <span class="text-xs font-bold text-amber-300 uppercase" id="proModalPlanBadge">14-Day / 30-Day Track Pass</span>
+          <span class="text-base font-black text-white" id="proModalFeeText">Rs. 499 <span class="text-[10px] text-gray-400 font-normal">/ Track Pass</span></span>
         </div>
         <div class="text-[11px] text-gray-300 space-y-1 pt-2 border-t border-gray-800">
           <div>💳 <strong>EasyPaisa / JazzCash / Bank Transfer</strong></div>
@@ -1018,6 +1018,7 @@
       activeSession = '';
     }
     let currentUserEmail = activeSession;
+    let currentActiveCourse = null;
     let currentActiveDayNumber = 1;
     let currentLang = localStorage.getItem('practix_lang') || 'urdu';
 
@@ -1456,6 +1457,7 @@
 
         const user = userData.user;
         const course = userData.activeCourse;
+        currentActiveCourse = course;
 
         // Populate User Info
         document.getElementById('navUserName').innerText = user.name;
@@ -1590,7 +1592,7 @@
 
         if (!res.ok) {
           if (res.status === 402 || data.isProRequired) {
-            openProModal();
+            openProModal(data);
             return;
           }
           alert(data.message || (currentLang === 'en' ? "This day is locked!" : "Yeh day locked hai!"));
@@ -2095,8 +2097,27 @@
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 
-    function openProModal() {
+    function openProModal(optData) {
       const modal = document.getElementById('proUpgradeModal');
+      const totalDays = (optData && optData.totalDays) || (currentActiveCourse && currentActiveCourse.totalDays) || 30;
+      const is14 = totalDays <= 14;
+      const fee = (optData && optData.fee) || (is14 ? 499 : 999);
+      const trackLabel = (optData && optData.trackLabel) || (is14 ? '14-Day Skill Track' : '30-Day Career Masterclass');
+
+      const heading = document.getElementById('proModalHeading');
+      const sub = document.getElementById('proModalSubtext');
+      const feeEl = document.getElementById('proModalFeeText');
+      const badge = document.getElementById('proModalPlanBadge');
+      const f1 = document.getElementById('proModalFeature1');
+
+      if (heading) heading.innerText = is14 ? 'Upgrade to 14-Day Skill Track PRO ⭐' : 'Upgrade to 30-Day Masterclass PRO ⭐';
+      if (sub) sub.innerText = is14 
+        ? `7-Day Free Trial Mukammal! Days 8 se 14 aur Verified Certificate unlock karein.`
+        : `7-Day Free Trial Mukammal! Days 8 se 30 aur Client Portfolio Launch unlock karein.`;
+      if (feeEl) feeEl.innerHTML = `Rs. ${fee} <span class="text-[10px] text-gray-400 font-normal">/ One-Time Track Pass</span>`;
+      if (badge) badge.innerText = is14 ? '⚡ 14-Day Skill Track Fee' : '🏆 30-Day Masterclass Fee';
+      if (f1) f1.innerText = is14 ? 'Days 8 to 14 Advanced Practical Modules Unlocked' : 'Full 30-Day Practical Action Roadmap (All Days Unlocked)';
+
       if (modal) modal.classList.remove('hidden');
     }
 
@@ -2107,7 +2128,13 @@
 
     function contactOnWhatsAppForPro() {
       const user = currentUserEmail || 'Student';
-      const text = encodeURIComponent(`Assalam o Alaikum! Maine Practix 7-Day Free Trial complete kar lia hai. Mera username "${user}" hai. Main Practix PRO (Rs. 999/Month) upgrade karna chahta/chahti hoon. Baraye meherbani EasyPaisa / JazzCash payment details aur activation process guide kar dein.`);
+      const totalDays = (currentActiveCourse && currentActiveCourse.totalDays) || 30;
+      const is14 = totalDays <= 14;
+      const fee = is14 ? 499 : 999;
+      const courseTitle = (currentActiveCourse && currentActiveCourse.title) || 'Digital Skill';
+      const trackLabel = is14 ? '14-Day Skill Track (Days 8–14)' : '30-Day Career Masterclass (Days 8–30)';
+
+      const text = encodeURIComponent(`Assalam o Alaikum! Maine Practix 7-Day Free Trial complete kar lia hai. Mera username "${user}" hai aur mera course "${courseTitle}" (${totalDays} Days) hai. Main "${trackLabel}" (Rs. ${fee}) unlock karna chahta/chahti hoon. Baraye meherbani EasyPaisa / JazzCash payment details aur activation process guide kar dein.`);
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 
