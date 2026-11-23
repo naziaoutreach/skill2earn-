@@ -38,19 +38,19 @@
   <!-- ═════════════════════════ AUTHENTICATED APP SHELL WRAPPER ═════════════════════════ -->
   <div id="appShellWrapper" class="flex flex-col flex-1 w-full min-h-screen hidden">
   <!-- ═════════════════════════ TOP NAVBAR ═════════════════════════ -->
-  <header class="h-14 sm:h-16 bg-[#0F1629]/95 border-b border-[#1E293B] sticky top-0 z-30 backdrop-blur-md px-2.5 sm:px-6 flex items-center justify-between gap-1.5 w-full max-w-full">
+  <header class="h-14 sm:h-16 bg-[#0F1629]/95 border-b border-[#1E293B] sticky top-0 z-30 backdrop-blur-md px-2 sm:px-6 flex items-center justify-between gap-1 w-full max-w-full">
     <div class="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-shrink-0">
       <!-- Mobile Sidebar Hamburger Toggle -->
       <button onclick="toggleMobileSidebar()" class="md:hidden w-8 h-8 rounded-xl bg-[#18223C] border border-gray-700 flex items-center justify-center text-gray-300 hover:text-white flex-shrink-0">
         <i class="fa-solid fa-bars text-xs"></i>
       </button>
 
-      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#7C3AED] to-[#6366F1] flex items-center justify-center shadow-lg shadow-purple-500/30 flex-shrink-0">
+      <div class="hidden sm:flex w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#7C3AED] to-[#6366F1] items-center justify-center shadow-lg shadow-purple-500/30 flex-shrink-0">
         <i class="fa-solid fa-bolt text-white text-sm sm:text-lg"></i>
       </div>
       <div class="min-w-0">
-        <div class="flex items-center gap-1.5 sm:gap-2">
-          <span class="text-base sm:text-xl font-black tracking-tight text-white">PRACT<span class="text-[#A78BFA]">IX</span></span>
+        <div class="flex items-center gap-1 sm:gap-2">
+          <span class="text-sm sm:text-xl font-black tracking-tight text-white">PRACT<span class="text-[#A78BFA]">IX</span></span>
           <button onclick="openProModal()" id="topPlanBadge" class="hidden md:flex text-[10px] font-bold uppercase tracking-wider bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full items-center gap-1 transition whitespace-nowrap">
             <span id="topPlanText">7-Day Free Trial</span>
             <i class="fa-solid fa-crown text-amber-400 text-[8px]"></i>
@@ -2796,8 +2796,9 @@
         }
       }
 
-      // Overall Gate Badge
+      // Overall Gate Badge & Submit Button Visual Lock
       const overallBadge = document.getElementById('homeworkOverallBadge');
+      const submitBtn = document.getElementById('btnSubmitHomework');
       const completedGates = (validWsCount >= totalQuestions ? 1 : 0) + (answeredQuizCount >= totalQuiz ? 1 : 0) + (hasProof ? 1 : 0);
       if (overallBadge) {
         if (completedGates === 3) {
@@ -2806,6 +2807,15 @@
         } else {
           overallBadge.className = 'bg-rose-500/10 text-rose-300 border border-rose-500/30 px-2.5 py-0.5 rounded-full text-[10px] font-bold';
           overallBadge.innerText = isEn ? `Incomplete (${completedGates}/3 Tasks Done)` : `Adhoora (${completedGates}/3 Mukammal)`;
+        }
+      }
+      if (submitBtn) {
+        if (completedGates === 3) {
+          submitBtn.className = 'bg-gradient-to-r from-[#7C3AED] to-[#6366F1] text-white px-6 py-2.5 rounded-xl text-sm font-bold hover:opacity-95 shadow-lg shadow-purple-500/30 transition flex items-center gap-2';
+          submitBtn.innerHTML = `<i class="fa-solid fa-circle-check"></i> <span id="btnSubmitHomeworkText">${isEn ? 'Submit & Mark Day Complete' : 'Submit & Day Mukammal Karein'}</span>`;
+        } else {
+          submitBtn.className = 'bg-gray-800/90 border border-gray-700 text-gray-400 px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold opacity-80 cursor-not-allowed transition flex items-center gap-2';
+          submitBtn.innerHTML = `<i class="fa-solid fa-lock text-amber-400"></i> <span id="btnSubmitHomeworkText">${isEn ? `Locked (${completedGates}/3 Tasks Done)` : `Locked (${completedGates}/3 Kaam Mukammal Karein)`}</span>`;
         }
       }
 
