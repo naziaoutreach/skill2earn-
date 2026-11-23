@@ -38,25 +38,25 @@
   <!-- ═════════════════════════ AUTHENTICATED APP SHELL WRAPPER ═════════════════════════ -->
   <div id="appShellWrapper" class="flex flex-col flex-1 w-full min-h-screen hidden">
   <!-- ═════════════════════════ TOP NAVBAR ═════════════════════════ -->
-  <header class="h-16 bg-[#0F1629]/95 border-b border-[#1E293B] sticky top-0 z-40 backdrop-blur-md px-3 sm:px-6 flex items-center justify-between w-full max-w-full">
-    <div class="flex items-center gap-2 sm:gap-3">
+  <header class="h-14 sm:h-16 bg-[#0F1629]/95 border-b border-[#1E293B] sticky top-0 z-30 backdrop-blur-md px-2.5 sm:px-6 flex items-center justify-between gap-1.5 w-full max-w-full">
+    <div class="flex items-center gap-1.5 sm:gap-3 min-w-0 flex-shrink-0">
       <!-- Mobile Sidebar Hamburger Toggle -->
-      <button onclick="toggleMobileSidebar()" class="md:hidden w-9 h-9 rounded-xl bg-[#18223C] border border-gray-700 flex items-center justify-center text-gray-300 hover:text-white">
-        <i class="fa-solid fa-bars text-sm"></i>
+      <button onclick="toggleMobileSidebar()" class="md:hidden w-8 h-8 rounded-xl bg-[#18223C] border border-gray-700 flex items-center justify-center text-gray-300 hover:text-white flex-shrink-0">
+        <i class="fa-solid fa-bars text-xs"></i>
       </button>
 
-      <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#7C3AED] to-[#6366F1] flex items-center justify-center shadow-lg shadow-purple-500/30 flex-shrink-0">
-        <i class="fa-solid fa-bolt text-white text-base sm:text-lg"></i>
+      <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-[#7C3AED] to-[#6366F1] flex items-center justify-center shadow-lg shadow-purple-500/30 flex-shrink-0">
+        <i class="fa-solid fa-bolt text-white text-sm sm:text-lg"></i>
       </div>
-      <div>
+      <div class="min-w-0">
         <div class="flex items-center gap-1.5 sm:gap-2">
-          <span class="text-lg sm:text-xl font-black tracking-tight text-white">PRACT<span class="text-[#A78BFA]">IX</span></span>
-          <button onclick="openProModal()" id="topPlanBadge" class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full flex items-center gap-1 transition">
+          <span class="text-base sm:text-xl font-black tracking-tight text-white">PRACT<span class="text-[#A78BFA]">IX</span></span>
+          <button onclick="openProModal()" id="topPlanBadge" class="hidden md:flex text-[10px] font-bold uppercase tracking-wider bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full items-center gap-1 transition whitespace-nowrap">
             <span id="topPlanText">7-Day Free Trial</span>
             <i class="fa-solid fa-crown text-amber-400 text-[8px]"></i>
           </button>
         </div>
-        <p class="text-[10px] sm:text-[11px] text-gray-400 hidden xs:block">Kal se nahi... Aaj se!</p>
+        <p class="text-[10px] sm:text-[11px] text-gray-400 hidden sm:block">Kal se nahi... Aaj se!</p>
       </div>
     </div>
 
@@ -68,22 +68,22 @@
     </div>
 
     <!-- Right Quick Stats: Streak, XP, User Profile -->
-    <div class="flex items-center gap-1.5 sm:gap-3">
+    <div class="flex items-center gap-1 sm:gap-2.5 flex-shrink-0">
       <!-- Language Switcher Pill -->
-      <div class="flex items-center bg-[#141C33] border border-gray-700/80 rounded-xl p-0.5 sm:p-1 text-[11px] sm:text-xs font-bold">
-        <button id="langBtnUrdu" onclick="setLanguage('urdu')" class="px-2 sm:px-2.5 py-1 rounded-lg transition bg-purple-600 text-white shadow-sm">
+      <div class="flex items-center bg-[#141C33] border border-gray-700/80 rounded-xl p-0.5 sm:p-1 text-[10px] sm:text-xs font-bold flex-shrink-0">
+        <button id="langBtnUrdu" onclick="setLanguage('urdu')" class="px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg transition bg-purple-600 text-white shadow-sm">
           اردو
         </button>
-        <button id="langBtnEng" onclick="setLanguage('en')" class="px-2 sm:px-2.5 py-1 rounded-lg transition text-gray-400 hover:text-white">
+        <button id="langBtnEng" onclick="setLanguage('en')" class="px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-lg transition text-gray-400 hover:text-white">
           EN
         </button>
       </div>
 
       <!-- Streak Flame -->
-      <div class="flex items-center gap-1.5 sm:gap-2 bg-gradient-to-r from-amber-500/15 to-orange-500/15 border border-amber-500/30 px-2 sm:px-3 py-1.5 rounded-xl glow-orange">
-        <span class="text-sm sm:text-base">🔥</span>
+      <div class="flex items-center gap-1 sm:gap-2 bg-gradient-to-r from-amber-500/15 to-orange-500/15 border border-amber-500/30 px-1.5 sm:px-3 py-1 sm:py-1.5 rounded-xl glow-orange flex-shrink-0 whitespace-nowrap">
+        <span class="text-xs sm:text-base">🔥</span>
         <div class="text-left">
-          <div class="text-[11px] sm:text-xs font-black text-amber-400"><span id="streakCount">0</span>D</div>
+          <div class="text-[10px] sm:text-xs font-black text-amber-400"><span id="streakCount">0</span>D</div>
           <div class="text-[8px] sm:text-[9px] text-gray-400 uppercase tracking-wider font-semibold hidden sm:block">Streak</div>
         </div>
       </div>
@@ -98,15 +98,15 @@
       </div>
 
       <!-- User Account Button -->
-      <div class="relative">
-        <button onclick="toggleUserDropdown()" class="flex items-center gap-1.5 sm:gap-2.5 bg-[#18223C] hover:bg-[#202E52] border border-gray-700 p-1.5 sm:px-3 sm:py-1.5 rounded-xl transition">
-          <div id="userAvatarInitial" class="w-7 h-7 rounded-full bg-purple-600 font-bold text-white text-xs flex items-center justify-center">
+      <div class="relative flex-shrink-0">
+        <button onclick="toggleUserDropdown()" class="flex items-center gap-1 sm:gap-2 bg-[#18223C] hover:bg-[#202E52] border border-gray-700 p-1 sm:px-3 sm:py-1.5 rounded-xl transition">
+          <div id="userAvatarInitial" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-purple-600 font-bold text-white text-[11px] sm:text-xs flex items-center justify-center">
             U
           </div>
           <div class="hidden sm:block text-left text-xs">
             <div class="font-bold text-white truncate max-w-[80px]" id="navUserName">My Account</div>
           </div>
-          <i class="fa-solid fa-chevron-down text-gray-400 text-[9px] sm:text-[10px]"></i>
+          <i class="fa-solid fa-chevron-down text-gray-400 text-[8px] sm:text-[10px] hidden sm:inline"></i>
         </button>
 
         <!-- Dropdown Menu -->
@@ -129,8 +129,8 @@
       </div>
 
       <!-- Prominent Header Log Out Button (Always Visible!) -->
-      <button onclick="logoutUser()" id="headerLogoutBtn" class="flex items-center gap-1.5 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 hover:text-white px-2.5 sm:px-3.5 py-1.5 rounded-xl text-xs font-bold transition shadow-md shadow-rose-950/40" title="Log Out">
-        <i class="fa-solid fa-power-off text-rose-400"></i>
+      <button onclick="logoutUser()" id="headerLogoutBtn" class="flex items-center gap-1 sm:gap-1.5 bg-rose-500/20 hover:bg-rose-500/30 border border-rose-500/40 text-rose-300 hover:text-white px-2 sm:px-3.5 py-1 sm:py-1.5 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-md shadow-rose-950/40 flex-shrink-0 whitespace-nowrap" title="Log Out">
+        <i class="fa-solid fa-power-off text-rose-400 text-[11px] sm:text-xs"></i>
         <span>Log Out</span>
       </button>
     </div>
@@ -138,10 +138,10 @@
 
   <div class="flex flex-1 overflow-hidden relative w-full max-w-full">
     <!-- Mobile Sidebar Backdrop Overlay -->
-    <div id="mobileSidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/70 z-30 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
+    <div id="mobileSidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/70 z-40 hidden md:hidden backdrop-blur-sm transition-opacity"></div>
 
     <!-- ═════════════════════════ SIDEBAR (RESPONSIVE DRAWER ON MOBILE) ═════════════════════════ -->
-    <aside id="mainSidebar" class="w-64 bg-[#0F1629] border-r border-[#1E293B] flex flex-col justify-between p-4 flex-shrink-0 fixed md:static inset-y-0 left-0 z-40 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+    <aside id="mainSidebar" class="w-64 bg-[#0F1629] border-r border-[#1E293B] flex flex-col justify-between p-4 flex-shrink-0 fixed md:static inset-y-0 left-0 z-50 md:z-auto transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
       <div class="space-y-1.5 overflow-y-auto scrollbar-custom">
         <!-- Mobile Sidebar Close Header -->
         <div class="flex items-center justify-between md:hidden pb-3 mb-2 border-b border-gray-800">
@@ -306,10 +306,10 @@
                   <i class="fa-solid fa-clock text-amber-400"></i>
                   <span>Target Course Duration:</span>
                 </div>
-                <div class="flex items-center gap-2">
-                  <button type="button" onclick="setSprintDuration(7)" class="sprint-btn-dash px-3 py-1.5 rounded-lg border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white" data-days="7">⚡ 7 Days Sprint (Free)</button>
-                  <button type="button" onclick="setSprintDuration(14)" class="sprint-btn-dash px-3 py-1.5 rounded-lg border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white" data-days="14">🚀 14 Days Skill</button>
-                  <button type="button" onclick="setSprintDuration(30)" class="sprint-btn-dash active px-3 py-1.5 rounded-lg border border-purple-500 bg-purple-600/30 text-white font-bold text-xs" data-days="30">🏆 30 Days Masterclass</button>
+                <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+                  <button type="button" onclick="setSprintDuration(7)" class="sprint-btn-dash whitespace-nowrap px-3 py-1.5 rounded-lg border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white" data-days="7">⚡ 7 Days Sprint (Free)</button>
+                  <button type="button" onclick="setSprintDuration(14)" class="sprint-btn-dash whitespace-nowrap px-3 py-1.5 rounded-lg border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white" data-days="14">🚀 14 Days Skill</button>
+                  <button type="button" onclick="setSprintDuration(30)" class="sprint-btn-dash active whitespace-nowrap px-3 py-1.5 rounded-lg border border-purple-500 bg-purple-600/30 text-white font-bold text-xs" data-days="30">🏆 30 Days Masterclass</button>
                 </div>
               </div>
             </div>
@@ -425,11 +425,11 @@
             </div>
 
             <!-- Duration Filter Pills -->
-            <div class="flex items-center gap-1.5 bg-[#0B0F19] p-1 rounded-xl border border-gray-800 text-xs">
-              <button onclick="filterFeaturedTracks('all', 'dash')" class="filter-dash-pill active px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white transition" data-filter="all">All Tracks (11)</button>
-              <button onclick="filterFeaturedTracks(7, 'dash')" class="filter-dash-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="7">⚡ 7 Days Sprint</button>
-              <button onclick="filterFeaturedTracks(14, 'dash')" class="filter-dash-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="14">🚀 14 Days Skill</button>
-              <button onclick="filterFeaturedTracks(30, 'dash')" class="filter-dash-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="30">🏆 30 Days Pro</button>
+            <div class="flex flex-wrap items-center gap-1.5 bg-[#0B0F19] p-1.5 rounded-xl border border-gray-800 text-xs w-full sm:w-auto">
+              <button onclick="filterFeaturedTracks('all', 'dash')" class="filter-dash-pill active whitespace-nowrap px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white transition" data-filter="all">All Tracks (11)</button>
+              <button onclick="filterFeaturedTracks(7, 'dash')" class="filter-dash-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="7">⚡ 7 Days Sprint</button>
+              <button onclick="filterFeaturedTracks(14, 'dash')" class="filter-dash-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="14">🚀 14 Days Skill</button>
+              <button onclick="filterFeaturedTracks(30, 'dash')" class="filter-dash-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="30">🏆 30 Days Pro</button>
             </div>
           </div>
 
@@ -1044,10 +1044,10 @@
             </div>
             <div class="text-[11px] text-gray-400 mt-0.5">Apni sahulat ke mutabiq duration chunein — algorithm automatically curriculum ko adapt kar lega!</div>
           </div>
-          <div class="flex items-center gap-2" id="sprintDurationSelectorGroup">
-            <button type="button" onclick="setSprintDuration(7)" id="btnSprint7" class="sprint-btn px-3.5 py-2 rounded-xl border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white transition">⚡ 7 Days Sprint</button>
-            <button type="button" onclick="setSprintDuration(14)" id="btnSprint14" class="sprint-btn px-3.5 py-2 rounded-xl border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white transition">🚀 14 Days Skill</button>
-            <button type="button" onclick="setSprintDuration(30)" id="btnSprint30" class="sprint-btn active px-3.5 py-2 rounded-xl border border-purple-500 bg-purple-600/30 text-white font-bold text-xs transition">🏆 30 Days Masterclass</button>
+          <div class="flex flex-wrap items-center gap-2" id="sprintDurationSelectorGroup">
+            <button type="button" onclick="setSprintDuration(7)" id="btnSprint7" class="sprint-btn whitespace-nowrap px-3.5 py-2 rounded-xl border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white transition">⚡ 7 Days Sprint</button>
+            <button type="button" onclick="setSprintDuration(14)" id="btnSprint14" class="sprint-btn whitespace-nowrap px-3.5 py-2 rounded-xl border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white transition">🚀 14 Days Skill</button>
+            <button type="button" onclick="setSprintDuration(30)" id="btnSprint30" class="sprint-btn active whitespace-nowrap px-3.5 py-2 rounded-xl border border-purple-500 bg-purple-600/30 text-white font-bold text-xs transition">🏆 30 Days Masterclass</button>
           </div>
         </div>
 
@@ -1133,11 +1133,11 @@
             </div>
 
             <!-- Duration Filter Pills for Ingest -->
-            <div class="flex items-center gap-1.5 bg-[#0B0F19] p-1 rounded-xl border border-gray-800 text-xs">
-              <button onclick="filterFeaturedTracks('all', 'ingest')" class="filter-ingest-pill active px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white transition" data-filter="all">All Tracks</button>
-              <button onclick="filterFeaturedTracks(7, 'ingest')" class="filter-ingest-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="7">⚡ 7D</button>
-              <button onclick="filterFeaturedTracks(14, 'ingest')" class="filter-ingest-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="14">🚀 14D</button>
-              <button onclick="filterFeaturedTracks(30, 'ingest')" class="filter-ingest-pill px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="30">🏆 30D</button>
+            <div class="flex flex-wrap items-center gap-1.5 bg-[#0B0F19] p-1.5 rounded-xl border border-gray-800 text-xs">
+              <button onclick="filterFeaturedTracks('all', 'ingest')" class="filter-ingest-pill active whitespace-nowrap px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white transition" data-filter="all">All Tracks</button>
+              <button onclick="filterFeaturedTracks(7, 'ingest')" class="filter-ingest-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="7">⚡ 7D</button>
+              <button onclick="filterFeaturedTracks(14, 'ingest')" class="filter-ingest-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="14">🚀 14D</button>
+              <button onclick="filterFeaturedTracks(30, 'ingest')" class="filter-ingest-pill whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition" data-filter="30">🏆 30D</button>
             </div>
           </div>
 
@@ -1266,15 +1266,15 @@
           <p class="text-sm text-gray-400">Students ranking based on daily streaks and practical task execution.</p>
         </div>
 
-        <div class="glass-card rounded-3xl border border-gray-800 overflow-x-auto">
-          <table class="w-full text-left text-xs min-w-[500px]">
-            <thead class="bg-[#141C30] text-gray-400 uppercase font-bold text-[11px] border-b border-gray-800">
+        <div class="glass-card rounded-3xl border border-gray-800 overflow-hidden">
+          <table class="w-full text-left text-[11px] sm:text-xs">
+            <thead class="bg-[#141C30] text-gray-400 uppercase font-bold text-[10px] sm:text-[11px] border-b border-gray-800">
               <tr>
-                <th class="p-4">Rank</th>
-                <th class="p-4">Student</th>
-                <th class="p-4">Skill Track</th>
-                <th class="p-4">Active Streak</th>
-                <th class="p-4">Total XP</th>
+                <th class="p-2.5 sm:p-4 text-center">Rank</th>
+                <th class="p-2.5 sm:p-4">Student</th>
+                <th class="p-2.5 sm:p-4 hidden sm:table-cell">Skill Track</th>
+                <th class="p-2.5 sm:p-4 whitespace-nowrap">Streak</th>
+                <th class="p-2.5 sm:p-4 whitespace-nowrap">Total XP</th>
               </tr>
             </thead>
             <tbody id="leaderboardTbody" class="divide-y divide-gray-800 text-gray-200">
@@ -1284,10 +1284,20 @@
         </div>
       </section>
 
-      <!-- Bottom Spacing for Mobile Bottom Bar -->
-      <div class="h-16 md:hidden"></div>
+      <!-- Bottom Spacing for Mobile Bottom Bar + Floating Tutor Button -->
+      <div class="h-28 md:hidden"></div>
     </main>
   </div>
+
+  <!-- Floating 24/7 AI Tutor Pill (Sits cleanly above Mobile Bottom Nav) -->
+  <button id="floatingAiTutorBtn" onclick="openAiTutorModal('floating')" class="fixed bottom-20 md:bottom-6 right-3 md:right-6 z-30 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-3.5 py-2.5 md:px-4 md:py-3 rounded-full shadow-2xl border border-purple-400/40 flex items-center gap-2 transition transform hover:scale-105 group">
+    <span class="relative flex h-2.5 w-2.5">
+      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+      <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+    </span>
+    <i class="fa-solid fa-robot text-xs md:text-sm"></i>
+    <span class="text-[11px] md:text-xs font-bold whitespace-nowrap" id="floatingTutorText">24/7 AI Tutor Help</span>
+  </button>
 
   <!-- ═════════════════════════ MOBILE BOTTOM NAVIGATION BAR ═════════════════════════ -->
   <nav class="md:hidden fixed bottom-0 inset-x-0 bg-[#0F1629]/95 backdrop-blur-lg border-t border-[#1E293B] px-3 py-2 z-30 flex items-center justify-around">
@@ -1452,15 +1462,7 @@
     </div>
   </div>
 
-  <!-- Floating 24/7 AI Tutor Pill -->
-  <button id="floatingAiTutorBtn" onclick="openAiTutorModal('floating')" class="fixed bottom-6 right-6 z-40 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white px-4 py-3 rounded-full shadow-2xl border border-purple-400/40 flex items-center gap-2.5 transition transform hover:scale-105 group">
-    <span class="relative flex h-3 w-3">
-      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-      <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-    </span>
-    <i class="fa-solid fa-robot text-sm"></i>
-    <span class="text-xs font-bold" id="floatingTutorText">24/7 AI Tutor Help</span>
-  </button>
+
 
   <!-- ═════════════════════════ AUTH MODAL (LOGIN / REGISTER) ═════════════════════════ -->
   <div id="authModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 overflow-y-auto p-4 hidden" style="-webkit-overflow-scrolling:touch;">
@@ -2296,10 +2298,10 @@
         if (planBadge && planText) {
           if (user.isPro) {
             planText.innerText = 'PRO ⭐';
-            planBadge.className = 'text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full flex items-center gap-1';
+            planBadge.className = 'hidden md:flex text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full items-center gap-1 whitespace-nowrap';
           } else {
             planText.innerText = 'Upgrade PRO';
-            planBadge.className = 'text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full flex items-center gap-1 cursor-pointer transition';
+            planBadge.className = 'hidden md:flex text-[10px] font-bold uppercase tracking-wider bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full items-center gap-1 cursor-pointer transition whitespace-nowrap';
           }
         }
 
@@ -3056,18 +3058,18 @@
       selectedSprintDays = Number(days) || 30;
       document.querySelectorAll('.sprint-btn-dash').forEach(btn => {
         if (Number(btn.dataset.days) === selectedSprintDays) {
-          btn.className = 'sprint-btn-dash active px-3 py-1.5 rounded-lg border border-purple-500 bg-purple-600/30 text-white font-bold text-xs';
+          btn.className = 'sprint-btn-dash active whitespace-nowrap px-3 py-1.5 rounded-lg border border-purple-500 bg-purple-600/30 text-white font-bold text-xs';
         } else {
-          btn.className = 'sprint-btn-dash px-3 py-1.5 rounded-lg border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white';
+          btn.className = 'sprint-btn-dash whitespace-nowrap px-3 py-1.5 rounded-lg border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white';
         }
       });
       ['7', '14', '30'].forEach(d => {
         const btn = document.getElementById(`btnSprint${d}`);
         if (btn) {
           if (Number(d) === selectedSprintDays) {
-            btn.className = 'sprint-btn active px-3.5 py-2 rounded-xl border border-purple-500 bg-purple-600/30 text-white font-bold text-xs transition';
+            btn.className = 'sprint-btn active whitespace-nowrap px-3.5 py-2 rounded-xl border border-purple-500 bg-purple-600/30 text-white font-bold text-xs transition';
           } else {
-            btn.className = 'sprint-btn px-3.5 py-2 rounded-xl border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white transition';
+            btn.className = 'sprint-btn whitespace-nowrap px-3.5 py-2 rounded-xl border border-gray-700 text-xs font-semibold text-gray-300 hover:text-white transition';
           }
         }
       });
@@ -3144,9 +3146,9 @@
 
       document.querySelectorAll(`.${pillClass}`).forEach(btn => {
         if (btn.dataset.filter === String(filter)) {
-          btn.className = `${pillClass} active px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white transition`;
+          btn.className = `${pillClass} active whitespace-nowrap px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white transition`;
         } else {
-          btn.className = `${pillClass} px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition`;
+          btn.className = `${pillClass} whitespace-nowrap px-3 py-1.5 rounded-lg font-semibold text-gray-400 hover:text-white transition`;
         }
       });
 
@@ -3295,16 +3297,21 @@
           const tr = document.createElement('tr');
           tr.className = item.name.includes("You") ? 'bg-purple-950/30 border-l-4 border-l-purple-500 font-bold' : 'hover:bg-[#12192C]';
           tr.innerHTML = `
-            <td class="p-4 text-center font-bold ${item.rank <= 3 ? 'text-amber-400 text-sm' : 'text-gray-400'}">
+            <td class="p-2.5 sm:p-4 text-center font-bold ${item.rank <= 3 ? 'text-amber-400 text-sm' : 'text-gray-400'}">
               ${item.rank === 1 ? '🥇' : item.rank === 2 ? '🥈' : item.rank === 3 ? '🥉' : '#' + item.rank}
             </td>
-            <td class="p-4 flex items-center gap-3">
-              <img src="${item.avatar}" class="w-7 h-7 rounded-full object-cover ring-1 ring-purple-500/40">
-              <span class="text-white">${item.name}</span>
+            <td class="p-2.5 sm:p-4">
+              <div class="flex items-center gap-2 sm:gap-3">
+                <img src="${item.avatar}" class="w-6 h-6 sm:w-7 sm:h-7 rounded-full object-cover ring-1 ring-purple-500/40 flex-shrink-0">
+                <div class="min-w-0">
+                  <div class="text-white font-semibold truncate max-w-[110px] sm:max-w-none">${item.name}</div>
+                  <div class="text-[10px] text-gray-400 sm:hidden truncate max-w-[110px]">${item.skill}</div>
+                </div>
+              </div>
             </td>
-            <td class="p-4 text-gray-400">${item.skill}</td>
-            <td class="p-4 text-amber-400 font-bold">🔥 ${item.streak} Days</td>
-            <td class="p-4 text-purple-300 font-bold">⭐ ${item.xp.toLocaleString()} XP</td>
+            <td class="p-2.5 sm:p-4 text-gray-400 hidden sm:table-cell">${item.skill}</td>
+            <td class="p-2.5 sm:p-4 text-amber-400 font-bold whitespace-nowrap">🔥 ${item.streak}d</td>
+            <td class="p-2.5 sm:p-4 text-purple-300 font-bold whitespace-nowrap">⭐ ${item.xp.toLocaleString()}</td>
           `;
           tbody.appendChild(tr);
         });
