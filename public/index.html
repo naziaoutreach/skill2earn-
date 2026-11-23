@@ -1497,26 +1497,35 @@
 
       <!-- Register Form -->
       <form id="formRegister" onsubmit="handleRegister(event)" class="space-y-3.5" autocomplete="off">
+        <!-- Hidden trap fields to soak up browser password autofill -->
+        <input type="text" name="fake_reg_user" style="display:none!important;" tabindex="-1" autocomplete="username">
+        <input type="password" name="fake_reg_pass" style="display:none!important;" tabindex="-1" autocomplete="new-password">
+
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegFullName">Aapka Mukammal Naam (Full Name):</label>
-          <input type="text" id="regName" placeholder="Jaise: Sara Ahmed ya Ali Khan" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <input type="text" id="regName" placeholder="Jaise: Sara Ahmed ya Ali Khan" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
 
         <!-- Phone & Email Inputs for Customer Reach -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
             <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegPhone">WhatsApp / Mobile No: <span class="text-rose-400">*</span></label>
-            <input type="tel" id="regPhone" placeholder="0322 1234567" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+            <input type="tel" id="regPhone" placeholder="0322 1234567" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
           </div>
           <div>
             <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegEmail">Email Address: <span class="text-rose-400">*</span></label>
-            <input type="email" id="regEmail" placeholder="name@gmail.com" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+            <input type="email" id="regEmail" placeholder="name@gmail.com" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
           </div>
         </div>
 
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegPassword">Password:</label>
-          <input type="password" id="regPassword" placeholder="Apna aasan password rakhein" autocomplete="new-password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <div class="relative">
+            <input type="password" id="regPassword" placeholder="Apna aasan password rakhein" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500 pr-10">
+            <button type="button" onclick="togglePasswordVisibility('regPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblRegSkill">Aap kya seekhna chahte hain? (100% Free Tracks)</label>
@@ -1541,13 +1550,22 @@
 
       <!-- Login Form -->
       <form id="formLogin" onsubmit="handleLogin(event)" class="space-y-3.5 hidden" autocomplete="off">
+        <!-- Hidden trap fields to soak up browser password autofill -->
+        <input type="text" name="fake_login_user" style="display:none!important;" tabindex="-1" autocomplete="username">
+        <input type="password" name="fake_login_pass" style="display:none!important;" tabindex="-1" autocomplete="current-password">
+
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblLoginIdentifier">Email, Phone / WhatsApp ya Username:</label>
-          <input type="text" id="loginUsername" placeholder="03XX XXXXXXX, email ya username" autocomplete="off" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <input type="text" id="loginUsername" placeholder="03XX XXXXXXX, email ya username" autocomplete="off" readonly onfocus="this.removeAttribute('readonly')" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
         </div>
         <div>
           <label class="text-xs font-semibold text-gray-300 block mb-1" id="lblLoginPassword">Password:</label>
-          <input type="password" id="loginPassword" placeholder="Apna password likhein" autocomplete="current-password" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500">
+          <div class="relative">
+            <input type="password" id="loginPassword" placeholder="Apna password likhein" autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly')" required class="w-full bg-[#0B0F19] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-purple-500 pr-10">
+            <button type="button" onclick="togglePasswordVisibility('loginPassword', this)" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs">
+              <i class="fa-solid fa-eye"></i>
+            </button>
+          </div>
         </div>
         <button type="submit" id="btnSubmitLogin" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 rounded-xl font-bold text-xs hover:opacity-95 transition shadow-lg shadow-emerald-500/30">
           Log In Karein →
@@ -2002,6 +2020,38 @@
       }
     });
 
+    
+    // Password visibility toggle helper
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const icon = btn.querySelector('i');
+      if (input.type === 'password') {
+        input.type = 'text';
+        if (icon) icon.className = 'fa-solid fa-eye-slash';
+      } else {
+        input.type = 'password';
+        if (icon) icon.className = 'fa-solid fa-eye';
+      }
+    }
+
+    // Forcefully wipe any browser autofill values
+    function enforceBlankInputs() {
+      const fields = ['loginPassword', 'loginUsername', 'regPassword', 'regName', 'regPhone', 'regEmail'];
+      fields.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.value = '';
+          el.setAttribute('readonly', 'readonly');
+        }
+      });
+    }
+
+    function runAntiAutofillSweep() {
+      enforceBlankInputs();
+      [50, 150, 300, 600, 1000].forEach(ms => setTimeout(enforceBlankInputs, ms));
+    }
+
     // Auth Modal Controls
     function openAuthModal(mode = 'login') {
       const modal = document.getElementById('authModal');
@@ -2040,6 +2090,7 @@
       const drop = document.getElementById('userDropdown');
       if (drop) drop.classList.add('hidden');
       switchAuthMode(mode);
+      runAntiAutofillSweep();
       applyLanguageTranslations();
     }
 
@@ -2062,10 +2113,7 @@
       const sub = document.getElementById('authModalSubtitle');
       const t = TRANSLATIONS[currentLang] || TRANSLATIONS.urdu;
 
-      const p1 = document.getElementById('regPassword');
-      if (p1) p1.value = '';
-      const p2 = document.getElementById('loginPassword');
-      if (p2) p2.value = '';
+      runAntiAutofillSweep();
 
       if (mode === 'register') {
         formReg.classList.remove('hidden');
