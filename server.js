@@ -915,6 +915,15 @@ app.get('/api/day/:dayNumber', (req, res) => {
     });
   }
 
+  // 7-Day Free Trial Gate: Days 8 to 30 require PRO upgrade
+  if (dayNum > 7 && !user.isPro) {
+    return res.status(402).json({
+      error: "pro_required",
+      message: `🌟 7-Day Free Trial Mukammal!\n\nMubarak ho! Aapne pehle 7 din kamyabi se complete kar liye hain. Days 8 se 30 aur Client Portfolio Launch unlock karne ke liye Practix PRO mein upgrade karein!`,
+      isProRequired: true
+    });
+  }
+
   const lang = (req.query.lang || req.headers['x-lang'] || "urdu").toLowerCase();
   const lesson = getLessonForDay(dayNum, user, lang);
   
@@ -1079,6 +1088,7 @@ app.get('/api/admin/overview', verifyAdminAuth, async (req, res) => {
     level: u.level || 1,
     activeCourseTitle: u.activeCourse ? u.activeCourse.title : "No Course",
     completedDays: u.activeCourse ? u.activeCourse.completedDays || 0 : 0,
+    isPro: Boolean(u.isPro),
     submissionsCount: (u.portfolio && u.portfolio.length) || 0
   }));
 
@@ -1144,6 +1154,22 @@ app.post('/api/admin/submission/grade', verifyAdminAuth, (req, res) => {
     return res.json({ success: true, message: "Submission updated!", submission: sub });
   }
   return res.status(404).json({ error: "Submission not found" });
+});
+
+// 5. Admin Toggle PRO Status
+app.post('/api/admin/user/toggle-pro', verifyAdminAuth, async (req, res) => {
+  const { userId, isPro } = req.body;
+  const db = loadDb();
+  const user = db.users[userId] || Object.values(db.users).find(u => u.email === userId || u.id === userId);
+  if (user) {
+    user.isPro = Boolean(isPro);
+    saveDb(db);
+    try {
+      await supabase.from('users').update({ isPro: user.isPro }).eq('id', user.id);
+    } catch (e) {}
+    return res.json({ success: true, message: `User ${user.name} is now ${user.isPro ? 'PRO ⭐' : 'Free Trial'}`, isPro: user.isPro });
+  }
+  return res.status(404).json({ error: "User not found" });
 });
 
 // Fallback middleware to serve index.html for any frontend route

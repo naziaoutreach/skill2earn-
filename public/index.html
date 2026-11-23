@@ -51,7 +51,10 @@
       <div>
         <div class="flex items-center gap-1.5 sm:gap-2">
           <span class="text-lg sm:text-xl font-black tracking-tight text-white">PRACT<span class="text-[#A78BFA]">IX</span></span>
-          <span class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-purple-950/80 text-purple-300 border border-purple-500/30 px-1.5 py-0.2 rounded-full">Pro</span>
+          <button onclick="openProModal()" id="topPlanBadge" class="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full flex items-center gap-1 transition">
+            <span id="topPlanText">7-Day Free Trial</span>
+            <i class="fa-solid fa-crown text-amber-400 text-[8px]"></i>
+          </button>
         </div>
         <p class="text-[10px] sm:text-[11px] text-gray-400 hidden xs:block">Kal se nahi... Aaj se!</p>
       </div>
@@ -723,6 +726,67 @@
     </div>
   </div>
 
+  <!-- ═════════════════════════ PRACTIX PRO UPGRADE & PAYMENT MODAL ═════════════════════════ -->
+  <div id="proUpgradeModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-card max-w-md w-full p-6 md:p-8 rounded-3xl border border-amber-500/40 glow-purple relative space-y-5 animate-in fade-in zoom-in duration-200">
+      <button onclick="closeProModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-lg">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- Header -->
+      <div class="text-center space-y-2">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center text-black text-2xl mx-auto shadow-lg shadow-amber-500/30">
+          <i class="fa-solid fa-crown"></i>
+        </div>
+        <h3 class="text-xl font-black text-white">Upgrade to Practix PRO ⭐</h3>
+        <p class="text-xs text-gray-300">7-Day Free Trial Mukammal! Days 8 se 30 aur Freelance Client Launch unlock karein.</p>
+      </div>
+
+      <!-- Features Checklist -->
+      <div class="bg-[#12192C] p-4 rounded-2xl border border-gray-800 space-y-2 text-xs text-gray-300">
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400 font-bold">✓</span>
+          <span>Full 30-Day Practical Action Roadmap (All Days Unlocked)</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400 font-bold">✓</span>
+          <span>Unlimited 24/7 AI Coach Asad Freelance Guidance</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400 font-bold">✓</span>
+          <span>Verified Client-Ready Public Portfolio Page</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-emerald-400 font-bold">✓</span>
+          <span>Upwork & Fiverr Winning Proposals & Cold Pitch (Days 26-30)</span>
+        </div>
+      </div>
+
+      <!-- Payment Details Box -->
+      <div class="bg-gradient-to-r from-[#18223C] to-[#12192C] p-4 rounded-2xl border border-amber-500/30 space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-amber-300 uppercase">Special Launch Fee</span>
+          <span class="text-base font-black text-white">Rs. 1,500 <span class="text-[10px] text-gray-400 font-normal">/ Month</span></span>
+        </div>
+        <div class="text-[11px] text-gray-300 space-y-1 pt-2 border-t border-gray-800">
+          <div>💳 <strong>EasyPaisa / JazzCash / Bank Transfer</strong></div>
+          <p class="text-gray-400">Payment karne ke baad foran WhatsApp par receipt/screenshot bheinjen taake Admin aapka PRO account 5 minute mein activate kar sakein!</p>
+        </div>
+      </div>
+
+      <!-- 1-Click WhatsApp Button -->
+      <div class="space-y-2">
+        <button onclick="contactOnWhatsAppForPro()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-3.5 rounded-xl font-black text-xs flex items-center justify-center gap-2 transition shadow-lg shadow-emerald-600/30">
+          <i class="fa-brands fa-whatsapp text-lg"></i>
+          <span>WhatsApp par Rabta Karein (Send Payment Proof)</span>
+        </button>
+        <button onclick="closeProModal()" class="w-full py-2 text-xs text-gray-400 hover:text-white">
+          Abhi nahi, baad mein karunga
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ═════════════════════════ AUTH MODAL (LOGIN / REGISTER) ═════════════════════════ -->
   <div id="authModal" class="fixed inset-0 bg-[#0B0F19] z-50 flex items-center justify-center p-4">
     <div class="glass-card max-w-md w-full p-6 md:p-8 rounded-3xl border border-purple-500/40 glow-purple relative">
@@ -1335,6 +1399,19 @@
         document.getElementById('levelCount').innerText = user.level || 1;
         document.getElementById('statLevel').innerText = user.level || 1;
 
+        // Pro Status Badge
+        const planBadge = document.getElementById('topPlanBadge');
+        const planText = document.getElementById('topPlanText');
+        if (planBadge && planText) {
+          if (user.isPro) {
+            planText.innerText = 'PRO ⭐';
+            planBadge.className = 'text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded-full flex items-center gap-1';
+          } else {
+            planText.innerText = 'Upgrade PRO';
+            planBadge.className = 'text-[9px] sm:text-[10px] font-bold uppercase tracking-wider bg-purple-950/80 hover:bg-purple-900 text-purple-300 border border-purple-500/30 px-2 py-0.5 rounded-full flex items-center gap-1 cursor-pointer transition';
+          }
+        }
+
         // Course Info
         document.getElementById('headerCourseTitle').innerText = course.title || 'No Course Ingested';
         const pct = course.totalDays ? Math.round(((course.completedDays || 0) / course.totalDays) * 100) : 0;
@@ -1437,6 +1514,10 @@
         const data = await res.json();
 
         if (!res.ok) {
+          if (res.status === 402 || data.isProRequired) {
+            openProModal();
+            return;
+          }
           alert(data.message || (currentLang === 'en' ? "This day is locked!" : "Yeh day locked hai!"));
           switchTab('roadmap');
           return;
@@ -1805,6 +1886,22 @@
 
     function shareOnWhatsApp() {
       const text = encodeURIComponent(`Check out my verified 30-Day Practix portfolio: ${window.location.origin}/portfolio`);
+      window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
+    }
+
+    function openProModal() {
+      const modal = document.getElementById('proUpgradeModal');
+      if (modal) modal.classList.remove('hidden');
+    }
+
+    function closeProModal() {
+      const modal = document.getElementById('proUpgradeModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function contactOnWhatsAppForPro() {
+      const user = currentUserEmail || 'Student';
+      const text = encodeURIComponent(`Assalam o Alaikum! Maine Practix 7-Day Free Trial complete kar lia hai. Mera username "${user}" hai. Main Practix PRO upgrade karna chahta/chahti hoon. Baraye meherbani payment details aur activation process guide kar dein.`);
       window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
     }
 

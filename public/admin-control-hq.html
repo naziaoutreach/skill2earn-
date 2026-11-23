@@ -131,7 +131,7 @@
                 <tr>
                   <th class="p-4">Student</th>
                   <th class="p-4">Selected Skill</th>
-                  <th class="p-4">Enrolled Course</th>
+                  <th class="p-4">Membership</th>
                   <th class="p-4">Progress</th>
                   <th class="p-4">Streak & XP</th>
                   <th class="p-4 text-right">Actions</th>
@@ -304,7 +304,11 @@
           <td class="p-4">
             <span class="bg-[#1A233D] px-2.5 py-1 rounded-lg text-purple-300 font-semibold border border-purple-500/20">${u.currentSkill}</span>
           </td>
-          <td class="p-4 text-gray-300 max-w-xs truncate">${u.activeCourseTitle}</td>
+          <td class="p-4">
+            ${u.isPro 
+              ? `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2.5 py-1 rounded-full font-bold text-[10px] flex items-center gap-1 w-max"><i class="fa-solid fa-crown text-amber-400"></i> PRO Plan</span>` 
+              : `<span class="bg-gray-800 text-gray-400 px-2.5 py-1 rounded-full font-semibold text-[10px]">Free Trial (7D)</span>`}
+          </td>
           <td class="p-4">
             <span class="font-bold text-white">${u.completedDays}</span> / 30 Days
           </td>
@@ -312,7 +316,10 @@
             <span class="text-amber-400 font-bold">🔥 ${u.streak}D</span> · <span class="text-purple-300 font-bold">⭐ ${u.totalXp} XP</span>
           </td>
           <td class="p-4 text-right space-x-2">
-            <button onclick="deleteStudent('${u.id}', '${u.name}')" class="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 font-semibold">
+            ${u.isPro 
+              ? `<button onclick="toggleProStudent('${u.id}', '${u.name}', false)" class="px-2.5 py-1 rounded-lg bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold text-[11px]">Set Free</button>` 
+              : `<button onclick="toggleProStudent('${u.id}', '${u.name}', true)" class="px-2.5 py-1 rounded-lg bg-gradient-to-r from-amber-500 to-yellow-600 hover:opacity-95 text-black font-black text-[11px] shadow-sm"><i class="fa-solid fa-crown mr-1"></i> Make PRO</button>`}
+            <button onclick="deleteStudent('${u.id}', '${u.name}')" class="px-2.5 py-1 rounded-lg bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 font-semibold text-[11px]">
               <i class="fa-solid fa-trash mr-1"></i> Delete
             </button>
           </td>
@@ -376,6 +383,30 @@
         }
       } catch (err) {
         alert("Error deleting student");
+      }
+    }
+
+    async function toggleProStudent(id, name, isPro) {
+      const actionText = isPro ? 'Upgrade to PRO' : 'Downgrade to Free Trial';
+      if (!confirm(`Are you sure you want to ${actionText} for student "${name}"?`)) return;
+      try {
+        const res = await fetch('/api/admin/user/toggle-pro', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': adminKey
+          },
+          body: JSON.stringify({ userId: id, isPro })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`🎉 ${data.message}`);
+          loadAdminData();
+        } else {
+          alert(data.error || "Update failed");
+        }
+      } catch (err) {
+        alert("Server error updating PRO status");
       }
     }
 
