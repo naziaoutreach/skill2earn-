@@ -771,13 +771,6 @@
           Log In Karein →
         </button>
       </form>
-
-      <!-- Quick Demo Account Shortcut -->
-      <div class="mt-4 pt-3 border-t border-gray-800 text-center">
-        <button onclick="loginAsDemoUser()" class="text-xs text-gray-400 hover:text-purple-300 underline font-semibold">
-          Or instant explore with Ali Khan (Demo Account)
-        </button>
-      </div>
     </div>
   </div>
 
@@ -847,14 +840,22 @@
       showModalAlert(title, text, icon);
     };
 
-    // State - Always start fresh unless real logged-in user explicitly saved
-    // Clear any demo or test accounts completely
-    let storedUser = localStorage.getItem('practix_user_email') || '';
-    if (storedUser === 'ali' || storedUser === 'demo_student' || storedUser.includes('ali@')) {
+    // ═════════════════════════ ACTIVE USER SESSION MANAGEMENT ═════════════════════════
+    // Purge ALL legacy localStorage accounts so no cached demo or test user auto-logs in
+    try {
       localStorage.removeItem('practix_user_email');
-      storedUser = '';
+      localStorage.removeItem('practix_user');
+      localStorage.removeItem('practix_demo');
+      localStorage.removeItem('practix_student');
+    } catch (e) {}
+
+    // Use sessionStorage so opening the app in a new tab or after closing always starts at Create Account
+    let activeSession = (sessionStorage.getItem('practix_user_session') || '').trim();
+    if (activeSession.toLowerCase().includes('ali') || activeSession.toLowerCase().includes('demo')) {
+      sessionStorage.removeItem('practix_user_session');
+      activeSession = '';
     }
-    let currentUserEmail = storedUser;
+    let currentUserEmail = activeSession;
     let currentActiveDayNumber = 1;
     let currentLang = localStorage.getItem('practix_lang') || 'urdu';
 
@@ -1171,7 +1172,11 @@
     }
 
     function closeAuthModal() {
-      if (!currentUserEmail) return; // Cannot close if not logged in
+      if (!currentUserEmail) {
+        const appShell = document.getElementById('appShellWrapper');
+        if (appShell) appShell.classList.add('hidden');
+        return; // Cannot close if not logged in
+      }
       const modal = document.getElementById('authModal');
       if (modal) modal.classList.add('hidden');
       const appShell = document.getElementById('appShellWrapper');
@@ -1227,7 +1232,7 @@
 
         alert(`🎉 ${data.message}`);
         currentUserEmail = data.user.id || data.user.email || data.user.name;
-        localStorage.setItem('practix_user_email', currentUserEmail);
+        sessionStorage.setItem('practix_user_session', currentUserEmail);
         closeAuthModal();
         initApp();
       } catch (err) {
@@ -1256,7 +1261,7 @@
 
         alert(`👋 ${data.message}`);
         currentUserEmail = data.user.id || data.user.email || data.user.name;
-        localStorage.setItem('practix_user_email', currentUserEmail);
+        sessionStorage.setItem('practix_user_session', currentUserEmail);
         closeAuthModal();
         initApp();
       } catch (err) {
@@ -1264,23 +1269,24 @@
       }
     }
 
-    function loginAsDemoUser() {
-      currentUserEmail = 'demo_student';
-      localStorage.setItem('practix_user_email', currentUserEmail);
-      closeAuthModal();
-      initApp();
-    }
-
     function logoutUser() {
-      localStorage.removeItem('practix_user_email');
+      sessionStorage.removeItem('practix_user_session');
+      try {
+        localStorage.removeItem('practix_user_email');
+        localStorage.removeItem('practix_user');
+      } catch (e) {}
       currentUserEmail = '';
       const appShell = document.getElementById('appShellWrapper');
       if (appShell) appShell.classList.add('hidden');
-      openAuthModal('login');
+      openAuthModal('register');
     }
 
     // Main App Initialization
     async function initApp() {
+      if (!currentUserEmail) {
+        openAuthModal('register');
+        return;
+      }
       try {
         const urlParam = currentUserEmail ? `?email=${encodeURIComponent(currentUserEmail)}` : '';
         const userRes = await fetch(`/api/user${urlParam}`);
